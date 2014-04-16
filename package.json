@@ -1,0 +1,19 @@
+{
+  "name": "elegans",
+  "version": "0.0.0",
+  "description": "A 3D plotting library for three.js and d3.js.",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Naoki Nishida",
+  "license": "Apache License Version 2.0",
+  "devDependencies": {
+    "grunt": "~0.4.4",
+    "grunt-contrib-requirejs": "~0.4.3",
+    "grunt-contrib-copy": "~0.5.0"
+  }
+}
