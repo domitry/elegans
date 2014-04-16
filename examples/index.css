@@ -6,20 +6,10 @@
 #legend{
     position:absolute;
     right:0px;
-    top:50px;
+    top:20px;
     width:150px;
     height:300px;
-}
-
-#color{
-    width:50px;
-    height:200px;
-/*
-    background: -moz-linear-gradient(top, #fee0d2 0%, #fc9272 50%, #de2d26 100%);
-    background: -webkit-gradient(linear, top, bottom, from(#fee0d2), to(#de2d26));
-    background: linear-gradient(top, bottom, #fee0d2 0%, #de2d26 100%);
-    border: solid 2px #505050;
-*/
+    /*background-color:blue;*/
 }
 
 .axis path,

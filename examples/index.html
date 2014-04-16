@@ -6,8 +6,7 @@
 <body>
 
 <div id="vis">
-  <div id="legend">
-<svg id="color"></svg>
+  <svg id="legend">
   </div>
 </div>
 
@@ -22,7 +21,7 @@ var BIGIN=-10, END=10;
 for(var x=BIGIN;x<END;x+=0.5){
     var row = [];
     for(var y=BIGIN;y<END;y+=0.5){
-	z = 2.5*(Math.cos(Math.sqrt(x*x+y*y))+1);
+	z = Math.cos(Math.sqrt(x*x+y*y));
 	row.push({x: x, y: y, z: z});
     }
     data.push(row);

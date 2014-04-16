@@ -614,16 +614,19 @@ define('components/legend',[],function(){
 	var group = svg.append("g");
 
 	group.append("svg:rect")
-	    .attr("width", "100%")
-	    .attr("height", "100%")
+	    .attr("y",10)
+	    .attr("width", "50")
+	    .attr("height", "200")
 	    .style("fill", "url(#gradient)");
 	
 	svg.append("g")
+	    .attr("width", "100")
+	    .attr("height", "200")
 	    .attr("class", "axis")
-	    .attr("transform", "translate(" + 50  + ",0)")
+	    .attr("transform", "translate(" + 50  + ",10)")
 	    .call(d3.svg.axis(scale)
 		  .scale(scale)
-		  .orient("left")
+		  .orient("right")
 		  .ticks(5));
     };
 
