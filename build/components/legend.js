@@ -25,7 +25,7 @@ define([],function(){
 
 	group.append("svg:rect")
 	    .attr("y",10)
-	    .attr("width", "50")
+	    .attr("width", "25")
 	    .attr("height", "200")
 	    .style("fill", "url(#gradient)");
 	
@@ -33,8 +33,8 @@ define([],function(){
 	    .attr("width", "100")
 	    .attr("height", "200")
 	    .attr("class", "axis")
-	    .attr("transform", "translate(" + 50  + ",10)")
-	    .call(d3.svg.axis(scale)
+	    .attr("transform", "translate(" + 25  + ",10)")
+	    .call(d3.svg.axis()
 		  .scale(scale)
 		  .orient("right")
 		  .ticks(5));

@@ -8,16 +8,12 @@ define([
 
     function Surface(selection){
 	Utils.mixin(this, Base);
-
-	var additional_options = {
+	Utils.merge(this.options, {
 	    fill_colors:colorbrewer.Reds[3]
-	};
-
-	this.constructor();
-	Utils.merge(this.options, additional_options);
+	});
 	
 	// generate world //
-	var world, world_options =  {
+	var world, world_options = {
 	    width:this.options.width,
 	    height:this.options.height,
 	    bg_color:this.options.bg_color

@@ -538,25 +538,59 @@ define('components/space',[],function(){
 	yz_plane.translateOnAxis(new THREE.Vector3(-1,0,0), 10);
 	yz_plane.translateOnAxis(new THREE.Vector3(0,0,1), 10);
 
+	this.scales = {};
+	this.scales.x = d3.scale.linear().domain([ranges[0][0], ranges[0][1]]).range([10, -10])
+	this.scales.y = d3.scale.linear().domain([ranges[1][0], ranges[1][1]]).range([10, -10])
+	this.scales.z = d3.scale.linear().domain([ranges[2][0], ranges[2][1]]).range([15,0])
+
+	//svg append, check num and value
+	var svg = d3.select("body")
+	    .append("svg")
+	    .style("width", "500")
+	    .style("height", "500")
+	    .style("display", "none")
+	svg.append("g")
+	    .attr("class", "axis")
+	    .call(d3.svg.axis()
+		  .scale(this.scales.x)
+		  .orient("left")
+		  .ticks(5));
+
 	this.meshes = [];
 
 	this.meshes.push(xy_plane);
 	this.meshes.push(xz_plane);
 	this.meshes.push(yz_plane);
 
+	// generate axis
+	this.meshes.push(generateAxis());
+
 	this.meshes.push(generateGrid([-10,10],[-10,10],[0,0],2));//x-y
 	this.meshes.push(generateGrid([-10,10],[-10,-10],[0,20],2));//x-z
 	this.meshes.push(generateGrid([10,10],[-10,10],[0,20],2));//y-z
 
-	this.scales = {};
-	this.scales.x = d3.scale.linear().domain([ranges[0][0], ranges[0][1]]).range([10, -10])
-	this.scales.y = d3.scale.linear().domain([ranges[1][0], ranges[1][1]]).range([10, -10])
-	this.scales.z = d3.scale.linear().domain([ranges[2][0], ranges[2][1]]).range([15,0])
-
 	return this;
     }
 
-    function generateGrid(x_range, y_range, z_range, interval){
+    var generateAxis = function(){
+	var geometry = new THREE.Geometry();
+	
+	geometry.vertices.push(new THREE.Vector3(-10,-10,0));
+	geometry.vertices.push(new THREE.Vector3(-10,10,0));
+
+	geometry.vertices.push(new THREE.Vector3(-10,10,0));
+	geometry.vertices.push(new THREE.Vector3(10,10,0));
+
+	geometry.vertices.push(new THREE.Vector3(10,10,0));
+	geometry.vertices.push(new THREE.Vector3(10,10,20));
+
+	var material = new THREE.LineBasicMaterial( { color: 0x000000, opacity: 0.2 } );
+	var line = new THREE.Line(geometry, material);
+	line.type = THREE.LinePieces;
+	return line;	
+    }
+
+    var generateGrid = function(x_range, y_range, z_range, interval){
 	var geometry = new THREE.Geometry();
 
 	if(x_range[0]!=x_range[1])for(var x=x_range[0];x<=x_range[1];x+=interval){
@@ -615,7 +649,7 @@ define('components/legend',[],function(){
 
 	group.append("svg:rect")
 	    .attr("y",10)
-	    .attr("width", "50")
+	    .attr("width", "25")
 	    .attr("height", "200")
 	    .style("fill", "url(#gradient)");
 	
@@ -623,8 +657,8 @@ define('components/legend',[],function(){
 	    .attr("width", "100")
 	    .attr("height", "200")
 	    .attr("class", "axis")
-	    .attr("transform", "translate(" + 50  + ",10)")
-	    .call(d3.svg.axis(scale)
+	    .attr("transform", "translate(" + 25  + ",10)")
+	    .call(d3.svg.axis()
 		  .scale(scale)
 		  .orient("right")
 		  .ticks(5));
@@ -664,16 +698,12 @@ define('charts/surface',[
 
     function Surface(selection){
 	Utils.mixin(this, Base);
-
-	var additional_options = {
+	Utils.merge(this.options, {
 	    fill_colors:colorbrewer.Reds[3]
-	};
-
-	this.constructor();
-	Utils.merge(this.options, additional_options);
+	});
 	
 	// generate world //
-	var world, world_options =  {
+	var world, world_options = {
 	    width:this.options.width,
 	    height:this.options.height,
 	    bg_color:this.options.bg_color
