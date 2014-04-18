@@ -44,8 +44,6 @@ define([],function(){
 	requestAnimationFrame(world.animate);
 	world.renderer.render(world.scene, world.camera);
 	world.controls.update();
-	console.log(world.camera.position);
-	console.log(world.camera.rotation);
     }
 
     World.prototype.addMesh = function(mesh){
