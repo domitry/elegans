@@ -5,7 +5,6 @@ define([
     "components/legend",
     "utils/utils"
 ],function(Base, World, Space, Legend, Utils){
-
     function Surface(selection){
 	Utils.mixin(this, Base);
 	Utils.merge(this.options, {
@@ -13,12 +12,15 @@ define([
 	});
 	
 	// generate world //
-	var world, world_options = {
+	var world,data, world_options = {
 	    width:this.options.width,
 	    height:this.options.height,
 	    bg_color:this.options.bg_color
 	};
-	selection.each(function(data){world = new World(this, world_options);});
+	selection.each(function(data2){
+	    world = new World(this, world_options);
+	    data = data2; // too dirty, I'll modify this soon.
+	});
 	
 	// add space to world //
 	ranges = [];
