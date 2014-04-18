@@ -11,8 +11,9 @@ define([],function(){
 
 	this.camera = new THREE.OrthographicCamera(-20,20,-20,20);
 	this.scene.add(this.camera);
-	this.camera.position.set(135, 135 ,50);
-	this.camera.lookAt(this.scene.position);
+	this.camera.position.set(-30, 31,42);
+	//this.camera.lookAt(this.scene.position);
+	this.camera.rotation.set(-0.6,-0.5,0.6);
 
 	var positions = [[1,1,1],[-1,-1,1],[-1,1,1],[1,-1,1]];
 	for(var i=0;i<4;i++){
@@ -28,6 +29,9 @@ define([],function(){
 
 	selection.appendChild(this.renderer.domElement);
 
+	this.camera.position.set(-30, 31,42);
+	this.camera.rotation.set(-0.6,-0.5,0.6);
+
 	return this;
     }
 
@@ -40,6 +44,8 @@ define([],function(){
 	requestAnimationFrame(world.animate);
 	world.renderer.render(world.scene, world.camera);
 	world.controls.update();
+	console.log(world.camera.position);
+	console.log(world.camera.rotation);
     }
 
     World.prototype.addMesh = function(mesh){

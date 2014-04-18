@@ -19,7 +19,7 @@ define([
 	};
 	selection.each(function(data2){
 	    world = new World(this, world_options);
-	    data = data2;
+	    data = data2; // too dirty, I'll modify this soon.
 	});
 	
 	// add space to world //
