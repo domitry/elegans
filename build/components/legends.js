@@ -1,10 +1,6 @@
 define([],function(){
-    function Legend(){
-	return this;
-    }
 
-    Legend.prototype.addContinuousColormap = function(range, color){
-    	var svg = d3.select("svg");
+    function addContinuousLegend(svg, range, color){
 	var scale = d3.scale.linear().domain([range[0], range[1]]).range([0,200]);
 
 	var gradient = svg.append("svg:defs")
@@ -40,5 +36,9 @@ define([],function(){
 		  .ticks(5));
     };
 
-    return Legend;
+    var Legends = {
+	addContinuousLegend:addContinuousLegend
+    };
+
+    return Legends;
 });

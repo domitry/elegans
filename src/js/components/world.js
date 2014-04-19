@@ -2,7 +2,7 @@ define([],function(){
 
     var world, animate;
 
-    function World(selection, options){
+    function World(options){
 	this.scene = new THREE.Scene();
 
 	// Perspective Camera Support
@@ -27,15 +27,16 @@ define([],function(){
 	this.renderer.setSize(options.width, options.height);
 	this.renderer.setClearColor(options.bg_color, 1);
 
-	selection.appendChild(this.renderer.domElement);
-
 	this.camera.position.set(-30, 31,42);
 	this.camera.rotation.set(-0.6,-0.5,0.6);
 
 	return this;
     }
 
-    World.prototype.begin = function(){
+    World.prototype.begin = function(selection){
+	var element;
+	selection.each(function(){element = this});
+	element.appendChild(this.renderer.domElement);
 	world = this;
 	this.animate();
     }

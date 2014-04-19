@@ -426,47 +426,11 @@ var requirejs, require, define;
 
 define("vendor/almond/almond", function(){});
 
-define('charts/base',[],function(){
-    /********************************
-      Base function of all charts
-     **********************************/
-    Base = function(){	
-	this.options = {
-	    width: 500,
-	    height: 500,
-	    bg_color: 0xffffff,
-	    legend: true
-	};
-
-	// getters and setters
-	this.width = function(_){
-	    if(!arguments.length)return this.options.width;
-	    this.options.width = _;
-	};
-
-	this.height = function(_){
-	    if(!arguments.length)return this.options.height;
-	    this.options.height = _;
-	};
-
-	this.bg_color = function(_){
-	    if(!arguments.length)return this.options.bg_color;
-	    this.options.bg_color = _;
-	}
-
-	this.legend = function(_){
-	    if(!arguments.length)return this.options.legend;
-	    this.options.legend = _;
-	}
-    }
-    return Base;
-});
-
 define('components/world',[],function(){
 
     var world, animate;
 
-    function World(selection, options){
+    function World(options){
 	this.scene = new THREE.Scene();
 
 	// Perspective Camera Support
@@ -491,15 +455,16 @@ define('components/world',[],function(){
 	this.renderer.setSize(options.width, options.height);
 	this.renderer.setClearColor(options.bg_color, 1);
 
-	selection.appendChild(this.renderer.domElement);
-
 	this.camera.position.set(-30, 31,42);
 	this.camera.rotation.set(-0.6,-0.5,0.6);
 
 	return this;
     }
 
-    World.prototype.begin = function(){
+    World.prototype.begin = function(selection){
+	var element;
+	selection.each(function(){element = this});
+	element.appendChild(this.renderer.domElement);
 	world = this;
 	this.animate();
     }
@@ -576,7 +541,7 @@ define('components/space',[],function(){
 	var geometry = new THREE.Geometry();
 	var nv_start2end = (new THREE.Vector3).subVectors(axis_end, axis_start).normalize();
 	var generateLabel = function(text, position){
-	    var geometry = new THREE.TextGeometry(text, {size:1, font:"helvetiker", height:1});
+	    var geometry = new THREE.TextGeometry(text, {size:0.6, font:"helvetiker", height:0.1});
 	    var material = new THREE.MeshBasicMaterial({color:0x000000});
 	    mesh = new THREE.Mesh(geometry, material);
 	    mesh.position = position;
@@ -617,8 +582,8 @@ define('components/space',[],function(){
 	    //generate labels
 	    var text = ticks[0][i].children[1].childNodes[0].nodeValue;
 	    nv_t.copy(nv_tick);
-	    //var label_center = (new THREE.Vector3).addVectors(tick_center ,nv_t.multiplyScalar(1.0));
-	    label = generateLabel(text, tick_end);
+	    var label_center = (new THREE.Vector3).addVectors(tick_center ,nv_t.multiplyScalar(1.0));
+	    label = generateLabel(text, label_center);
 	    meshes.push(label);
 	}
 
@@ -656,20 +621,97 @@ define('components/space',[],function(){
 	return this.scales;
     };
 
-    Space.prototype.getMesh = function(){
+    Space.prototype.getMeshes = function(){
 	return this.meshes;
     };
 
     return Space;
 });
 
-define('components/legend',[],function(){
-    function Legend(){
+define('utils/utils',[],function(){
+    var mixin = function(sub, sup) {
+	sup.call(sub);
+    };
+
+    var merge = function(dest, src){
+	for(var key in src){
+	    if(!dest.hasOwnProperty(key)){
+		dest[key] = src[key];
+	    }
+	}
+    }
+
+    exports = {
+	mixin:mixin,
+	merge:merge
+    };
+
+    return exports;
+});
+
+define('components/stage',[
+    "components/world",
+    "components/space",
+    "utils/utils"
+], function(World, Space, Utils){
+    function Stage(selection, options){
+	this.options = {
+	    width:700,
+	    height:500,
+	    world_width:500,
+	    bg_color:0xffffff
+	};
+
+	if(arguments.length > 1){
+	    Utils.merge(this.options, options);
+	};
+	
+	selection.style("width",String(this.options.width));
+	this.world_space = selection.append("div")
+	    .style("float","left")
+	    .style("width",String(this.options.world_width));
+	this.legend_space = selection.append("svg")
+	    .style("float","left")
+	    .style("width",String(this.options.width - this.options.world_width));
+	this.charts = [];
+
 	return this;
     }
 
-    Legend.prototype.addContinuousColormap = function(range, color){
-    	var svg = d3.select("svg");
+    Stage.prototype.render = function(){
+	this.world.begin(this.world_space);
+    }    
+
+    Stage.prototype.add = function(chart){
+	if(this.charts.length == 0){
+	    this.world = new World({
+		width:this.options.world_width,
+		height:this.options.height,
+		bg_color:this.options.bg_color
+	    });
+  	    
+	    this.space = new Space(chart.getDataRanges());
+	    this.world.addMesh(this.space.getMeshes());
+	}else{
+	    // check ranges of data, and expand space if it is bigger than of data previous charts have
+	    // (not implemented yet)
+	}
+
+	chart.generateMesh(this.space.getScales());
+	this.world.addMesh(chart.getMesh());
+
+	// dirty. must be modified.
+	if(chart.hasLegend())chart.addLegend(this.legend_space);
+
+	this.charts.push(chart);
+    }
+
+    return Stage;
+});
+
+define('components/legends',[],function(){
+
+    function addContinuousLegend(svg, range, color){
 	var scale = d3.scale.linear().domain([range[0], range[1]]).range([0,200]);
 
 	var gradient = svg.append("svg:defs")
@@ -705,55 +747,27 @@ define('components/legend',[],function(){
 		  .ticks(5));
     };
 
-    return Legend;
-});
-
-define('utils/utils',[],function(){
-    var mixin = function(sub, sup) {
-	sup.call(sub);
+    var Legends = {
+	addContinuousLegend:addContinuousLegend
     };
 
-    var merge = function(dest, src){
-	for(var key in src){
-	    if(!dest.hasOwnProperty(key)){
-		dest[key] = src[key];
-	    }
-	}
-    }
-
-    exports = {
-	mixin:mixin,
-	merge:merge
-    };
-
-    return exports;
+    return Legends;
 });
 
 define('charts/surface',[
-    "charts/base",
-    "components/world",
-    "components/space",
-    "components/legend",
+    "components/legends",
     "utils/utils"
-],function(Base, World, Space, Legend, Utils){
-    function Surface(selection){
-	Utils.mixin(this, Base);
-	Utils.merge(this.options, {
-	    fill_colors:colorbrewer.Reds[3]
-	});
-	
-	// generate world //
-	var world,data, world_options = {
-	    width:this.options.width,
-	    height:this.options.height,
-	    bg_color:this.options.bg_color
+],function(Legends, Utils){
+    function Surface(data, options){
+	this.options = {
+	    fill_colors: colorbrewer.Reds[3],
+	    has_legend: true
 	};
-	selection.each(function(data2){
-	    world = new World(this, world_options);
-	    data = data2; // too dirty, I'll modify this soon.
-	});
+
+	if(arguments.length > 1){
+	    Utils.merge(this.options, options);
+	}
 	
-	// add space to world //
 	ranges = [];
 	var functions = [
 	    function(val){return val.x},
@@ -766,31 +780,35 @@ define('charts/surface',[
 		d3.min(data, function(d){return d3.min(d, functions[i])})
 	    ];
 	}
-	var space = new Space(ranges);
-	world.addMesh(space.getMesh());
 
-	// add surface //
 	var med = (ranges[2][0]+ranges[2][1])/2;
-	var color_scale =
+	this.color_scale =
 	    d3.scale.linear().domain([ranges[2][1],med,ranges[2][0]]).range(this.options.fill_colors);
-	var surface = generateMesh(data, space.getScales(), color_scale);
-	world.addMesh(surface);
-
-	// add legend //
-	if(this.options.legend == true){
-	    var legend = new Legend();
-	    legend.addContinuousColormap(ranges[2], this.options.fill_colors);
-	}
-	world.begin();
+	this.ranges = ranges; //dirty. must be modified.
+	this.data = data;
     }
 
-    function generateMesh(data, scales, color_scale){
+    Surface.prototype.getDataRanges = function(){
+	return this.ranges;
+    }
+    
+    Surface.prototype.hasLegend = function(){
+	return this.options.has_legend;
+    }
+
+    Surface.prototype.addLegend = function(svg){
+	Legends.addContinuousLegend(svg, this.ranges[2], this.options.fill_colors);
+    }
+    
+    Surface.prototype.getMesh = function(){return this.mesh};
+
+    Surface.prototype.generateMesh = function(scales){
+	var data = this.data;
 	var geometry = new THREE.Geometry();
 	var width = data.length, height = data[0].length;
+	var color_scale = this.color_scale;
 	var colors = [];
-
 	var offset = function(x,y){return x*width+y;};
-
 	var fillFace = function(geometry, p1, p2, p3, colors){
 	    var vec0 = new THREE.Vector3(), vec1 = new THREE.Vector3();
 	    vec0.subVectors(geometry.vertices[p1],geometry.vertices[p2]);
@@ -820,24 +838,92 @@ define('charts/surface',[
 	    }
 	}
 	var material = new THREE.MeshBasicMaterial({ vertexColors: THREE.VertexColors});
-	var mesh = new THREE.Mesh(geometry, material);
-	return mesh;
+	this.mesh = new THREE.Mesh(geometry, material);
     }
+
+    return Surface;
+});
+
+define('quick/base',[],function(){
+    /********************************
+      Base function of all quick functions
+     **********************************/
+    Base = function(){	
+	this.options = {};
+
+	// getters and setters
+	this.width = function(_){
+	    if(!arguments.length)return this.options.width;
+	    this.options.width = _;
+	};
+
+	this.height = function(_){
+	    if(!arguments.length)return this.options.height;
+	    this.options.height = _;
+	};
+
+	this.bg_color = function(_){
+	    if(!arguments.length)return this.options.bg_color;
+	    this.options.bg_color = _;
+	}
+
+	this.legend = function(_){
+	    if(!arguments.length)return this.options.legend;
+	    this.options.legend = _;
+	}
+    }
+    return Base;
+});
+
+define('quick/surface_plot',[
+    "components/stage",
+    "quick/base",
+    "charts/surface",
+    "utils/utils"
+],function(Stage, Base, Surface, Utils){
+
+    function SurfacePlot(selection){
+	var options = this.options;
+	selection.each(function(data){
+	    var stage = new Stage(selection);
+	    stage.add(new Surface(data, options));
+	    stage.render();
+	});
+    }	
 
     Surface.fill_colors = function(_){
 	if(!arguments.length)return this.options.bg_color;
 	this.options.fill_colors = _;
     }
 
-    return Surface;
+    Utils.mixin(SurfacePlot, Base);
+
+    return SurfacePlot;
 });
 
-define('main',['require','exports','module','charts/surface'],function(require, exports, module){
+define('main',['require','exports','module','components/stage','charts/surface','quick/surface_plot'],function(require, exports, module){
     Elegans = {};
 
+    /***************************
+      Prototype Objects for plotting
+      e.g. var stage = new Elegant.Stage(d3.select("#vis"), {width:500, height:500});
+           stage.add(new Elegant.Surface(data, {fill_colors:[#000000, #ffffff]}));
+           stage.render();
+    ****************/
+
+    Elegans.Stage = require("components/stage");
     Elegans.Surface = require("charts/surface");
     //Elegans.Scatter = require("charts/scatter");
     //Elegans.Wireframe = require("charts/wireframe");
+
+    /***************************
+      Functions for quick plotting with method chain style  
+      e.g. d3.select('#vis').datum(data).call(Elegans.SurfacePlot);
+    ****************/
+
+    Elegans.SurfacePlot = require("quick/surface_plot");
+    //Elegans.ScatterPlot = require("quick/scatter_plot");
+    //Elegans.WireframePlot = require("quick/wireframe_plot");
 
     return Elegans;
 });

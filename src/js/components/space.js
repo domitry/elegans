@@ -50,7 +50,7 @@ define([],function(){
 	var geometry = new THREE.Geometry();
 	var nv_start2end = (new THREE.Vector3).subVectors(axis_end, axis_start).normalize();
 	var generateLabel = function(text, position){
-	    var geometry = new THREE.TextGeometry(text, {size:1, font:"helvetiker", height:1});
+	    var geometry = new THREE.TextGeometry(text, {size:0.6, font:"helvetiker", height:0.1});
 	    var material = new THREE.MeshBasicMaterial({color:0x000000});
 	    mesh = new THREE.Mesh(geometry, material);
 	    mesh.position = position;
@@ -91,8 +91,8 @@ define([],function(){
 	    //generate labels
 	    var text = ticks[0][i].children[1].childNodes[0].nodeValue;
 	    nv_t.copy(nv_tick);
-	    //var label_center = (new THREE.Vector3).addVectors(tick_center ,nv_t.multiplyScalar(1.0));
-	    label = generateLabel(text, tick_end);
+	    var label_center = (new THREE.Vector3).addVectors(tick_center ,nv_t.multiplyScalar(1.0));
+	    label = generateLabel(text, label_center);
 	    meshes.push(label);
 	}
 
@@ -130,7 +130,7 @@ define([],function(){
 	return this.scales;
     };
 
-    Space.prototype.getMesh = function(){
+    Space.prototype.getMeshes = function(){
 	return this.meshes;
     };
 

@@ -1,28 +1,17 @@
 define([
-    "charts/base",
-    "components/world",
-    "components/space",
-    "components/legend",
+    "components/legends",
     "utils/utils"
-],function(Base, World, Space, Legend, Utils){
-    function Surface(selection){
-	Utils.mixin(this, Base);
-	Utils.merge(this.options, {
-	    fill_colors:colorbrewer.Reds[3]
-	});
-	
-	// generate world //
-	var world,data, world_options = {
-	    width:this.options.width,
-	    height:this.options.height,
-	    bg_color:this.options.bg_color
+],function(Legends, Utils){
+    function Surface(data, options){
+	this.options = {
+	    fill_colors: colorbrewer.Reds[3],
+	    has_legend: true
 	};
-	selection.each(function(data2){
-	    world = new World(this, world_options);
-	    data = data2; // too dirty, I'll modify this soon.
-	});
+
+	if(arguments.length > 1){
+	    Utils.merge(this.options, options);
+	}
 	
-	// add space to world //
 	ranges = [];
 	var functions = [
 	    function(val){return val.x},
@@ -35,31 +24,35 @@ define([
 		d3.min(data, function(d){return d3.min(d, functions[i])})
 	    ];
 	}
-	var space = new Space(ranges);
-	world.addMesh(space.getMesh());
 
-	// add surface //
 	var med = (ranges[2][0]+ranges[2][1])/2;
-	var color_scale =
+	this.color_scale =
 	    d3.scale.linear().domain([ranges[2][1],med,ranges[2][0]]).range(this.options.fill_colors);
-	var surface = generateMesh(data, space.getScales(), color_scale);
-	world.addMesh(surface);
-
-	// add legend //
-	if(this.options.legend == true){
-	    var legend = new Legend();
-	    legend.addContinuousColormap(ranges[2], this.options.fill_colors);
-	}
-	world.begin();
+	this.ranges = ranges; //dirty. must be modified.
+	this.data = data;
     }
 
-    function generateMesh(data, scales, color_scale){
+    Surface.prototype.getDataRanges = function(){
+	return this.ranges;
+    }
+    
+    Surface.prototype.hasLegend = function(){
+	return this.options.has_legend;
+    }
+
+    Surface.prototype.addLegend = function(svg){
+	Legends.addContinuousLegend(svg, this.ranges[2], this.options.fill_colors);
+    }
+    
+    Surface.prototype.getMesh = function(){return this.mesh};
+
+    Surface.prototype.generateMesh = function(scales){
+	var data = this.data;
 	var geometry = new THREE.Geometry();
 	var width = data.length, height = data[0].length;
+	var color_scale = this.color_scale;
 	var colors = [];
-
 	var offset = function(x,y){return x*width+y;};
-
 	var fillFace = function(geometry, p1, p2, p3, colors){
 	    var vec0 = new THREE.Vector3(), vec1 = new THREE.Vector3();
 	    vec0.subVectors(geometry.vertices[p1],geometry.vertices[p2]);
@@ -89,13 +82,7 @@ define([
 	    }
 	}
 	var material = new THREE.MeshBasicMaterial({ vertexColors: THREE.VertexColors});
-	var mesh = new THREE.Mesh(geometry, material);
-	return mesh;
-    }
-
-    Surface.fill_colors = function(_){
-	if(!arguments.length)return this.options.bg_color;
-	this.options.fill_colors = _;
+	this.mesh = new THREE.Mesh(geometry, material);
     }
 
     return Surface;
