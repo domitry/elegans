@@ -96,7 +96,7 @@ define([],function(){
 	    meshes.push(label);
 	}
 
-	//svg.remove();
+	svg.remove();
 
 	var material = new THREE.LineBasicMaterial( { color: 0x000000, opacity: 0.2 } );
 	var line = new THREE.Line(geometry, material);
