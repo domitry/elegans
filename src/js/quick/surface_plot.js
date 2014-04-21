@@ -13,14 +13,13 @@ define([
 	});
     }
 
-    Utils.mixin(SurfacePlot, Base);
-
     SurfacePlot.fill_colors = function(_){
-	if(!arguments.length)return this.options.bg_color;
 	this.options.fill_colors = _;
 	options = this.options;
 	return this;
     }
+
+    Utils.mixin(SurfacePlot, Base);
 
     return SurfacePlot;
 });
