@@ -510,9 +510,9 @@ define('components/space',[],function(){
 	yz_plane.translateOnAxis(newV(0,0,1), 10);
 
 	this.scales = {};
-	this.scales.x = d3.scale.linear().domain([ranges[0][0], ranges[0][1]]).range([10, -10])
-	this.scales.y = d3.scale.linear().domain([ranges[1][0], ranges[1][1]]).range([10, -10])
-	this.scales.z = d3.scale.linear().domain([ranges[2][0], ranges[2][1]]).range([15,0])
+	this.scales.x = d3.scale.linear().domain([ranges.x.max, ranges.x.min]).range([10, -10])
+	this.scales.y = d3.scale.linear().domain([ranges.y.max, ranges.y.min]).range([10, -10])
+	this.scales.z = d3.scale.linear().domain([ranges.z.max, ranges.z.min]).range([15,0])
 
 	this.meshes = [];
 
@@ -521,9 +521,9 @@ define('components/space',[],function(){
 	this.meshes.push(yz_plane);
 
 	// generate axis (dirty. must be modified.)
-	var x_scale = d3.scale.linear().domain([ranges[0][0], ranges[0][1]]).range([20, 0]);
-	var y_scale = d3.scale.linear().domain([ranges[1][0], ranges[1][1]]).range([20, 0]);
-	var z_scale = d3.scale.linear().domain([ranges[2][0], ranges[2][1]]).range([15,0]);
+	var x_scale = d3.scale.linear().domain([ranges.x.max, ranges.x.min]).range([20, 0]);
+	var y_scale = d3.scale.linear().domain([ranges.y.max, ranges.y.min]).range([20, 0]);
+	var z_scale = d3.scale.linear().domain([ranges.z.max, ranges.z.min]).range([15,0]);
 	this.meshes = this.meshes.concat(generateAxisAndLabels(newV(-10,10,0),newV(10,10,0),newV(0,1,0),x_scale));
 	this.meshes = this.meshes.concat(generateAxisAndLabels(newV(-10,-10,0),newV(-10,10,0),newV(-1,0,0),y_scale));
 	this.meshes = this.meshes.concat(generateAxisAndLabels(newV(10,10,0),newV(10,10,20),newV(0,1,0),z_scale));
@@ -587,7 +587,7 @@ define('components/space',[],function(){
 	    meshes.push(label);
 	}
 
-	//svg.remove();
+	svg.remove();
 
 	var material = new THREE.LineBasicMaterial( { color: 0x000000, opacity: 0.2 } );
 	var line = new THREE.Line(geometry, material);
@@ -635,9 +635,7 @@ define('utils/utils',[],function(){
 
     var merge = function(dest, src){
 	for(var key in src){
-	    if(!dest.hasOwnProperty(key)){
-		dest[key] = src[key];
-	    }
+	    dest[key] = src[key];
 	}
     }
 
@@ -654,7 +652,7 @@ define('components/stage',[
     "components/space",
     "utils/utils"
 ], function(World, Space, Utils){
-    function Stage(selection, options){
+    function Stage(element, options){
 	this.options = {
 	    width:700,
 	    height:500,
@@ -666,13 +664,17 @@ define('components/stage',[
 	    Utils.merge(this.options, options);
 	};
 	
+	var selection = d3.select(element);
 	selection.style("width",String(this.options.width));
+
 	this.world_space = selection.append("div")
 	    .style("float","left")
-	    .style("width",String(this.options.world_width));
+	    .style("width",String(this.options.world_width))
+	    .style("height",String(this.options.height));
 	this.legend_space = selection.append("svg")
 	    .style("float","left")
-	    .style("width",String(this.options.width - this.options.world_width));
+	    .style("width",String(this.options.width - this.options.world_width))
+	    .style("height",String(this.options.height));
 	this.charts = [];
 
 	return this;
@@ -712,7 +714,7 @@ define('components/stage',[
 define('components/legends',[],function(){
 
     function addContinuousLegend(svg, range, color){
-	var scale = d3.scale.linear().domain([range[0], range[1]]).range([0,200]);
+	var scale = d3.scale.linear().domain([range.max, range.min]).range([0,200]);
 
 	var gradient = svg.append("svg:defs")
 	    .append("svg:linearGradient")
@@ -724,7 +726,7 @@ define('components/legends',[],function(){
 
 	for(var i=0; i<color.length; i++){
 	    gradient.append("svg:stop")
-		.attr("offset", (100/color.length)*i + "%")
+		.attr("offset", (100/(color.length-1))*i + "%")
 		.attr("stop-color", color[i]);
 	}
 
@@ -740,7 +742,7 @@ define('components/legends',[],function(){
 	    .attr("width", "100")
 	    .attr("height", "200")
 	    .attr("class", "axis")
-	    .attr("transform", "translate(" + 25  + ",10)")
+	    .attr("transform", "translate(25,10)")
 	    .call(d3.svg.axis()
 		  .scale(scale)
 		  .orient("right")
@@ -754,10 +756,61 @@ define('components/legends',[],function(){
     return Legends;
 });
 
+define('utils/range',[],function(){
+    function Range(max, min){
+	this.max = max;
+	this.min = min;
+    }
+
+    Range.prototype.divide = function(num){
+	var arr = new Array();
+	var interval = Math.ceil((this.max-this.min)/(num-1));
+	for(var i=0;i<num;i++){
+	    arr.push(this.min + interval*i);
+	}
+	return arr;
+    }
+
+    return Range;
+});
+
+define('utils/datasets',[
+    "utils/range"
+],function(Range){
+    function MatrixDataset(data){
+	var ranges = new Array();
+	var functions = [
+	    function(val){return val.x},
+	    function(val){return val.y},
+	    function(val){return val.z}
+	];
+	for(var i=0;i<3;i++){
+	    ranges[i] = new Range(
+		d3.max(data, function(d){return d3.max(d, functions[i])}),
+		d3.min(data, function(d){return d3.min(d, functions[i])})
+	    );
+	}
+	this.ranges = {x:ranges[0], y:ranges[1], z:ranges[2]};
+	this.data = data;
+	return this;
+    }
+
+    MatrixDataset.prototype.getRanges = function(){
+	return this.ranges;
+    };
+
+    Datasets = {
+	Matrix:MatrixDataset
+    };
+
+    return Datasets;
+});
+
 define('charts/surface',[
     "components/legends",
-    "utils/utils"
-],function(Legends, Utils){
+    "utils/utils",
+    "utils/datasets"
+],function(Legends, Utils, Datasets){
     function Surface(data, options){
 	this.options = {
 	    fill_colors: colorbrewer.Reds[3],
@@ -767,43 +820,17 @@ define('charts/surface',[
 	if(arguments.length > 1){
 	    Utils.merge(this.options, options);
 	}
-	
-	ranges = [];
-	var functions = [
-	    function(val){return val.x},
-	    function(val){return val.y},
-	    function(val){return val.z}
-	];
-	for(var i=0;i<3;i++){
-	    ranges[i] = [
-		d3.max(data, function(d){return d3.max(d, functions[i])}),
-		d3.min(data, function(d){return d3.min(d, functions[i])})
-	    ];
-	}
 
-	var med = (ranges[2][0]+ranges[2][1])/2;
+	this.dataset = new Datasets.Matrix(data);
+	this.ranges = this.dataset.getRanges();
 	this.color_scale =
-	    d3.scale.linear().domain([ranges[2][1],med,ranges[2][0]]).range(this.options.fill_colors);
-	this.ranges = ranges; //dirty. must be modified.
-	this.data = data;
+	    d3.scale.linear()
+	    .domain(this.ranges.z.divide(this.options.fill_colors.length))
+	    .range(this.options.fill_colors);
     }
-
-    Surface.prototype.getDataRanges = function(){
-	return this.ranges;
-    }
-    
-    Surface.prototype.hasLegend = function(){
-	return this.options.has_legend;
-    }
-
-    Surface.prototype.addLegend = function(svg){
-	Legends.addContinuousLegend(svg, this.ranges[2], this.options.fill_colors);
-    }
-    
-    Surface.prototype.getMesh = function(){return this.mesh};
 
     Surface.prototype.generateMesh = function(scales){
-	var data = this.data;
+	var data = this.dataset.data;
 	var geometry = new THREE.Geometry();
 	var width = data.length, height = data[0].length;
 	var color_scale = this.color_scale;
@@ -840,6 +867,22 @@ define('charts/surface',[
 	var material = new THREE.MeshBasicMaterial({ vertexColors: THREE.VertexColors});
 	this.mesh = new THREE.Mesh(geometry, material);
     }
+
+    Surface.prototype.getDataRanges = function(){
+	return this.ranges;
+    }
+    
+    Surface.prototype.hasLegend = function(){
+	return this.options.has_legend;
+    }
+
+    Surface.prototype.addLegend = function(svg){
+	Legends.addContinuousLegend(svg, this.ranges.z, this.options.fill_colors);
+    }
+    
+    Surface.prototype.getMesh = function(){
+	return this.mesh
+    };
 
     return Surface;
 });
@@ -883,20 +926,21 @@ define('quick/surface_plot',[
 ],function(Stage, Base, Surface, Utils){
 
     function SurfacePlot(selection){
-	var options = this.options;
 	selection.each(function(data){
-	    var stage = new Stage(selection);
+	    var stage = new Stage(this);
 	    stage.add(new Surface(data, options));
 	    stage.render();
 	});
-    }	
-
-    Surface.fill_colors = function(_){
-	if(!arguments.length)return this.options.bg_color;
-	this.options.fill_colors = _;
     }
 
     Utils.mixin(SurfacePlot, Base);
+
+    SurfacePlot.fill_colors = function(_){
+	if(!arguments.length)return this.options.bg_color;
+	this.options.fill_colors = _;
+	options = this.options;
+	return this;
+    }
 
     return SurfacePlot;
 });

@@ -3,7 +3,7 @@ define([
     "components/space",
     "utils/utils"
 ], function(World, Space, Utils){
-    function Stage(selection, options){
+    function Stage(element, options){
 	this.options = {
 	    width:700,
 	    height:500,
@@ -15,13 +15,17 @@ define([
 	    Utils.merge(this.options, options);
 	};
 	
+	var selection = d3.select(element);
 	selection.style("width",String(this.options.width));
+
 	this.world_space = selection.append("div")
 	    .style("float","left")
-	    .style("width",String(this.options.world_width));
+	    .style("width",String(this.options.world_width))
+	    .style("height",String(this.options.height));
 	this.legend_space = selection.append("svg")
 	    .style("float","left")
-	    .style("width",String(this.options.width - this.options.world_width));
+	    .style("width",String(this.options.width - this.options.world_width))
+	    .style("height",String(this.options.height));
 	this.charts = [];
 
 	return this;

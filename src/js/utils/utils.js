@@ -5,9 +5,7 @@ define([],function(){
 
     var merge = function(dest, src){
 	for(var key in src){
-	    if(!dest.hasOwnProperty(key)){
-		dest[key] = src[key];
-	    }
+	    dest[key] = src[key];
 	}
     }
 

@@ -19,9 +19,9 @@ define([],function(){
 	yz_plane.translateOnAxis(newV(0,0,1), 10);
 
 	this.scales = {};
-	this.scales.x = d3.scale.linear().domain([ranges[0][0], ranges[0][1]]).range([10, -10])
-	this.scales.y = d3.scale.linear().domain([ranges[1][0], ranges[1][1]]).range([10, -10])
-	this.scales.z = d3.scale.linear().domain([ranges[2][0], ranges[2][1]]).range([15,0])
+	this.scales.x = d3.scale.linear().domain([ranges.x.max, ranges.x.min]).range([10, -10])
+	this.scales.y = d3.scale.linear().domain([ranges.y.max, ranges.y.min]).range([10, -10])
+	this.scales.z = d3.scale.linear().domain([ranges.z.max, ranges.z.min]).range([15,0])
 
 	this.meshes = [];
 
@@ -30,9 +30,9 @@ define([],function(){
 	this.meshes.push(yz_plane);
 
 	// generate axis (dirty. must be modified.)
-	var x_scale = d3.scale.linear().domain([ranges[0][0], ranges[0][1]]).range([20, 0]);
-	var y_scale = d3.scale.linear().domain([ranges[1][0], ranges[1][1]]).range([20, 0]);
-	var z_scale = d3.scale.linear().domain([ranges[2][0], ranges[2][1]]).range([15,0]);
+	var x_scale = d3.scale.linear().domain([ranges.x.max, ranges.x.min]).range([20, 0]);
+	var y_scale = d3.scale.linear().domain([ranges.y.max, ranges.y.min]).range([20, 0]);
+	var z_scale = d3.scale.linear().domain([ranges.z.max, ranges.z.min]).range([15,0]);
 	this.meshes = this.meshes.concat(generateAxisAndLabels(newV(-10,10,0),newV(10,10,0),newV(0,1,0),x_scale));
 	this.meshes = this.meshes.concat(generateAxisAndLabels(newV(-10,-10,0),newV(-10,10,0),newV(-1,0,0),y_scale));
 	this.meshes = this.meshes.concat(generateAxisAndLabels(newV(10,10,0),newV(10,10,20),newV(0,1,0),z_scale));

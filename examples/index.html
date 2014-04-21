@@ -20,7 +20,7 @@
 	}
 	data.push(row);
     }
-    d3.select('#vis').datum(data).call(Elegans.SurfacePlot)
+    d3.select('#vis').datum(data).call(Elegans.SurfacePlot.fill_colors(["#000000", "#ffffff"]));
     };
   </script>
 </head>

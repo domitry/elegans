@@ -1,7 +1,7 @@
 define([],function(){
 
     function addContinuousLegend(svg, range, color){
-	var scale = d3.scale.linear().domain([range[0], range[1]]).range([0,200]);
+	var scale = d3.scale.linear().domain([range.max, range.min]).range([0,200]);
 
 	var gradient = svg.append("svg:defs")
 	    .append("svg:linearGradient")
@@ -13,7 +13,7 @@ define([],function(){
 
 	for(var i=0; i<color.length; i++){
 	    gradient.append("svg:stop")
-		.attr("offset", (100/color.length)*i + "%")
+		.attr("offset", (100/(color.length-1))*i + "%")
 		.attr("stop-color", color[i]);
 	}
 
@@ -29,7 +29,7 @@ define([],function(){
 	    .attr("width", "100")
 	    .attr("height", "200")
 	    .attr("class", "axis")
-	    .attr("transform", "translate(" + 25  + ",10)")
+	    .attr("transform", "translate(25,10)")
 	    .call(d3.svg.axis()
 		  .scale(scale)
 		  .orient("right")

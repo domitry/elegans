@@ -1,7 +1,8 @@
 define([
     "components/legends",
-    "utils/utils"
-],function(Legends, Utils){
+    "utils/utils",
+    "utils/datasets"
+],function(Legends, Utils, Datasets){
     function Surface(data, options){
 	this.options = {
 	    fill_colors: colorbrewer.Reds[3],
@@ -11,43 +12,17 @@ define([
 	if(arguments.length > 1){
 	    Utils.merge(this.options, options);
 	}
-	
-	ranges = [];
-	var functions = [
-	    function(val){return val.x},
-	    function(val){return val.y},
-	    function(val){return val.z}
-	];
-	for(var i=0;i<3;i++){
-	    ranges[i] = [
-		d3.max(data, function(d){return d3.max(d, functions[i])}),
-		d3.min(data, function(d){return d3.min(d, functions[i])})
-	    ];
-	}
 
-	var med = (ranges[2][0]+ranges[2][1])/2;
+	this.dataset = new Datasets.Matrix(data);
+	this.ranges = this.dataset.getRanges();
 	this.color_scale =
-	    d3.scale.linear().domain([ranges[2][1],med,ranges[2][0]]).range(this.options.fill_colors);
-	this.ranges = ranges; //dirty. must be modified.
-	this.data = data;
+	    d3.scale.linear()
+	    .domain(this.ranges.z.divide(this.options.fill_colors.length))
+	    .range(this.options.fill_colors);
     }
-
-    Surface.prototype.getDataRanges = function(){
-	return this.ranges;
-    }
-    
-    Surface.prototype.hasLegend = function(){
-	return this.options.has_legend;
-    }
-
-    Surface.prototype.addLegend = function(svg){
-	Legends.addContinuousLegend(svg, this.ranges[2], this.options.fill_colors);
-    }
-    
-    Surface.prototype.getMesh = function(){return this.mesh};
 
     Surface.prototype.generateMesh = function(scales){
-	var data = this.data;
+	var data = this.dataset.data;
 	var geometry = new THREE.Geometry();
 	var width = data.length, height = data[0].length;
 	var color_scale = this.color_scale;
@@ -84,6 +59,22 @@ define([
 	var material = new THREE.MeshBasicMaterial({ vertexColors: THREE.VertexColors});
 	this.mesh = new THREE.Mesh(geometry, material);
     }
+
+    Surface.prototype.getDataRanges = function(){
+	return this.ranges;
+    }
+    
+    Surface.prototype.hasLegend = function(){
+	return this.options.has_legend;
+    }
+
+    Surface.prototype.addLegend = function(svg){
+	Legends.addContinuousLegend(svg, this.ranges.z, this.options.fill_colors);
+    }
+    
+    Surface.prototype.getMesh = function(){
+	return this.mesh
+    };
 
     return Surface;
 });
