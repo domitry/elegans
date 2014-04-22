@@ -433,15 +433,10 @@ define('components/world',[],function(){
     function World(options){
 	this.scene = new THREE.Scene();
 
-	// Perspective Camera Support
-	//var VIEW_ANGLE=45, ASPECT=SCREEN_WIDTH/SCREEN_HEIGHT, NEAR=0.1, FAR=2000;
-	//camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-
 	this.camera = new THREE.OrthographicCamera(-20,20,-20,20);
-	this.scene.add(this.camera);
 	this.camera.position.set(-30, 31,42);
-	//this.camera.lookAt(this.scene.position);
 	this.camera.rotation.set(-0.6,-0.5,0.6);
+	this.scene.add(this.camera);
 
 	var positions = [[1,1,1],[-1,-1,1],[-1,1,1],[1,-1,1]];
 	for(var i=0;i<4;i++){
@@ -894,25 +889,29 @@ define('quick/base',[],function(){
     Base = function(){	
 	this.options = {};
 
-	// getters and setters
+	//setters
 	this.width = function(_){
-	    if(!arguments.length)return this.options.width;
 	    this.options.width = _;
+	    options = this.options;
+	    return this;
 	};
 
 	this.height = function(_){
-	    if(!arguments.length)return this.options.height;
 	    this.options.height = _;
+	    options = this.options;
+	    return this;
 	};
 
 	this.bg_color = function(_){
-	    if(!arguments.length)return this.options.bg_color;
 	    this.options.bg_color = _;
+	    options = this.options;
+	    return this;
 	}
 
 	this.legend = function(_){
-	    if(!arguments.length)return this.options.legend;
 	    this.options.legend = _;
+	    options = this.options;
+	    return this;
 	}
     }
     return Base;
@@ -933,19 +932,43 @@ define('quick/surface_plot',[
 	});
     }
 
-    Utils.mixin(SurfacePlot, Base);
-
     SurfacePlot.fill_colors = function(_){
-	if(!arguments.length)return this.options.bg_color;
 	this.options.fill_colors = _;
 	options = this.options;
 	return this;
     }
 
+    Utils.mixin(SurfacePlot, Base);
+
     return SurfacePlot;
 });
 
-define('main',['require','exports','module','components/stage','charts/surface','quick/surface_plot'],function(require, exports, module){
+define('embed/embed',[
+    "components/stage",
+    "charts/surface"
+],function(Stage){
+    function Embed(){
+	return this;
+    }
+
+    Embed.parse = function(element_name, model){
+	var selection = d3.select(element_name);
+	var stage = new Stage(selection[0][0] ,model.options);
+	var plots = model.plots;
+	var plot_types = {
+	    Surface: Surface
+	};
+	for(var i=0;i<plots.length;i++){
+	    var plot = new (plot_types[plots[i].type])(plots[i].options);
+	    stage.add(plot);
+	}
+	return stage;
+    };
+
+    return Embed;
+});
+
+define('main',['require','exports','module','components/stage','charts/surface','quick/surface_plot','embed/embed'],function(require, exports, module){
     Elegans = {};
 
     /***************************
@@ -968,6 +991,14 @@ define('main',['require','exports','module','components/stage','charts/surface',
     Elegans.SurfacePlot = require("quick/surface_plot");
     //Elegans.ScatterPlot = require("quick/scatter_plot");
     //Elegans.WireframePlot = require("quick/wireframe_plot");
+
+    /***************************
+       Prototype Object for embedding to other language.
+       e.g. var model = [{plots:[{type:"Surface",data={[...]},options={...}}],option:{...}}]
+            Elegans.Embed.parse(model).render();
+    ****************/
+
+    Elegans.Embed = require("embed/embed");
 
     return Elegans;
 });

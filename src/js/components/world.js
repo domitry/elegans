@@ -5,15 +5,10 @@ define([],function(){
     function World(options){
 	this.scene = new THREE.Scene();
 
-	// Perspective Camera Support
-	//var VIEW_ANGLE=45, ASPECT=SCREEN_WIDTH/SCREEN_HEIGHT, NEAR=0.1, FAR=2000;
-	//camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-
 	this.camera = new THREE.OrthographicCamera(-20,20,-20,20);
-	this.scene.add(this.camera);
 	this.camera.position.set(-30, 31,42);
-	//this.camera.lookAt(this.scene.position);
 	this.camera.rotation.set(-0.6,-0.5,0.6);
+	this.scene.add(this.camera);
 
 	var positions = [[1,1,1],[-1,-1,1],[-1,1,1],[1,-1,1]];
 	for(var i=0;i<4;i++){

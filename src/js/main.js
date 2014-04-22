@@ -22,5 +22,13 @@ define(function(require, exports, module){
     //Elegans.ScatterPlot = require("quick/scatter_plot");
     //Elegans.WireframePlot = require("quick/wireframe_plot");
 
+    /***************************
+       Prototype Object for embedding to other language.
+       e.g. var model = [{plots:[{type:"Surface",data={[...]},options={...}}],option:{...}}]
+            Elegans.Embed.parse(model).render();
+    ****************/
+
+    Elegans.Embed = require("embed/embed");
+
     return Elegans;
 });

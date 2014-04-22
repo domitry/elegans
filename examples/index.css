@@ -3,15 +3,6 @@
     width:600px;
 }
 
-#legend{
-    position:absolute;
-    right:0px;
-    top:20px;
-    width:150px;
-    height:300px;
-    /*background-color:blue;*/
-}
-
 .axis path,
 .axis line{
     fill: none;

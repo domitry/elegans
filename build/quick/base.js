@@ -5,25 +5,29 @@ define([],function(){
     Base = function(){	
 	this.options = {};
 
-	// getters and setters
+	//setters
 	this.width = function(_){
-	    if(!arguments.length)return this.options.width;
 	    this.options.width = _;
+	    options = this.options;
+	    return this;
 	};
 
 	this.height = function(_){
-	    if(!arguments.length)return this.options.height;
 	    this.options.height = _;
+	    options = this.options;
+	    return this;
 	};
 
 	this.bg_color = function(_){
-	    if(!arguments.length)return this.options.bg_color;
 	    this.options.bg_color = _;
+	    options = this.options;
+	    return this;
 	}
 
 	this.legend = function(_){
-	    if(!arguments.length)return this.options.legend;
 	    this.options.legend = _;
+	    options = this.options;
+	    return this;
 	}
     }
     return Base;
