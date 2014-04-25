@@ -22,7 +22,7 @@ define([
     }
 
     Surface.prototype.generateMesh = function(scales){
-	var data = this.dataset.data;
+	var data = this.dataset.raw;
 	var geometry = new THREE.Geometry();
 	var width = data.length, height = data[0].length;
 	var color_scale = this.color_scale;
@@ -73,7 +73,7 @@ define([
     }
     
     Surface.prototype.getMesh = function(){
-	return this.mesh
+	return this.mesh;
     };
 
     return Surface;

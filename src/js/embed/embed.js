@@ -1,7 +1,7 @@
 define([
     "components/stage",
     "charts/surface"
-],function(Stage){
+],function(Stage, Surface){
     function Embed(){
 	return this;
     }

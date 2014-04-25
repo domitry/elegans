@@ -2,7 +2,8 @@ define([],function(){
     /********************************
       Base function of all quick functions
      **********************************/
-    Base = function(){	
+    Base = function(){
+	options = {};
 	this.options = {};
 
 	//setters

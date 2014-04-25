@@ -10,6 +10,7 @@ define(function(require, exports, module){
 
     Elegans.Stage = require("components/stage");
     Elegans.Surface = require("charts/surface");
+    Elegans.Particles = require("charts/particles");
     //Elegans.Scatter = require("charts/scatter");
     //Elegans.Wireframe = require("charts/wireframe");
 
@@ -19,6 +20,7 @@ define(function(require, exports, module){
     ****************/
 
     Elegans.SurfacePlot = require("quick/surface_plot");
+    Elegans.ParticlesPlot = require("quick/particles_plot");
     //Elegans.ScatterPlot = require("quick/scatter_plot");
     //Elegans.WireframePlot = require("quick/wireframe_plot");
 

@@ -1,0 +1,42 @@
+<html lang="en">
+<head>
+  <title>Plot Sample - Particles</title>
+  <link rel='stylesheet' href='common.css'>
+  <script type="text/javascript" src="../build/vendor/three.min.js"></script>
+  <script type="text/javascript" src="../build/vendor/d3.min.js"></script>
+  <script type="text/javascript" src="../build/vendor/TrackballControls.js"></script>
+  <script type="text/javascript" src="../build/vendor/helvetiker_regular.typeface.js"></script>
+  <script type="text/javascript" src="../build/vendor/colorbrewer.js"></script>
+  <script type="text/javascript" src="../build/elegans.js"></script>
+  <script type="text/javascript">
+    window.onload = function(){
+    var stage = new Elegans.Stage(d3.select("#vis")[0][0]);
+    var data1 = [], data2 = [];
+    var BIGIN=-10, END=10;
+    var x_arr = [], y_arr = [], z_arr = [];
+    for(var x=BIGIN;x<END;x+=2){
+	for(var y=BIGIN;y<END;y+=2){
+	    z = Math.cos(Math.sqrt(x*x+y*y));
+            x_arr.push(x);y_arr.push(y);z_arr.push(z);
+	}
+    }
+    data1 = {x:x_arr, y:y_arr, z:z_arr};
+    stage.add(new Elegans.Particles(data1, {color: "#ef8a62"}));
+    x_arr = [], y_arr = [], z_arr = [];
+    for(var x=BIGIN;x<END;x+=2){
+	for(var y=BIGIN;y<END;y+=2){
+	    z = Math.sin(x)*Math.sin(y);
+            x_arr.push(x);y_arr.push(y);z_arr.push(z);
+	}
+    }
+    data2 = {x:x_arr, y:y_arr, z:z_arr};
+    stage.add(new Elegans.Particles(data2, {color: "#67a9cf"}));
+    stage.render();
+    };
+  </script>
+</head>
+<body>
+
+<div id="vis">
+</div>
+</body>

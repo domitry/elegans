@@ -786,7 +786,7 @@ define('utils/datasets',[
 	    );
 	}
 	this.ranges = {x:ranges[0], y:ranges[1], z:ranges[2]};
-	this.data = data;
+	this.raw = data;
 	return this;
     }
 
@@ -794,8 +794,24 @@ define('utils/datasets',[
 	return this.ranges;
     };
 
+    function ArrayDataset(data){
+	this.ranges = {};
+	for(var i in data){
+	    this.ranges[i] = new Range(
+		d3.max(data[i], function(d){return d;}),
+		d3.min(data[i], function(d){return d;})
+	    );
+	}
+	this.raw = data;
+    }
+
+    ArrayDataset.prototype.getRanges = function(){
+	return this.ranges;
+    };
+
     Datasets = {
-	Matrix:MatrixDataset
+	Matrix:MatrixDataset,
+	Array:ArrayDataset
     };
 
     return Datasets;
@@ -825,7 +841,7 @@ define('charts/surface',[
     }
 
     Surface.prototype.generateMesh = function(scales){
-	var data = this.dataset.data;
+	var data = this.dataset.raw;
 	var geometry = new THREE.Geometry();
 	var width = data.length, height = data[0].length;
 	var color_scale = this.color_scale;
@@ -876,17 +892,72 @@ define('charts/surface',[
     }
     
     Surface.prototype.getMesh = function(){
-	return this.mesh
+	return this.mesh;
     };
 
     return Surface;
+});
+
+define('charts/particles',[
+    "components/legends",
+    "utils/utils",
+    "utils/datasets"
+],function(Legends, Utils, Datasets){
+    function Particles(data, options){
+	this.options = {
+	    color: colorbrewer.Reds[3][1],
+	    size: 0.2,
+	    has_legend: true
+	};
+
+	if(arguments.length > 1){
+	    Utils.merge(this.options, options);
+	}
+
+	this.dataset = new Datasets.Array(data);
+	this.ranges = this.dataset.getRanges();
+    }
+
+    Particles.prototype.generateMesh = function(scales){
+	var data = this.dataset.raw;
+	var geometry = new THREE.Geometry();
+	for(var i=0;i<data.x.length;i++){
+	    var mesh = new THREE.Mesh(new THREE.SphereGeometry(this.options.size));
+	    mesh.position = new THREE.Vector3(
+		scales.x(data.x[i]),
+		scales.y(data.y[i]),
+		scales.z(data.z[i])
+	    );
+	    THREE.GeometryUtils.merge(geometry, mesh);
+	}
+	var material = new THREE.MeshBasicMaterial({color: this.options.color});
+	this.mesh = new THREE.Mesh(geometry, material);
+    }
+
+    Particles.prototype.getDataRanges = function(){
+	return this.ranges;
+    }
+    
+    Particles.prototype.hasLegend = function(){
+	return this.options.has_legend;
+    }
+
+    Particles.prototype.addLegend = function(svg){
+    }
+    
+    Particles.prototype.getMesh = function(){
+	return this.mesh;
+    };
+
+    return Particles;
 });
 
 define('quick/base',[],function(){
     /********************************
       Base function of all quick functions
      **********************************/
-    Base = function(){	
+    Base = function(){
+	options = {};
 	this.options = {};
 
 	//setters
@@ -943,10 +1014,36 @@ define('quick/surface_plot',[
     return SurfacePlot;
 });
 
+define('quick/particles_plot',[
+    "components/stage",
+    "quick/base",
+    "charts/particles",
+    "utils/utils"
+],function(Stage, Base, Particles, Utils){
+
+    function ParticlesPlot(selection){
+	selection.each(function(data){
+	    var stage = new Stage(this);
+	    stage.add(new Particles(data, options));
+	    stage.render();
+	});
+    }
+
+    ParticlesPlot.color = function(_){
+	this.options.color = _;
+	options = this.options;
+	return this;
+    }
+
+    Utils.mixin(ParticlesPlot, Base);
+
+    return ParticlesPlot;
+});
+
 define('embed/embed',[
     "components/stage",
     "charts/surface"
-],function(Stage){
+],function(Stage, Surface){
     function Embed(){
 	return this;
     }
@@ -968,7 +1065,7 @@ define('embed/embed',[
     return Embed;
 });
 
-define('main',['require','exports','module','components/stage','charts/surface','quick/surface_plot','embed/embed'],function(require, exports, module){
+define('main',['require','exports','module','components/stage','charts/surface','charts/particles','quick/surface_plot','quick/particles_plot','embed/embed'],function(require, exports, module){
     Elegans = {};
 
     /***************************
@@ -980,6 +1077,7 @@ define('main',['require','exports','module','components/stage','charts/surface',
 
     Elegans.Stage = require("components/stage");
     Elegans.Surface = require("charts/surface");
+    Elegans.Particles = require("charts/particles");
     //Elegans.Scatter = require("charts/scatter");
     //Elegans.Wireframe = require("charts/wireframe");
 
@@ -989,6 +1087,7 @@ define('main',['require','exports','module','components/stage','charts/surface',
     ****************/
 
     Elegans.SurfacePlot = require("quick/surface_plot");
+    Elegans.ParticlesPlot = require("quick/particles_plot");
     //Elegans.ScatterPlot = require("quick/scatter_plot");
     //Elegans.WireframePlot = require("quick/wireframe_plot");
 

@@ -15,7 +15,7 @@ define([
 	    );
 	}
 	this.ranges = {x:ranges[0], y:ranges[1], z:ranges[2]};
-	this.data = data;
+	this.raw = data;
 	return this;
     }
 
@@ -23,8 +23,24 @@ define([
 	return this.ranges;
     };
 
+    function ArrayDataset(data){
+	this.ranges = {};
+	for(var i in data){
+	    this.ranges[i] = new Range(
+		d3.max(data[i], function(d){return d;}),
+		d3.min(data[i], function(d){return d;})
+	    );
+	}
+	this.raw = data;
+    }
+
+    ArrayDataset.prototype.getRanges = function(){
+	return this.ranges;
+    };
+
     Datasets = {
-	Matrix:MatrixDataset
+	Matrix:MatrixDataset,
+	Array:ArrayDataset
     };
 
     return Datasets;
