@@ -3,7 +3,7 @@ module.exports = function(grunt){
         requirejs: {
             options: {
                 baseUrl: 'src',
-                name: 'lib/almond/almond',
+                name: '../lib/almond/almond',
 		include: ['main'],
                 wrap: {
                     startFile: 'src/wrap/start.js',

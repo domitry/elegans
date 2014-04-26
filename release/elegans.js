@@ -424,7 +424,7 @@ var requirejs, require, define;
     };
 }());
 
-define("lib/almond/almond", function(){});
+define("../lib/almond/almond", function(){});
 
 /**
  * @author Eberhard Graether / http://egraether.com/
