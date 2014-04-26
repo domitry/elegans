@@ -23,6 +23,7 @@ define([
 	    .style("float","left")
 	    .style("width",String(this.options.world_width))
 	    .style("height",String(this.options.height));
+
 	this.legend_space = selection.append("svg")
 	    .style("float","left")
 	    .style("width",String(this.options.width - this.options.world_width))
@@ -40,6 +41,14 @@ define([
 	return this;
     }
 
+    Stage.prototype.add = function(chart){
+        var ranges = chart.getDataRanges();
+        for(var i in ranges){
+            this.data_ranges[i] = Range.expand(this.data_ranges[i], ranges[i]);
+	}
+	this.charts.push(chart);
+    }
+
     Stage.prototype.render = function(){
 	this.space = new Space(this.data_ranges);
 	this.world.addMesh(this.space.getMeshes());
@@ -50,14 +59,6 @@ define([
             if(chart.hasLegend())chart.addLegend(this.legend_space);
         }
 	this.world.begin(this.world_space);
-    }
-
-    Stage.prototype.add = function(chart){
-        var ranges = chart.getDataRanges();
-        for(var i in ranges){
-            this.data_ranges[i] = Range.expand(this.data_ranges[i], ranges[i]);
-	}
-	this.charts.push(chart);
     }
 
     return Stage;

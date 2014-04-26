@@ -1,7 +1,7 @@
 # Elegans
 A 3D plotting library for three.js and d3.js
 
-![alt text](https://dl.dropboxusercontent.com/u/47978121/ss560.png)
+![alt text](https://dl.dropboxusercontent.com/u/47978121/ss561.png)
 
 ## Supporting charts
 * Surface
