@@ -1,4 +1,6 @@
-define([],function(){
+define([
+    "components/TrackballControls"
+],function(){
 
     var world, animate;
 
@@ -17,11 +19,10 @@ define([],function(){
 	    this.scene.add(light);
 	}
 
-	this.controls = new THREE.TrackballControls(this.camera);
 	this.renderer = new THREE.WebGLRenderer({antialias:true});
 	this.renderer.setSize(options.width, options.height);
 	this.renderer.setClearColor(options.bg_color, 1);
-
+	this.controls = new THREE.TrackballControls(this.camera, this.renderer.domElement);
 	this.camera.position.set(-30, 31,42);
 	this.camera.rotation.set(-0.6,-0.5,0.6);
 
