@@ -13,5 +13,9 @@ define([],function(){
 	return arr;
     }
 
+    Range.expand = function(range1, range2){
+	return new Range(Math.max(range1.max, range2.max), Math.min(range1.min, range2.min));
+    }
+
     return Range;
 });

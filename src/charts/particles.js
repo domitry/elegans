@@ -7,7 +7,7 @@ define([
     function Particles(data, options){
 	this.options = {
 	    color: colorbrewer.Reds[3][1],
-	    size: 0.2,
+	    size: 0.3,
 	    has_legend: true
 	};
 

@@ -4,30 +4,31 @@
   <link rel='stylesheet' href='common.css'>
   <script type="text/javascript" src="js/three.min.js"></script>
   <script type="text/javascript" src="js/d3.min.js"></script>
-  <script type="text/javascript" src="../release/elegans.js"></script>
+  <script type="text/javascript" src="../release/elegans.min.js"></script>
+  <script src="http://github.com/mrdoob/three.js/raw/r49/examples/js/ImprovedNoise.js"></script>
   <script type="text/javascript">
     window.onload = function(){
     var stage = new Elegans.Stage(d3.select("#vis")[0][0]);
-    var data1 = [], data2 = [];
-    var BIGIN=-10, END=10;
-    var x_arr = [], y_arr = [], z_arr = [];
-    for(var x=BIGIN;x<END;x+=2){
-	for(var y=BIGIN;y<END;y+=2){
-	    z = Math.cos(Math.sqrt(x*x+y*y));
-            x_arr.push(x);y_arr.push(y);z_arr.push(z);
-	}
+    var MAX=10, DATA_NUM=3, INTERVAL_MIN=0.5, INTERVAL_MAX=3, X_NUM=10, Y_NUM=10;
+    var color_scale = d3.scale.category20();
+    for(var n=0;n<DATA_NUM;n++){
+        var x_arr = [], y_arr = [], z_arr = [];
+        var point = {x:Math.random()*MAX,y:Math.random()*MAX};
+	var noise = ImprovedNoise();
+	for(var i=0;i<X_NUM;i++){
+            point.x = point.x + Math.random()*(INTERVAL_MAX - INTERVAL_MIN) + INTERVAL_MIN;
+            for(var j=0;j<Y_NUM;j++){
+                point.y = point.y + Math.random()*(INTERVAL_MAX - INTERVAL_MIN) + INTERVAL_MIN;
+                point.z = noise.noise(point.x,point.y,0);
+                x_arr.push(point.x);
+                y_arr.push(point.y);
+                z_arr.push(point.z);
+            }
+        }
+        var data = {x:x_arr, y:y_arr, z:z_arr};
+        var color = color_scale(n);
+        stage.add(new Elegans.Particles(data, {color: color}));
     }
-    data1 = {x:x_arr, y:y_arr, z:z_arr};
-    stage.add(new Elegans.Particles(data1, {color: "#ef8a62"}));
-    x_arr = [], y_arr = [], z_arr = [];
-    for(var x=BIGIN;x<END;x+=2){
-	for(var y=BIGIN;y<END;y+=2){
-	    z = Math.sin(x)*Math.sin(y);
-            x_arr.push(x);y_arr.push(y);z_arr.push(z);
-	}
-    }
-    data2 = {x:x_arr, y:y_arr, z:z_arr};
-    stage.add(new Elegans.Particles(data2, {color: "#67a9cf"}));
     stage.render();
     };
   </script>

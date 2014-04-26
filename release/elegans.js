@@ -1208,11 +1208,34 @@ define('utils/utils',[],function(){
     return exports;
 });
 
+define('utils/range',[],function(){
+    function Range(max, min){
+	this.max = max;
+	this.min = min;
+    }
+
+    Range.prototype.divide = function(num){
+	var arr = new Array();
+	var interval = Math.ceil((this.max-this.min)/(num-1));
+	for(var i=0;i<num;i++){
+	    arr.push(this.min + interval*i);
+	}
+	return arr;
+    }
+
+    Range.expand = function(range1, range2){
+	return new Range(Math.max(range1.max, range2.max), Math.min(range1.min, range2.min));
+    }
+
+    return Range;
+});
+
 define('components/stage',[
     "components/world",
     "components/space",
-    "utils/utils"
-], function(World, Space, Utils){
+    "utils/utils",
+    "utils/range"
+], function(World, Space, Utils, Range){
     function Stage(element, options){
 	this.options = {
 	    width:700,
@@ -1238,34 +1261,34 @@ define('components/stage',[
 	    .style("height",String(this.options.height));
 	this.charts = [];
 
+	this.world = new World({
+	    width:this.options.world_width,
+	    height:this.options.height,
+	    bg_color:this.options.bg_color
+	});
+
+	this.data_ranges = {x:new Range(0,0),y:new Range(0,0),z:new Range(0,0)};
+
 	return this;
     }
 
     Stage.prototype.render = function(){
+	this.space = new Space(this.data_ranges);
+	this.world.addMesh(this.space.getMeshes());
+        for(var i=0;i<this.charts.length;i++){
+            var chart=this.charts[i];
+            chart.generateMesh(this.space.getScales());
+	    this.world.addMesh(chart.getMesh());
+            if(chart.hasLegend())chart.addLegend(this.legend_space);
+        }
 	this.world.begin(this.world_space);
-    }    
+    }
 
     Stage.prototype.add = function(chart){
-	if(this.charts.length == 0){
-	    this.world = new World({
-		width:this.options.world_width,
-		height:this.options.height,
-		bg_color:this.options.bg_color
-	    });
-  	    
-	    this.space = new Space(chart.getDataRanges());
-	    this.world.addMesh(this.space.getMeshes());
-	}else{
-	    // check ranges of data, and expand space if it is bigger than of data previous charts have
-	    // (not implemented yet)
+        var ranges = chart.getDataRanges();
+        for(var i in ranges){
+            this.data_ranges[i] = Range.expand(this.data_ranges[i], ranges[i]);
 	}
-
-	chart.generateMesh(this.space.getScales());
-	this.world.addMesh(chart.getMesh());
-
-	// dirty. must be modified.
-	if(chart.hasLegend())chart.addLegend(this.legend_space);
-
 	this.charts.push(chart);
     }
 
@@ -1315,24 +1338,6 @@ define('components/legends',[],function(){
     };
 
     return Legends;
-});
-
-define('utils/range',[],function(){
-    function Range(max, min){
-	this.max = max;
-	this.min = min;
-    }
-
-    Range.prototype.divide = function(num){
-	var arr = new Array();
-	var interval = Math.ceil((this.max-this.min)/(num-1));
-	for(var i=0;i<num;i++){
-	    arr.push(this.min + interval*i);
-	}
-	return arr;
-    }
-
-    return Range;
 });
 
 define('utils/datasets',[
@@ -1784,7 +1789,7 @@ define('charts/particles',[
     function Particles(data, options){
 	this.options = {
 	    color: colorbrewer.Reds[3][1],
-	    size: 0.2,
+	    size: 0.3,
 	    has_legend: true
 	};
 

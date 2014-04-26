@@ -1,8 +1,9 @@
 define([
     "components/world",
     "components/space",
-    "utils/utils"
-], function(World, Space, Utils){
+    "utils/utils",
+    "utils/range"
+], function(World, Space, Utils, Range){
     function Stage(element, options){
 	this.options = {
 	    width:700,
@@ -28,34 +29,34 @@ define([
 	    .style("height",String(this.options.height));
 	this.charts = [];
 
+	this.world = new World({
+	    width:this.options.world_width,
+	    height:this.options.height,
+	    bg_color:this.options.bg_color
+	});
+
+	this.data_ranges = {x:new Range(0,0),y:new Range(0,0),z:new Range(0,0)};
+
 	return this;
     }
 
     Stage.prototype.render = function(){
+	this.space = new Space(this.data_ranges);
+	this.world.addMesh(this.space.getMeshes());
+        for(var i=0;i<this.charts.length;i++){
+            var chart=this.charts[i];
+            chart.generateMesh(this.space.getScales());
+	    this.world.addMesh(chart.getMesh());
+            if(chart.hasLegend())chart.addLegend(this.legend_space);
+        }
 	this.world.begin(this.world_space);
-    }    
+    }
 
     Stage.prototype.add = function(chart){
-	if(this.charts.length == 0){
-	    this.world = new World({
-		width:this.options.world_width,
-		height:this.options.height,
-		bg_color:this.options.bg_color
-	    });
-  	    
-	    this.space = new Space(chart.getDataRanges());
-	    this.world.addMesh(this.space.getMeshes());
-	}else{
-	    // check ranges of data, and expand space if it is bigger than of data previous charts have
-	    // (not implemented yet)
+        var ranges = chart.getDataRanges();
+        for(var i in ranges){
+            this.data_ranges[i] = Range.expand(this.data_ranges[i], ranges[i]);
 	}
-
-	chart.generateMesh(this.space.getScales());
-	this.world.addMesh(chart.getMesh());
-
-	// dirty. must be modified.
-	if(chart.hasLegend())chart.addLegend(this.legend_space);
-
 	this.charts.push(chart);
     }
 
