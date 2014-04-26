@@ -1,5 +1,5 @@
 define([
-    "components/TrackballControls"
+    "utils/TrackballControls"
 ],function(){
 
     var world, animate;

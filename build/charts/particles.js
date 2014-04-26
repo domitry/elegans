@@ -1,8 +1,9 @@
 define([
     "components/legends",
     "utils/utils",
-    "utils/datasets"
-],function(Legends, Utils, Datasets){
+    "utils/datasets",
+    "utils/colorbrewer"
+],function(Legends, Utils, Datasets, colorbrewer){
     function Particles(data, options){
 	this.options = {
 	    color: colorbrewer.Reds[3][1],

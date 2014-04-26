@@ -5,7 +5,6 @@
   <script type="text/javascript" src="../build/vendor/three.min.js"></script>
   <script type="text/javascript" src="../build/vendor/d3.min.js"></script>
   <script type="text/javascript" src="../build/vendor/helvetiker_regular.typeface.js"></script>
-  <script type="text/javascript" src="../build/vendor/colorbrewer.js"></script>
   <script type="text/javascript" src="../build/elegans.js"></script>
   <script type="text/javascript">
     window.onload = function(){
@@ -19,7 +18,7 @@
 	}
 	data.push(row);
     }
-    d3.select('#vis').datum(data).call(Elegans.SurfacePlot.fill_colors(["#000000", "#ffffff"]));
+    d3.select('#vis').datum(data).call(Elegans.SurfacePlot);
     };
   </script>
 </head>
