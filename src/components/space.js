@@ -19,7 +19,7 @@ define([],function(){
 	yz_plane.translateOnAxis(newV(0,0,1), 10);
 
 	this.scales = {};
-	this.scales.x = d3.scale.linear().domain([ranges.x.max, ranges.x.min]).range([10, -10])
+	this.scales.x = d3.scale.linear().domain([ranges.x.max, ranges.x.min]).range([-10, 10])
 	this.scales.y = d3.scale.linear().domain([ranges.y.max, ranges.y.min]).range([10, -10])
 	this.scales.z = d3.scale.linear().domain([ranges.z.max, ranges.z.min]).range([15,0])
 
@@ -29,11 +29,11 @@ define([],function(){
 	this.meshes.push(xz_plane);
 	this.meshes.push(yz_plane);
 
-	// generate axis (dirty. must be modified.)
+	// generate axis
 	var x_scale = d3.scale.linear().domain([ranges.x.max, ranges.x.min]).range([20, 0]);
 	var y_scale = d3.scale.linear().domain([ranges.y.max, ranges.y.min]).range([20, 0]);
 	var z_scale = d3.scale.linear().domain([ranges.z.max, ranges.z.min]).range([15,0]);
-	this.meshes = this.meshes.concat(generateAxisAndLabels(newV(-10,10,0),newV(10,10,0),newV(0,1,0),x_scale));
+	this.meshes = this.meshes.concat(generateAxisAndLabels(newV(10,10,0),newV(-10,10,0),newV(0,1,0),x_scale));
 	this.meshes = this.meshes.concat(generateAxisAndLabels(newV(-10,-10,0),newV(-10,10,0),newV(-1,0,0),y_scale));
 	this.meshes = this.meshes.concat(generateAxisAndLabels(newV(10,10,0),newV(10,10,20),newV(0,1,0),z_scale));
 
@@ -45,17 +45,33 @@ define([],function(){
 	return this;
     }
 
+    var generateLabel = function(text, position){
+	var canvas = document.createElement('canvas');
+	canvas.width = 100;
+	canvas.height = 100;
+	var context = canvas.getContext('2d');
+	context.fillStyle = "rgb(0, 0, 0)";
+	context.font = "60px sans-serif";
+	text_width = context.measureText(text).width;
+	context.fillText(text, (100-text_width)/2, 80);
+	var texture = new THREE.Texture(canvas);
+	texture.flipY = false;
+	texture.needsUpdate = true;
+	var material = new THREE.SpriteMaterial({
+	    map: texture,
+	    transparent: true,
+	    useScreenCoordinates: false
+	});
+	var sprite = new THREE.Sprite(material);
+	sprite.scale.set(1.5,1.5);
+	sprite.position = position;
+	return sprite;
+    }
+
     var generateAxisAndLabels = function(axis_start, axis_end, nv_tick, scale){
 	var meshes = [];
 	var geometry = new THREE.Geometry();
 	var nv_start2end = (new THREE.Vector3).subVectors(axis_end, axis_start).normalize();
-	var generateLabel = function(text, position){
-	    var geometry = new THREE.TextGeometry(text, {size:0.6, font:"helvetiker", height:0.1});
-	    var material = new THREE.MeshBasicMaterial({color:0x000000});
-	    mesh = new THREE.Mesh(geometry, material);
-	    mesh.position = position;
-	    return mesh;
-	}
 
 	geometry.vertices.push(axis_start);
 	geometry.vertices.push(axis_end);
