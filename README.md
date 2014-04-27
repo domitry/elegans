@@ -4,17 +4,18 @@ A 3D plotting library for web browsers enabling WebGL.
 ![alt text](https://dl.dropboxusercontent.com/u/47978121/ss561.png)
 
 ## Description
-Elegans is a 3D plotting library written in JavaScript. We can generate charts in JavaScript, and render them on your browser.
+Elegans is a 3D plotting library written in JavaScript. You can generate charts in JavaScript, and show them on your browser.
 
 We began to develop Elegans in order to embed it into other languages like Ruby and Python, so you can embed it into your environments in a relatively simple way. See 'Embed Elegans into your environments' paragraph in 'Usage' below.
 
 Elegans is still in its alpha release, and some charts and options are not implemented yet.
 
 ## Supporting charts
-| Name | Data type | Legend option | Link to examples |
-|:---- |:--------- |:-----:|:---------------- |
-| Surface | Matrix | o | [example](http://bl.ocks.org/domitry/11322618) |
-| Particles | Array | x | [example](http://bl.ocks.org/domitry/11322575) |
+| Name | Shortcuts function | Data type | Legend option | Link to examples |
+|:---- |:--------- |:--------- |:-----:|:----------------:|
+| Elegans.Surface | Elegans.SurfacePlot | Matrix | o | [example](http://bl.ocks.org/domitry/11322618) |
+| Elegans.Line | Elegans.LinePlot | Array | x | [example](http://bl.ocks.org/domitry/11338075) |
+| Elegans.Particles | Elegans.ParticlesPlot | Array | x | [example](http://bl.ocks.org/domitry/11322575) |
 
 ## Usage
 ### Getting Started
@@ -63,7 +64,7 @@ Elegans.Embed.parse(model, "#vis");
 If you need more information, please see [latest examples](https://github.com/domitry/elegans/tree/master/examples).
 
 ## Build Elegans
-First, pull repository from github.
+First, pull ripository from github.
 
 ```shell:
 git pull https://github.com/domitry/elegans.git
