@@ -9,6 +9,7 @@ Elegans is a 3D plotting library written in JavaScript. You can generate charts 
 We began to develop Elegans in order to embed it into other languages like Ruby and Python, so you can embed it into your environments in a relatively simple way. See 'Embed Elegans into your environments' paragraph in 'Usage' below.
 
 Elegans is still in its alpha release, and some charts and options are not implemented yet.
+Please see [documents](http://elegans.readthedocs.org) to learn more.
 
 ## Supporting charts
 | Name | Shortcuts function | Data type | Legend option | Link to examples |
@@ -64,7 +65,7 @@ Elegans.Embed.parse(model, "#vis");
 If you need more information, please see [latest examples](https://github.com/domitry/elegans/tree/master/examples).
 
 ## Build Elegans
-First, pull ripository from github.
+First, pull repository from github.
 
 ```shell:
 git pull https://github.com/domitry/elegans.git
