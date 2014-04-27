@@ -16,17 +16,15 @@ define([
 
 	this.dataset = new Datasets.Matrix(data);
 	this.ranges = this.dataset.getRanges();
-	this.color_scale =
-	    d3.scale.linear()
-	    .domain(this.ranges.z.divide(this.options.fill_colors.length))
-	    .range(this.options.fill_colors);
     }
 
     Surface.prototype.generateMesh = function(scales){
 	var data = this.dataset.raw;
 	var geometry = new THREE.Geometry();
 	var width = data.length, height = data[0].length;
-	var color_scale = this.color_scale;
+	var color_scale = d3.scale.linear()
+	    .domain(this.ranges.z.divide(this.options.fill_colors.length))
+	    .range(this.options.fill_colors);
 	var colors = [];
 	var offset = function(x,y){return x*width+y;};
 	var fillFace = function(geometry, p1, p2, p3, colors){

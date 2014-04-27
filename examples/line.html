@@ -1,0 +1,39 @@
+<html lang="en">
+<head>
+  <title>Plot Sample - Line</title>
+  <link rel='stylesheet' href='common.css'>
+  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/three.js/r66/three.min.js"></script>
+  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.4/d3.min.js"></script>
+  <script type="text/javascript" src="../release/elegans.min.js"></script>
+  <script type="text/javascript">
+    window.onload = function(){
+    var STEP_NUM = 10000;
+    var p = 10, r = 28, b = 8/3;
+
+    var fx = function(x,y,z){return ((-1)*p*x + p*y)};
+    var fy = function(x,y,z){return ((-1)*x*z + r*x - y)};
+    var fz = function(x,y,z){return (x*y - b*z)};
+
+    var dt = 0.01;
+    var x = 1, y = 1, z = 1;
+    var x_arr = [], y_arr = [], z_arr = [];
+
+    for(var i=0;i<STEP_NUM;i++){
+        x += dt * fx(x,y,z);
+	y += dt * fy(x,y,z);
+        z += dt * fz(x,y,z);
+        x_arr.push(x);
+        y_arr.push(y);
+        z_arr.push(z);
+     }
+     var data = {x:x_arr, y:y_arr, z:z_arr};
+     d3.select("#vis").datum(data).call(Elegans.LinePlot.thickness(2));
+     // you can try "Elegans.LinePlot.thickness(2).colors(["#ff0000","#ffffff"])"
+    };
+  </script>
+</head>
+<body>
+
+<div id="vis">
+</div>
+</body>
