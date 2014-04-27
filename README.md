@@ -63,7 +63,7 @@ Elegans.Embed.parse(model, "#vis");
 If you need more information, please see [latest examples](https://github.com/domitry/elegans/tree/master/examples).
 
 ## Build Elegans
-First, pull ripository from github.
+First, pull repository from github.
 
 ```shell:
 git pull https://github.com/domitry/elegans.git
