@@ -1034,8 +1034,37 @@ define('components/world',[
     return World;
 });
 
-define('components/space',[],function(){
-    function Space(ranges){
+define('utils/utils',[],function(){
+    var mixin = function(sub, sup) {
+	sup.call(sub);
+    };
+
+    var merge = function(dest, src){
+	for(var key in src){
+	    dest[key] = src[key];
+	}
+    }
+
+    exports = {
+	mixin:mixin,
+	merge:merge
+    };
+
+    return exports;
+});
+
+define('components/space',[
+    "utils/utils"
+],function(Utils){
+    function Space(ranges, options){
+	this.options = {
+	    axis_labels: {x:"X", y:"Y", z:"Z"}
+	};
+
+	if(arguments.length > 1){
+	    Utils.merge(this.options, options);
+	};
+	
 	var BIGIN=-10, END=10, WIDTH=END-BIGIN;
 	var geometry = new THREE.PlaneGeometry(WIDTH,WIDTH);
 	var material = new THREE.MeshBasicMaterial({color:0xf0f0f0, shading: THREE.FlatShading, overdraw: 0.5, side: THREE.DoubleSide});
@@ -1069,9 +1098,9 @@ define('components/space',[],function(){
 	var x_scale = d3.scale.linear().domain([ranges.x.max, ranges.x.min]).range([20, 0]);
 	var y_scale = d3.scale.linear().domain([ranges.y.max, ranges.y.min]).range([20, 0]);
 	var z_scale = d3.scale.linear().domain([ranges.z.max, ranges.z.min]).range([15,0]);
-	this.meshes = this.meshes.concat(generateAxisAndLabels(newV(10,10,0),newV(-10,10,0),newV(0,1,0),x_scale));
-	this.meshes = this.meshes.concat(generateAxisAndLabels(newV(-10,-10,0),newV(-10,10,0),newV(-1,0,0),y_scale));
-	this.meshes = this.meshes.concat(generateAxisAndLabels(newV(10,10,0),newV(10,10,20),newV(0,1,0),z_scale));
+	this.meshes = this.meshes.concat(generateAxisAndLabels(this.options.axis_labels.x, newV(10,10,0),newV(-10,10,0),newV(0,1,0),x_scale));
+	this.meshes = this.meshes.concat(generateAxisAndLabels(this.options.axis_labels.y, newV(-10,-10,0),newV(-10,10,0),newV(-1,0,0),y_scale));
+	this.meshes = this.meshes.concat(generateAxisAndLabels(this.options.axis_labels.z, newV(10,10,0),newV(10,10,20),newV(0,1,0),z_scale));
 
 	// generate grids
 	this.meshes.push(generateGrid([-10,10],[-10,10],[0,0],2));//x-y
@@ -1104,13 +1133,17 @@ define('components/space',[],function(){
 	return sprite;
     }
 
-    var generateAxisAndLabels = function(axis_start, axis_end, nv_tick, scale){
+    var generateAxisAndLabels = function(axis_label, axis_start, axis_end, nv_tick, scale){
 	var meshes = [];
 	var geometry = new THREE.Geometry();
 	var nv_start2end = (new THREE.Vector3).subVectors(axis_end, axis_start).normalize();
 
 	geometry.vertices.push(axis_start);
 	geometry.vertices.push(axis_end);
+
+	var label_position = (new THREE.Vector3).addVectors(axis_end, axis_start).divideScalar(2);
+	label_position.add(nv_tick.clone().multiplyScalar(3));
+	meshes.push(generateLabel(axis_label, label_position));
 
 	// generate d3.js axis
 	var svg = d3.select("body")
@@ -1131,19 +1164,15 @@ define('components/space',[],function(){
 	    // generate tick line
 	    attr = ticks[0][i].getAttribute("transform");
 	    valueArr = /translate\(((?:-|\d|.)+),((?:-|\d|.)+)\)/g.exec(attr);
-	    var nv_s2e = (new THREE.Vector3).copy(nv_start2end);
-	    var nv_t = (new THREE.Vector3).copy(nv_tick);
-	    var tick_center = (new THREE.Vector3).addVectors(axis_start, nv_s2e.multiplyScalar(valueArr[2]));
-	    var tick_start = (new THREE.Vector3).addVectors(tick_center, nv_t.multiplyScalar(0.3));
-	    nv_t.copy(nv_tick);
-	    var tick_end = (new THREE.Vector3).addVectors(tick_center, nv_t.multiplyScalar(-0.3));
+	    var tick_center = (new THREE.Vector3).addVectors(axis_start, nv_start2end.clone().multiplyScalar(valueArr[2]));
+	    var tick_start = (new THREE.Vector3).addVectors(tick_center, nv_tick.clone().multiplyScalar(0.3));
+	    var tick_end = (new THREE.Vector3).addVectors(tick_center, nv_tick.clone().multiplyScalar(-0.3));
 	    geometry.vertices.push(tick_start);
 	    geometry.vertices.push(tick_end);
 
 	    //generate labels
 	    var text = ticks[0][i].children[1].childNodes[0].nodeValue;
-	    nv_t.copy(nv_tick);
-	    var label_center = (new THREE.Vector3).addVectors(tick_center ,nv_t.multiplyScalar(1.0));
+	    var label_center = (new THREE.Vector3).addVectors(tick_center ,nv_tick.clone().multiplyScalar(1.0));
 	    label = generateLabel(text, label_center);
 	    meshes.push(label);
 	}
@@ -1187,25 +1216,6 @@ define('components/space',[],function(){
     };
 
     return Space;
-});
-
-define('utils/utils',[],function(){
-    var mixin = function(sub, sup) {
-	sup.call(sub);
-    };
-
-    var merge = function(dest, src){
-	for(var key in src){
-	    dest[key] = src[key];
-	}
-    }
-
-    exports = {
-	mixin:mixin,
-	merge:merge
-    };
-
-    return exports;
 });
 
 define('utils/range',[],function(){
