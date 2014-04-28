@@ -19,7 +19,7 @@ define([
 	return this;
     }
 
-    ScatterPlot.has_legend = function(_){
+    SurfacePlot.has_legend = function(_){
 	this.options.has_legend = _;
 	options = this.options;
 	return this;

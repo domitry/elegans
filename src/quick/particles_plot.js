@@ -19,13 +19,13 @@ define([
 	return this;
     }
 
-    ScatterPlot.size = function(_){
+    ParticlesPlot.size = function(_){
 	this.options.size = _;
 	options = this.options;
 	return this;
     }
 
-    ScatterPlot.has_legend = function(_){
+    ParticlesPlot.has_legend = function(_){
 	this.options.has_legend = _;
 	options = this.options;
 	return this;
