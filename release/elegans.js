@@ -1251,6 +1251,7 @@ define('components/stage',[
 	    width:700,
 	    height:500,
 	    world_width:500,
+	    axis_labels: {x:"X", y:"Y", z:"Z"},
 	    bg_color:0xffffff
 	};
 
@@ -1292,7 +1293,7 @@ define('components/stage',[
     }
 
     Stage.prototype.render = function(){
-	this.space = new Space(this.data_ranges);
+	this.space = new Space(this.data_ranges, {axis_labels:this.options.axis_labels});
 	this.world.addMesh(this.space.getMeshes());
         for(var i=0;i<this.charts.length;i++){
             var chart=this.charts[i];
