@@ -19,6 +19,18 @@ define([
 	return this;
     }
 
+    ScatterPlot.size = function(_){
+	this.options.size = _;
+	options = this.options;
+	return this;
+    }
+
+    ScatterPlot.has_legend = function(_){
+	this.options.has_legend = _;
+	options = this.options;
+	return this;
+    }
+
     Utils.mixin(ParticlesPlot, Base);
 
     return ParticlesPlot;

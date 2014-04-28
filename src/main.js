@@ -12,6 +12,7 @@ define(function(require, exports, module){
     Elegans.Surface = require("charts/surface");
     Elegans.Particles = require("charts/particles");
     Elegans.Line = require("charts/line");
+    Elegans.Scatter = require("charts/scatter");
 
     /***************************
       Functions for quick plotting with method chain style  
@@ -21,6 +22,7 @@ define(function(require, exports, module){
     Elegans.SurfacePlot = require("quick/surface_plot");
     Elegans.ParticlesPlot = require("quick/particles_plot");
     Elegans.LinePlot = require("quick/line_plot");
+    Elegans.ScatterPlot = require("quick/scatter_plot");
 
     /***************************
        Prototype Object for embedding to other language.

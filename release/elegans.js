@@ -1894,6 +1894,113 @@ define('charts/line',[
     return Line;
 });
 
+define('charts/scatter',[
+    "components/legends",
+    "utils/utils",
+    "utils/datasets",
+    "utils/colorbrewer"
+],function(Legends, Utils, Datasets, colorbrewer){
+    function Scatter(data, options){
+	this.options = {
+	    shape: "circle",
+	    size: 1.5,
+	    stroke_width: 3,
+	    stroke_color: "#000000",
+	    fill_color: colorbrewer.Reds[3][1],
+	    has_legend: true
+	};
+
+	if(arguments.length > 1){
+	    Utils.merge(this.options, options);
+	}
+
+	this.dataset = new Datasets.Array(data);
+	this.ranges = this.dataset.getRanges();
+    }
+
+    Scatter.prototype.generateMesh = function(scales){
+	var shape_funcs = {
+	    circle: function(ctx){
+		ctx.arc(50, 50, 40, 0, Math.PI*2, false);
+	    },
+	    rect: function(ctx){
+		ctx.beginPath();
+		ctx.moveTo(20,20);
+		ctx.lineTo(80,20);
+		ctx.lineTo(80,80);
+		ctx.lineTo(20,80);
+		ctx.lineTo(20,20);
+	    },
+	    cross: function(ctx){
+		var vertexes = [[35,5],[65,5],[65,35],[95,35],[95,65],[65,65],[65,95],[35,95],[35,65],[5,65],[5,35],[35,35]];
+		ctx.moveTo(vertexes[11][0],vertexes[11][1]);
+		for(var i=0;i<vertexes.length;i++){
+		    ctx.lineTo(vertexes[i][0],vertexes[i][1]);
+		}
+	    },
+	    diamond: function(ctx){
+		ctx.moveTo(50,5);
+		ctx.lineTo(85,50);
+		ctx.lineTo(50,95);
+		ctx.lineTo(15,50);
+		ctx.lineTo(50,5);
+	    }
+	};
+
+	var canvas = document.createElement('canvas');
+	canvas.width = 100;
+	canvas.height = 100;
+	var ctx = canvas.getContext('2d');
+	ctx.fillStyle = this.options.fill_color;
+	shape_funcs[this.options.shape](ctx);
+	ctx.fill();
+	ctx.lineWidth = this.options.stroke_width;
+	ctx.strokeStyle = this.options.stroke_color;
+	ctx.stroke();
+
+	var texture = new THREE.Texture(canvas);
+	texture.flipY = false;
+	texture.needsUpdate = true;
+	var material = new THREE.SpriteMaterial({
+	    map: texture,
+	    size: 10,
+	    transparent: true
+	});
+
+	var data = this.dataset.raw;
+	var meshes = [];
+	for(var i=0;i<data.x.length;i++){
+	    var sprite = new THREE.Sprite(material);
+	    sprite.position = new THREE.Vector3(
+		scales.x(data.x[i]),
+		scales.y(data.y[i]),
+		scales.z(data.z[i])
+	    );
+	    var size = this.options.size;
+	    sprite.scale.set(size,size,size);
+	    meshes.push(sprite);
+	}
+	this.mesh = meshes;
+    }
+
+    Scatter.prototype.getDataRanges = function(){
+	return this.ranges;
+    }
+    
+    Scatter.prototype.hasLegend = function(){
+	return this.options.has_legend;
+    }
+
+    Scatter.prototype.addLegend = function(svg){
+    }
+    
+    Scatter.prototype.getMesh = function(){
+	return this.mesh;
+    };
+
+    return Scatter;
+});
+
 define('quick/base',[],function(){
     /********************************
       Base function of all quick functions
@@ -1951,6 +2058,12 @@ define('quick/surface_plot',[
 	return this;
     }
 
+    ScatterPlot.has_legend = function(_){
+	this.options.has_legend = _;
+	options = this.options;
+	return this;
+    }
+
     Utils.mixin(SurfacePlot, Base);
 
     return SurfacePlot;
@@ -1973,6 +2086,18 @@ define('quick/particles_plot',[
 
     ParticlesPlot.color = function(_){
 	this.options.color = _;
+	options = this.options;
+	return this;
+    }
+
+    ScatterPlot.size = function(_){
+	this.options.size = _;
+	options = this.options;
+	return this;
+    }
+
+    ScatterPlot.has_legend = function(_){
+	this.options.has_legend = _;
 	options = this.options;
 	return this;
     }
@@ -2009,9 +2134,71 @@ define('quick/line_plot',[
 	return this;
     }
 
+    ScatterPlot.has_legend = function(_){
+	this.options.has_legend = _;
+	options = this.options;
+	return this;
+    }
+
     Utils.mixin(LinePlot, Base);
 
     return LinePlot;
+});
+
+define('quick/scatter_plot',[
+    "components/stage",
+    "quick/base",
+    "charts/scatter",
+    "utils/utils"
+],function(Stage, Base, Scatter, Utils){
+
+    function ScatterPlot(selection){
+	selection.each(function(data){
+	    var stage = new Stage(this);
+	    stage.add(new Scatter(data, options));
+	    stage.render();
+	});
+    }
+
+    ScatterPlot.shape = function(_){
+	this.options.shape = _;
+	options = this.options;
+	return this;
+    }
+
+    ScatterPlot.size = function(_){
+	this.options.size = _;
+	options = this.options;
+	return this;
+    }
+
+    ScatterPlot.stroke_width = function(_){
+	this.options.stroke_width = _;
+	options = this.options;
+	return this;
+    }
+
+    ScatterPlot.stroke_color = function(_){
+	this.options.stroke_color = _;
+	options = this.options;
+	return this;
+    }
+
+    ScatterPlot.fill_color = function(_){
+	this.options.fill_color = _;
+	options = this.options;
+	return this;
+    }
+
+    ScatterPlot.has_legend = function(_){
+	this.options.has_legend = _;
+	options = this.options;
+	return this;
+    }
+
+    Utils.mixin(ScatterPlot, Base);
+
+    return ScatterPlot;
 });
 
 define('embed/embed',[
@@ -2039,7 +2226,7 @@ define('embed/embed',[
     return Embed;
 });
 
-define('main',['require','exports','module','components/stage','charts/surface','charts/particles','charts/line','quick/surface_plot','quick/particles_plot','quick/line_plot','embed/embed'],function(require, exports, module){
+define('main',['require','exports','module','components/stage','charts/surface','charts/particles','charts/line','charts/scatter','quick/surface_plot','quick/particles_plot','quick/line_plot','quick/scatter_plot','embed/embed'],function(require, exports, module){
     Elegans = {};
 
     /***************************
@@ -2053,6 +2240,7 @@ define('main',['require','exports','module','components/stage','charts/surface',
     Elegans.Surface = require("charts/surface");
     Elegans.Particles = require("charts/particles");
     Elegans.Line = require("charts/line");
+    Elegans.Scatter = require("charts/scatter");
 
     /***************************
       Functions for quick plotting with method chain style  
@@ -2062,6 +2250,7 @@ define('main',['require','exports','module','components/stage','charts/surface',
     Elegans.SurfacePlot = require("quick/surface_plot");
     Elegans.ParticlesPlot = require("quick/particles_plot");
     Elegans.LinePlot = require("quick/line_plot");
+    Elegans.ScatterPlot = require("quick/scatter_plot");
 
     /***************************
        Prototype Object for embedding to other language.

@@ -19,6 +19,12 @@ define([
 	return this;
     }
 
+    ScatterPlot.has_legend = function(_){
+	this.options.has_legend = _;
+	options = this.options;
+	return this;
+    }
+
     Utils.mixin(SurfacePlot, Base);
 
     return SurfacePlot;
