@@ -17,6 +17,7 @@ Please see [documents](http://elegans.readthedocs.org) to learn more.
 | Elegans.Surface | Elegans.SurfacePlot | Matrix | o | [example](http://bl.ocks.org/domitry/11322618) |
 | Elegans.Line | Elegans.LinePlot | Array | x | [example](http://bl.ocks.org/domitry/11338075) |
 | Elegans.Particles | Elegans.ParticlesPlot | Array | x | [example](http://bl.ocks.org/domitry/11322575) |
+| Elegans.Scatter | Elegans.ScatterPlot | Array | x | [example](http://bl.ocks.org/domitry/11373451) |
 
 ## Usage
 ### Getting Started
