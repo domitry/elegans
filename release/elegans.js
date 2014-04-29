@@ -2291,7 +2291,7 @@ define('quick/wireframe_plot',[
 	});
     }
 
-    WireframePlot.name = function(_){
+    WireframePlot.data_name = function(_){
 	this.options.name = _;
 	options = this.options;
 	return this;
@@ -2373,7 +2373,7 @@ define('quick/line_plot',[
 	});
     }
 
-    LinePlot.name = function(_){
+    LinePlot.data_name = function(_){
 	this.options.name = _;
 	options = this.options;
 	return this;
@@ -2415,6 +2415,12 @@ define('quick/scatter_plot',[
 	    stage.add(new Scatter(data, options));
 	    stage.render();
 	});
+    }
+
+    ScatterPlot.data_name = function(_){
+	this.options.name = _;
+	options = this.options;
+	return this;
     }
 
     ScatterPlot.shape = function(_){
