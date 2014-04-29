@@ -29,7 +29,7 @@
 
   
     <link rel="top" title="Elegans 0.1.0 documentation" href="index.html"/>
-        <link rel="next" title="API Reference" href="api_reference.html"/>
+        <link rel="next" title="Supporting Charts" href="supporting_charts.html"/>
         <link rel="prev" title="Welcome to Elegans’s documentation!" href="index.html"/> 
 
   
@@ -60,20 +60,40 @@
             <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="">Getting Started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#quick-calling-functions">Quick calling functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#general-calling-method">General calling method</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#embed-into-your-library">Embed into your library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#preparing-data">Preparing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#quick-plotting">Quick plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#multiple-plotting">Multiple plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#embedding-elegans-into-your-library">Embedding Elegans into your library</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="supporting_charts.html">Supporting Charts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="supporting_charts.html#surface">Surface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supporting_charts.html#wireframe">Wireframe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supporting_charts.html#line">Line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supporting_charts.html#particles">Particles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supporting_charts.html#scatter">Scatter</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api_reference.html">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api_reference.html#stage">Stage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_reference.html#surface">Surface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#wireframe">WireFrame</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_reference.html#line">Line</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_reference.html#particles">Particles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#scatter">Scatter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#surfaceplot">SurfacePlot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#wireframeplot">WireFramePlot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#lineplot">LinePlot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#particlesplot">ParticlesPlot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#scatterplot">ScatterPlot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_reference.html#embed">Embed</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="contribution.html">Contribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contribution.html">Contribution</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contribution.html#how-to-contribute">How to contribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contribution.html#how-to-build-elegans">How to build Elegans</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 </ul>
 
@@ -113,15 +133,82 @@
 <h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="installation">
 <span id="import-docs"></span><h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>Download the latest version of Elegans from <a class="reference external" href="https://raw.githubusercontent.com/domitry/elegans/master/release/elegans.min.js">here</a>. Then copy and paste code below to your html file.</p>
+<div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;http://cdnjs.cloudflare.com/ajax/libs/three.js/r66/three.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.4/d3.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;your_link_to_elegans.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre></div>
 </div>
-<div class="section" id="quick-calling-functions">
-<h2>Quick calling functions<a class="headerlink" href="#quick-calling-functions" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="general-calling-method">
-<h2>General calling method<a class="headerlink" href="#general-calling-method" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="preparing-data">
+<h2>Preparing Data<a class="headerlink" href="#preparing-data" title="Permalink to this headline">¶</a></h2>
+<p>There are two input formats of vertexes, Matrix and Array.</p>
+<div class="section" id="matrix">
+<h3>Matrix<a class="headerlink" href="#matrix" title="Permalink to this headline">¶</a></h3>
+<p>Matrix format is looks like return value of <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.meshgrid.html">Numpy.meshgrid</a>.
+Surface and Wireframe support this format.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span>
+<span class="p">{</span><span class="nx">x</span><span class="o">:</span><span class="p">[</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>
+<span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span>
+<span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="p">],</span>
+<span class="nx">y</span><span class="o">:</span><span class="p">[</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="p">],</span>
+<span class="nx">z</span><span class="o">:</span><span class="p">[</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
+<span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span>
+<span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">]</span>
+<span class="p">]};</span>
+</pre></div>
 </div>
-<div class="section" id="embed-into-your-library">
-<h2>Embed into your library<a class="headerlink" href="#embed-into-your-library" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="array">
+<h3>Array<a class="headerlink" href="#array" title="Permalink to this headline">¶</a></h3>
+<p>In Array format, the set of 3 values that have the same index in x,y,z array indicates 1 vertex.
+Line, Particles and Scatter support this format.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{</span><span class="nx">x</span><span class="o">:</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="nx">y</span><span class="o">:</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="nx">z</span><span class="o">:</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]};</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="quick-plotting">
+<h2>Quick plotting<a class="headerlink" href="#quick-plotting" title="Permalink to this headline">¶</a></h2>
+<p>You can quickly generate plots in method-chain style, with d3.js selector.</p>
+<img alt="_images/single_plot.png" src="_images/single_plot.png" />
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="s2">&quot;#vis&quot;</span><span class="p">).</span><span class="nx">datum</span><span class="p">(</span><span class="nx">data</span><span class="p">).</span><span class="nx">call</span><span class="p">(</span><span class="nx">Elegans</span><span class="p">.</span><span class="nx">LinePlot</span><span class="p">.</span><span class="nx">thickness</span><span class="p">(</span><span class="mi">5</span><span class="p">).</span><span class="nx">colors</span><span class="p">([</span><span class="s2">&quot;#dd1c77&quot;</span><span class="p">,</span><span class="s2">&quot;#dd1c77&quot;</span><span class="p">]));</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="http://bl.ocks.org/domitry/11394091">Sample code here</a></p>
+</div>
+<div class="section" id="multiple-plotting">
+<h2>Multiple plotting<a class="headerlink" href="#multiple-plotting" title="Permalink to this headline">¶</a></h2>
+<p>When you need to put multiple plots in one 3-dimentional space, you can write code like below.</p>
+<img alt="_images/multiple_plot.png" src="_images/multiple_plot.png" />
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">stage</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Elegans</span><span class="p">.</span><span class="nx">Stage</span><span class="p">(</span><span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="s2">&quot;#vis&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]);</span>
+<span class="kd">var</span> <span class="nx">line</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Elegans</span><span class="p">.</span><span class="nx">Line</span><span class="p">(</span><span class="nx">line_data</span><span class="p">,</span> <span class="p">{</span><span class="nx">thickness</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span> <span class="nx">colors</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;#dd1c77&quot;</span><span class="p">,</span><span class="s2">&quot;#dd1c77&quot;</span><span class="p">]});</span>
+<span class="kd">var</span> <span class="nx">particles</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Elegans</span><span class="p">.</span><span class="nx">Particles</span><span class="p">(</span><span class="nx">particles_data</span><span class="p">,</span> <span class="p">{</span><span class="nx">size</span><span class="o">:</span> <span class="mf">0.8</span><span class="p">,</span> <span class="nx">color</span><span class="o">:</span> <span class="s2">&quot;#c994c7&quot;</span><span class="p">});</span>
+<span class="nx">stage</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">line</span><span class="p">);</span>
+<span class="nx">stage</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">particles</span><span class="p">);</span>
+<span class="nx">stage</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="http://bl.ocks.org/domitry/11394203">Sample code here</a></p>
+</div>
+<div class="section" id="embedding-elegans-into-your-library">
+<h2>Embedding Elegans into your library<a class="headerlink" href="#embedding-elegans-into-your-library" title="Permalink to this headline">¶</a></h2>
+<p>Elegans has API to make it easier to embed it into various environments except browsers, like IPython notebook.
+What you need to do is only to generate simple JSON object, and embed it into static html templates like below.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">model</span> <span class="o">=</span> <span class="p">{</span>
+<span class="nx">charts</span><span class="o">:</span><span class="p">[{</span><span class="nx">type</span><span class="o">:</span><span class="s2">&quot;Particles&quot;</span><span class="p">,</span><span class="nx">data</span><span class="o">:</span><span class="p">{</span><span class="nx">x</span><span class="o">:</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="nx">y</span><span class="o">:</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="nx">z</span><span class="o">:</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]},</span><span class="nx">options</span><span class="o">:</span><span class="p">{</span><span class="nx">color</span><span class="o">:</span><span class="s2">&quot;#000000&quot;</span><span class="p">}}],</span>
+<span class="nx">options</span><span class="o">:</span><span class="p">{</span><span class="nx">width</span><span class="o">:</span><span class="mi">500</span><span class="p">,</span> <span class="nx">height</span><span class="o">:</span><span class="mi">500</span><span class="p">}</span>
+<span class="p">};</span>
+<span class="nx">Elegans</span><span class="p">.</span><span class="nx">Embed</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">model</span><span class="p">,</span> <span class="s2">&quot;#vis&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
 </div>
 </div>
 
@@ -131,7 +218,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="api_reference.html" class="btn btn-neutral float-right" title="API Reference"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="supporting_charts.html" class="btn btn-neutral float-right" title="Supporting Charts"/>Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="index.html" class="btn btn-neutral" title="Welcome to Elegans’s documentation!"><span class="fa fa-arrow-circle-left"></span> Previous</a>

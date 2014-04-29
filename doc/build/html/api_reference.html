@@ -30,7 +30,7 @@
   
     <link rel="top" title="Elegans 0.1.0 documentation" href="index.html"/>
         <link rel="next" title="Contribution" href="contribution.html"/>
-        <link rel="prev" title="Getting Started" href="getting_started.html"/> 
+        <link rel="prev" title="Supporting Charts" href="supporting_charts.html"/> 
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
@@ -60,20 +60,40 @@
             <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="getting_started.html#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started.html#general-calling-method">General calling method</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started.html#quick-calling-functions">Quick calling functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started.html#embed-into-your-library">Embed into your library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#preparing-data">Preparing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#quick-plotting">Quick plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#multiple-plotting">Multiple plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#embedding-elegans-into-your-library">Embedding Elegans into your library</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="supporting_charts.html">Supporting Charts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="supporting_charts.html#surface">Surface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supporting_charts.html#wireframe">Wireframe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supporting_charts.html#line">Line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supporting_charts.html#particles">Particles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supporting_charts.html#scatter">Scatter</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#stage">Stage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#surface">Surface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#wireframe">WireFrame</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#line">Line</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#particles">Particles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scatter">Scatter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#surfaceplot">SurfacePlot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#wireframeplot">WireFramePlot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lineplot">LinePlot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#particlesplot">ParticlesPlot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scatterplot">ScatterPlot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#embed">Embed</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="contribution.html">Contribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contribution.html">Contribution</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contribution.html#how-to-contribute">How to contribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contribution.html#how-to-build-elegans">How to build Elegans</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 </ul>
 
@@ -113,18 +133,196 @@
 <h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="stage">
 <span id="import-docs"></span><h2>Stage<a class="headerlink" href="#stage" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="constructor">
+<h3>Constructor<a class="headerlink" href="#constructor" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">Stage</span><span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>element - HTML DOM Element Object</li>
+<li>options</li>
+</ul>
+</div>
+<div class="section" id="methods">
+<h3>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">chart</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Add charts to 3-dementional space.</p>
+<ul class="simple">
+<li>chart - instance of Surface, Wireframe, Line, Particles, Scatter</li>
+</ul>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="p">.</span><span class="nx">render</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Start rendering charts.</p>
+</div>
 </div>
 <div class="section" id="surface">
 <h2>Surface<a class="headerlink" href="#surface" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>Constructor<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">Surface</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>data - Matrix type data</li>
+<li>options<ul>
+<li>fill_colors - Array of String</li>
+<li>has_legend - Boolean</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="wireframe">
+<h2>WireFrame<a class="headerlink" href="#wireframe" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id2">
+<h3>Constructor<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">WireFrame</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>data - Matrix type data</li>
+<li>options<ul>
+<li>name - String</li>
+<li>color - String</li>
+<li>thickness - Number</li>
+<li>has_legend - Boolean</li>
+</ul>
+</li>
+</ul>
+</div>
 </div>
 <div class="section" id="line">
 <h2>Line<a class="headerlink" href="#line" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h3>Constructor<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">Line</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>data - Array type data</li>
+<li>options<ul>
+<li>name - String</li>
+<li>colors - Array of String</li>
+<li>thickness - Number</li>
+<li>has_legend - Boolean</li>
+</ul>
+</li>
+</ul>
+</div>
 </div>
 <div class="section" id="particles">
 <h2>Particles<a class="headerlink" href="#particles" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id4">
+<h3>Constructor<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">Particles</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>data - Array type data</li>
+<li>options<ul>
+<li>name - String</li>
+<li>color - String</li>
+<li>size - Number. default value is 0.3</li>
+<li>has_legend - Boolean</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="scatter">
+<h2>Scatter<a class="headerlink" href="#scatter" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id5">
+<h3>Constructor<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">Scatter</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>data - Array type data</li>
+<li>options<ul>
+<li>name - String</li>
+<li>shape - String. One of &#8220;circle&#8221;, &#8220;cross&#8221;, &#8220;rect&#8221;, and &#8220;diamond.&#8221;</li>
+<li>size - Number. default value is 1.5.</li>
+<li>stroke_width - Number. default value is 3.</li>
+<li>stroke_color - String</li>
+<li>fill_color - String</li>
+<li>has_legend - Boolean</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="surfaceplot">
+<h2>SurfacePlot<a class="headerlink" href="#surfaceplot" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="properties">
+<h3>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>fill_colors - Array of String</li>
+<li>has_legend - Boolean</li>
+</ul>
+</div>
+</div>
+<div class="section" id="wireframeplot">
+<h2>WireFramePlot<a class="headerlink" href="#wireframeplot" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id6">
+<h3>Properties<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>data_name - String</li>
+<li>color - String</li>
+<li>thickness - Number</li>
+<li>has_legend - Boolean</li>
+</ul>
+</div>
+</div>
+<div class="section" id="lineplot">
+<h2>LinePlot<a class="headerlink" href="#lineplot" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id7">
+<h3>Properties<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>data_name - String</li>
+<li>colors - Array of String</li>
+<li>thickness - Number</li>
+<li>has_legend - Boolean</li>
+</ul>
+</div>
+</div>
+<div class="section" id="particlesplot">
+<h2>ParticlesPlot<a class="headerlink" href="#particlesplot" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id8">
+<h3>Properties<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>data_name - String</li>
+<li>color - String</li>
+<li>size - Number</li>
+<li>has_legend - Boolean</li>
+</ul>
+</div>
+</div>
+<div class="section" id="scatterplot">
+<h2>ScatterPlot<a class="headerlink" href="#scatterplot" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id9">
+<h3>Properties<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>data_name - String</li>
+<li>shape - String</li>
+<li>stroke_width - Number</li>
+<li>stroke_color - String</li>
+<li>fill_color - String</li>
+<li>has_legend - Boolean</li>
+</ul>
+</div>
 </div>
 <div class="section" id="embed">
 <h2>Embed<a class="headerlink" href="#embed" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id10">
+<h3>Methods<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">model</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Parse JSON model. Return value is a instance of Elegans.Stage.</p>
+</div>
 </div>
 </div>
 
@@ -137,7 +335,7 @@
         <a href="contribution.html" class="btn btn-neutral float-right" title="Contribution"/>Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="getting_started.html" class="btn btn-neutral" title="Getting Started"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="supporting_charts.html" class="btn btn-neutral" title="Supporting Charts"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

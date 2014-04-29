@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Welcome to Elegans’s documentation! &mdash; Elegans 0.1.0 documentation</title>
+  <title>Elegans - elegance 3D plots generator with WebGL &mdash; Elegans 0.1.0 documentation</title>
   
 
   
@@ -59,20 +59,40 @@
             <ul>
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="getting_started.html#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started.html#quick-calling-functions">Quick calling functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started.html#general-calling-method">General calling method</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started.html#embed-into-your-library">Embed into your library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#preparing-data">Preparing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#quick-plotting">Quick plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#multiple-plotting">Multiple plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#embedding-elegans-into-your-library">Embedding Elegans into your library</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="supporting_charts.html">Supporting Charts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="supporting_charts.html#surface">Surface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supporting_charts.html#wireframe">Wireframe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supporting_charts.html#line">Line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supporting_charts.html#particles">Particles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supporting_charts.html#scatter">Scatter</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api_reference.html">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api_reference.html#stage">Stage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_reference.html#surface">Surface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#wireframe">WireFrame</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_reference.html#line">Line</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_reference.html#particles">Particles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#scatter">Scatter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#surfaceplot">SurfacePlot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#wireframeplot">WireFramePlot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#lineplot">LinePlot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#particlesplot">ParticlesPlot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#scatterplot">ScatterPlot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_reference.html#embed">Embed</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="contribution.html">Contribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contribution.html">Contribution</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contribution.html#how-to-contribute">How to contribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contribution.html#how-to-build-elegans">How to build Elegans</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 </ul>
 
@@ -97,7 +117,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="#">Docs</a> &raquo;</li>
       
-    <li>Welcome to Elegans&#8217;s documentation!</li>
+    <li>Elegans - elegance 3D plots generator with WebGL</li>
       <li class="wy-breadcrumbs-aside">
         
           <a href="_sources/index.txt" rel="nofollow"> View page source</a>
@@ -108,33 +128,57 @@
 </div>
           <div role="main">
             
-  <div class="section" id="welcome-to-elegans-s-documentation">
-<h1>Welcome to Elegans&#8217;s documentation!<a class="headerlink" href="#welcome-to-elegans-s-documentation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="elegans-elegance-3d-plots-generator-with-webgl">
+<h1>Elegans - elegance 3D plots generator with WebGL<a class="headerlink" href="#elegans-elegance-3d-plots-generator-with-webgl" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>Elegans is a 3D plotting library written in JavaScript. With Elegans, you can generate charts in JavaScript, and show them on your browser.</p>
 <p>Contents:</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="getting_started.html#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started.html#quick-calling-functions">Quick calling functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started.html#general-calling-method">General calling method</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started.html#embed-into-your-library">Embed into your library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#preparing-data">Preparing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#quick-plotting">Quick plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#multiple-plotting">Multiple plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#embedding-elegans-into-your-library">Embedding Elegans into your library</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="supporting_charts.html">Supporting Charts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="supporting_charts.html#surface">Surface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supporting_charts.html#wireframe">Wireframe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supporting_charts.html#line">Line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supporting_charts.html#particles">Particles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supporting_charts.html#scatter">Scatter</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api_reference.html">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api_reference.html#stage">Stage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_reference.html#surface">Surface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#wireframe">WireFrame</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_reference.html#line">Line</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_reference.html#particles">Particles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#scatter">Scatter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#surfaceplot">SurfacePlot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#wireframeplot">WireFramePlot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#lineplot">LinePlot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#particlesplot">ParticlesPlot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#scatterplot">ScatterPlot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_reference.html#embed">Embed</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="contribution.html">Contribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contribution.html">Contribution</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contribution.html#how-to-contribute">How to contribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contribution.html#how-to-build-elegans">How to build Elegans</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 </ul>
 </div>
 <ul class="simple">
 <li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
 </ul>
+</div>
 </div>
 
 

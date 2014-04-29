@@ -60,20 +60,40 @@
             <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="getting_started.html#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started.html#general-calling-method">General calling method</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started.html#quick-calling-functions">Quick calling functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started.html#embed-into-your-library">Embed into your library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#preparing-data">Preparing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#quick-plotting">Quick plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#multiple-plotting">Multiple plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#embedding-elegans-into-your-library">Embedding Elegans into your library</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="supporting_charts.html">Supporting Charts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="supporting_charts.html#surface">Surface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supporting_charts.html#wireframe">Wireframe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supporting_charts.html#line">Line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supporting_charts.html#particles">Particles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supporting_charts.html#scatter">Scatter</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api_reference.html">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api_reference.html#stage">Stage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_reference.html#surface">Surface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#wireframe">WireFrame</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_reference.html#line">Line</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_reference.html#particles">Particles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#scatter">Scatter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#surfaceplot">SurfacePlot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#wireframeplot">WireFramePlot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#lineplot">LinePlot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#particlesplot">ParticlesPlot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#scatterplot">ScatterPlot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_reference.html#embed">Embed</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">Contribution</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Contribution</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-contribute">How to contribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-build-elegans">How to build Elegans</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 </ul>
 
@@ -111,6 +131,33 @@
             
   <div class="section" id="contribution">
 <h1>Contribution<a class="headerlink" href="#contribution" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="how-to-contribute">
+<h2>How to contribute<a class="headerlink" href="#how-to-contribute" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Fork it.</li>
+<li>Create your feauture branch.</li>
+<li>Commit your changes.</li>
+<li>Push to the branch.</li>
+<li>Create new Pull-request.</li>
+</ul>
+</div>
+<div class="section" id="how-to-build-elegans">
+<h2>How to build Elegans<a class="headerlink" href="#how-to-build-elegans" title="Permalink to this headline">¶</a></h2>
+<p>Before building Elegans, you need to install node.js and npm.</p>
+<div class="highlight-shell"><div class="highlight"><pre>sudo apt-get install node
+</pre></div>
+</div>
+<p>After installing, Pull repository from GitHub.</p>
+<div class="highlight-shell"><div class="highlight"><pre>git pull https://github.com/domitry/elegans.git
+</pre></div>
+</div>
+<p>Then, run commands below.</p>
+<div class="highlight-shell"><div class="highlight"><pre>cd elegans
+npm install
+grunt release
+</pre></div>
+</div>
+</div>
 </div>
 
 

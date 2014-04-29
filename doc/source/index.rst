@@ -3,8 +3,12 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Elegans's documentation!
-===================================
+Elegans - elegance 3D plots generator with WebGL
+================================================
+
+Description
+-----------
+Elegans is a 3D plotting library written in JavaScript. With Elegans, you can generate charts in JavaScript, and show them on your browser.
 
 Contents:
 
@@ -12,6 +16,7 @@ Contents:
    :maxdepth: 2
 
    getting_started
+   supporting_charts
    api_reference
    contribution
    license
