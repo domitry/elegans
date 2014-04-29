@@ -1414,19 +1414,14 @@ define('utils/datasets',[
     "utils/range"
 ],function(Range){
     function MatrixDataset(data){
-	var ranges = new Array();
-	var functions = [
-	    function(val){return val.x},
-	    function(val){return val.y},
-	    function(val){return val.z}
-	];
-	for(var i=0;i<3;i++){
+	var ranges = {};
+	for(i in data){
 	    ranges[i] = new Range(
-		d3.max(data, function(d){return d3.max(d, functions[i])}),
-		d3.min(data, function(d){return d3.min(d, functions[i])})
+		d3.max(data[i], function(d){return Math.max.apply(null,d);}),
+		d3.min(data[i], function(d){return Math.min.apply(null,d);})
 	    );
 	}
-	this.ranges = {x:ranges[0], y:ranges[1], z:ranges[2]};
+	this.ranges = ranges;
 	this.raw = data;
 	return this;
     }
@@ -1791,7 +1786,6 @@ define('charts/surface',[
     Surface.prototype.generateMesh = function(scales){
 	var data = this.dataset.raw;
 	var geometry = new THREE.Geometry();
-	var width = data.length, height = data[0].length;
 	var color_scale = d3.scale.linear()
 	    .domain(this.ranges.z.divide(this.options.fill_colors.length))
 	    .range(this.options.fill_colors);
@@ -1807,17 +1801,18 @@ define('charts/surface',[
 	    color_arr = [colors[p3], colors[p2], colors[p1]];
 	    geometry.faces.push(new THREE.Face3(p3, p2, p1, vec1.negate(), color_arr));
 	}
+	var width = data.x.length, height = data.x[0].length;
 
-	data.forEach(function(col){
-	    col.forEach(function(val){
+	for(var i=0;i<width;i++){
+	    for(var j=0;j<height;j++){
 		geometry.vertices.push(new THREE.Vector3(
-		    scales.x(val.x),
-		    scales.y(val.y),
-		    scales.z(val.z)
+		    scales.x(data.x[i][j]),
+		    scales.y(data.y[i][j]),
+		    scales.z(data.z[i][j])
 		));
-		colors.push(new THREE.Color(color_scale(val.z)));
-	    });
-	});
+		colors.push(new THREE.Color(color_scale(data.z[i][j])));
+	    }
+	}
 
 	for(var x=0;x<width-1;x++){
 	    for(var y=0;y<height-1;y++){

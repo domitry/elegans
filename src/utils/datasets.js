@@ -2,19 +2,14 @@ define([
     "utils/range"
 ],function(Range){
     function MatrixDataset(data){
-	var ranges = new Array();
-	var functions = [
-	    function(val){return val.x},
-	    function(val){return val.y},
-	    function(val){return val.z}
-	];
-	for(var i=0;i<3;i++){
+	var ranges = {};
+	for(i in data){
 	    ranges[i] = new Range(
-		d3.max(data, function(d){return d3.max(d, functions[i])}),
-		d3.min(data, function(d){return d3.min(d, functions[i])})
+		d3.max(data[i], function(d){return Math.max.apply(null,d);}),
+		d3.min(data[i], function(d){return Math.min.apply(null,d);})
 	    );
 	}
-	this.ranges = {x:ranges[0], y:ranges[1], z:ranges[2]};
+	this.ranges = ranges;
 	this.raw = data;
 	return this;
     }
