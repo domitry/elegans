@@ -25,10 +25,11 @@ define([
 	    .style("width",String(this.options.world_width))
 	    .style("height",String(this.options.height));
 
-	this.legend_space = selection.append("svg")
+	this.legend_space = selection.append("div")
 	    .style("float","left")
 	    .style("width",String(this.options.width - this.options.world_width))
 	    .style("height",String(this.options.height));
+
 	this.charts = [];
 
 	this.world = new World({
@@ -57,7 +58,10 @@ define([
             var chart=this.charts[i];
             chart.generateMesh(this.space.getScales());
 	    this.world.addMesh(chart.getMesh());
-            if(chart.hasLegend())chart.addLegend(this.legend_space);
+            if(chart.hasLegend()){
+		var legend = chart.getLegend();
+		this.legend_space[0][0].appendChild(legend[0][0]);
+	    }
         }
 	this.world.begin(this.world_space);
     }

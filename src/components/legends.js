@@ -1,7 +1,15 @@
 define([],function(){
 
-    function addContinuousLegend(svg, range, color){
+    function generateContinuousLegend(range, color){
 	var scale = d3.scale.linear().domain([range.max, range.min]).range([0,200]);
+
+	var div = d3.select(document.createElement("div"))
+	    .style("padding", "5px")
+	    .style("float", "left")
+	    .style("height","auto");
+	
+	var svg = div.append("svg")	
+	    .style("height","100%"); // fixed for Mozilla Firefox Bug 736431
 
 	var gradient = svg.append("svg:defs")
 	    .append("svg:linearGradient")
@@ -34,10 +42,55 @@ define([],function(){
 		  .scale(scale)
 		  .orient("right")
 		  .ticks(5));
+	return div;
     };
 
+    function generateDiscreteLegend(name, color, chart){
+	var div = d3.select(document.createElement("div"))
+	    .style("padding", "4")
+	    .style("float", "left")
+	    .style("height","16")
+	    .style("width","100%");
+	
+	var svg = div.append("svg")
+	    .attr("height","100%");// fixed for Mozilla Firefox Bug 736431
+	
+	var onclick_func = function(event){
+	    var element = event.target;
+	    if(element.getAttribute("fill-opacity")=="0.0"){
+		element.setAttribute("fill-opacity","1.0");
+		element.chart.appear();
+	    }else{
+		element.setAttribute("fill-opacity","0.0");
+		element.chart.disappear();
+	    }
+	};
+
+	var circle = svg.append("circle")
+	    .attr("cx","8")
+	    .attr("cy","8")
+	    .attr("r","6")
+	    .attr("stroke",color)
+	    .attr("stroke-width","2")
+	    .attr("fill",color)
+	    .style("cursor","pointer");
+
+	circle[0][0].chart = chart;
+
+	circle[0][0].onclick = onclick_func;
+
+	svg.append("text")
+	    .attr("x","18")
+	    .attr("y","12")
+	    .attr("font-size","12")
+	    .text(name);
+
+	return div;
+    }
+
     var Legends = {
-	addContinuousLegend:addContinuousLegend
+	generateContinuousLegend:generateContinuousLegend,
+	generateDiscreteLegend:generateDiscreteLegend
     };
 
     return Legends;

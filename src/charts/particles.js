@@ -6,6 +6,7 @@ define([
 ],function(Legends, Utils, Datasets, colorbrewer){
     function Particles(data, options){
 	this.options = {
+	    name: "Particle",
 	    color: colorbrewer.Reds[3][1],
 	    size: 0.3,
 	    has_legend: true
@@ -31,7 +32,7 @@ define([
 	    );
 	    THREE.GeometryUtils.merge(geometry, mesh);
 	}
-	var material = new THREE.MeshBasicMaterial({color: this.options.color});
+	var material = new THREE.MeshBasicMaterial({transparent:true, color: this.options.color});
 	this.mesh = new THREE.Mesh(geometry, material);
     }
 
@@ -43,7 +44,17 @@ define([
 	return this.options.has_legend;
     }
 
-    Particles.prototype.addLegend = function(svg){
+    Particles.prototype.disappear = function(){
+	this.mesh.material.opacity = 0;
+	this.mesh.material.needsUpdate = true;
+    }
+
+    Particles.prototype.appear = function(){
+	this.mesh.material.opacity = 1;
+    }
+
+    Particles.prototype.getLegend = function(){
+	return Legends.generateDiscreteLegend(this.options.name, this.options.color, this);
     }
     
     Particles.prototype.getMesh = function(){

@@ -4,7 +4,7 @@
   <link rel='stylesheet' href='common.css'>
   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/three.js/r66/three.min.js"></script>
   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.4/d3.min.js"></script>
-  <script type="text/javascript" src="../release/elegans.min.js"></script>
+  <script type="text/javascript" src="../release/elegans.js"></script>
   <script type="text/javascript">
     window.onload = function(){
     var stage = new Elegans.Stage(d3.select("#vis")[0][0]);
@@ -26,7 +26,11 @@
         }
         var data = {x:x_arr, y:y_arr, z:z_arr};
         var color = color_scale(n);
-        stage.add(new Elegans.Scatter(data, {fill_color: color, shape: shapes[n]}));
+        stage.add(new Elegans.Scatter(data, {
+		fill_color: color, 
+		shape: shapes[n], 
+		name: "data"+String(n)
+	}));
     }
     stage.render();
     };

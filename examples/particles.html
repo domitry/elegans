@@ -4,7 +4,7 @@
   <link rel='stylesheet' href='common.css'>
   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/three.js/r66/three.min.js"></script>
   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.4/d3.min.js"></script>
-  <script type="text/javascript" src="../release/elegans.min.js"></script>
+  <script type="text/javascript" src="../release/elegans.js"></script>
   <script src="http://github.com/mrdoob/three.js/raw/r49/examples/js/ImprovedNoise.js"></script>
   <script type="text/javascript">
     window.onload = function(){
@@ -27,7 +27,7 @@
         }
         var data = {x:x_arr, y:y_arr, z:z_arr};
         var color = color_scale(n);
-        stage.add(new Elegans.Particles(data, {color: color}));
+        stage.add(new Elegans.Particles(data, {color: color, name: "molecule"+String(n)}));
     }
     stage.render();
     };

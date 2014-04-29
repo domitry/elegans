@@ -67,8 +67,8 @@ define([
 	return this.options.has_legend;
     }
 
-    Surface.prototype.addLegend = function(svg){
-	Legends.addContinuousLegend(svg, this.ranges.z, this.options.fill_colors);
+    Surface.prototype.getLegend = function(){
+	return Legends.generateContinuousLegend(this.ranges.z, this.options.fill_colors);
     }
     
     Surface.prototype.getMesh = function(){

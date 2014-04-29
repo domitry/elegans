@@ -1267,10 +1267,11 @@ define('components/stage',[
 	    .style("width",String(this.options.world_width))
 	    .style("height",String(this.options.height));
 
-	this.legend_space = selection.append("svg")
+	this.legend_space = selection.append("div")
 	    .style("float","left")
 	    .style("width",String(this.options.width - this.options.world_width))
 	    .style("height",String(this.options.height));
+
 	this.charts = [];
 
 	this.world = new World({
@@ -1299,7 +1300,10 @@ define('components/stage',[
             var chart=this.charts[i];
             chart.generateMesh(this.space.getScales());
 	    this.world.addMesh(chart.getMesh());
-            if(chart.hasLegend())chart.addLegend(this.legend_space);
+            if(chart.hasLegend()){
+		var legend = chart.getLegend();
+		this.legend_space[0][0].appendChild(legend[0][0]);
+	    }
         }
 	this.world.begin(this.world_space);
     }
@@ -1309,8 +1313,16 @@ define('components/stage',[
 
 define('components/legends',[],function(){
 
-    function addContinuousLegend(svg, range, color){
+    function generateContinuousLegend(range, color){
 	var scale = d3.scale.linear().domain([range.max, range.min]).range([0,200]);
+
+	var div = d3.select(document.createElement("div"))
+	    .style("padding", "5px")
+	    .style("float", "left")
+	    .style("height","auto");
+	
+	var svg = div.append("svg")	
+	    .style("height","100%"); // fixed for Mozilla Firefox Bug 736431
 
 	var gradient = svg.append("svg:defs")
 	    .append("svg:linearGradient")
@@ -1343,10 +1355,55 @@ define('components/legends',[],function(){
 		  .scale(scale)
 		  .orient("right")
 		  .ticks(5));
+	return div;
     };
 
+    function generateDiscreteLegend(name, color, chart){
+	var div = d3.select(document.createElement("div"))
+	    .style("padding", "4")
+	    .style("float", "left")
+	    .style("height","16")
+	    .style("width","100%");
+	
+	var svg = div.append("svg")
+	    .attr("height","100%");// fixed for Mozilla Firefox Bug 736431
+	
+	var onclick_func = function(event){
+	    var element = event.target;
+	    if(element.getAttribute("fill-opacity")=="0.0"){
+		element.setAttribute("fill-opacity","1.0");
+		element.chart.appear();
+	    }else{
+		element.setAttribute("fill-opacity","0.0");
+		element.chart.disappear();
+	    }
+	};
+
+	var circle = svg.append("circle")
+	    .attr("cx","8")
+	    .attr("cy","8")
+	    .attr("r","6")
+	    .attr("stroke",color)
+	    .attr("stroke-width","2")
+	    .attr("fill",color)
+	    .style("cursor","pointer");
+
+	circle[0][0].chart = chart;
+
+	circle[0][0].onclick = onclick_func;
+
+	svg.append("text")
+	    .attr("x","18")
+	    .attr("y","12")
+	    .attr("font-size","12")
+	    .text(name);
+
+	return div;
+    }
+
     var Legends = {
-	addContinuousLegend:addContinuousLegend
+	generateContinuousLegend:generateContinuousLegend,
+	generateDiscreteLegend:generateDiscreteLegend
     };
 
     return Legends;
@@ -1779,8 +1836,8 @@ define('charts/surface',[
 	return this.options.has_legend;
     }
 
-    Surface.prototype.addLegend = function(svg){
-	Legends.addContinuousLegend(svg, this.ranges.z, this.options.fill_colors);
+    Surface.prototype.getLegend = function(){
+	return Legends.generateContinuousLegend(this.ranges.z, this.options.fill_colors);
     }
     
     Surface.prototype.getMesh = function(){
@@ -1798,6 +1855,7 @@ define('charts/particles',[
 ],function(Legends, Utils, Datasets, colorbrewer){
     function Particles(data, options){
 	this.options = {
+	    name: "Particle",
 	    color: colorbrewer.Reds[3][1],
 	    size: 0.3,
 	    has_legend: true
@@ -1823,7 +1881,7 @@ define('charts/particles',[
 	    );
 	    THREE.GeometryUtils.merge(geometry, mesh);
 	}
-	var material = new THREE.MeshBasicMaterial({color: this.options.color});
+	var material = new THREE.MeshBasicMaterial({transparent:true, color: this.options.color});
 	this.mesh = new THREE.Mesh(geometry, material);
     }
 
@@ -1835,7 +1893,17 @@ define('charts/particles',[
 	return this.options.has_legend;
     }
 
-    Particles.prototype.addLegend = function(svg){
+    Particles.prototype.disappear = function(){
+	this.mesh.material.opacity = 0;
+	this.mesh.material.needsUpdate = true;
+    }
+
+    Particles.prototype.appear = function(){
+	this.mesh.material.opacity = 1;
+    }
+
+    Particles.prototype.getLegend = function(){
+	return Legends.generateDiscreteLegend(this.options.name, this.options.color, this);
     }
     
     Particles.prototype.getMesh = function(){
@@ -1854,6 +1922,7 @@ define('charts/line',[
 ],function(Legends, Utils, Range, Datasets, colorbrewer){
     function Line(data, options){
 	this.options = {
+	    name: "Line",
 	    colors: colorbrewer.Blues[3],
 	    thickness: 1,
 	    has_legend: true
@@ -1883,7 +1952,7 @@ define('charts/line',[
 	    geometry.colors.push(new THREE.Color(color_scale(i)));
 	}
 	geometry.colorsNeedUpdate = true;
-	var material = new THREE.LineBasicMaterial({vertexColors:THREE.VertexColors, linewidth:this.options.thickness});
+	var material = new THREE.LineBasicMaterial({vertexColors:THREE.VertexColors, linewidth:this.options.thickness, transparent:true});
 	this.mesh = new THREE.Line(geometry, material);
     }
 
@@ -1895,7 +1964,17 @@ define('charts/line',[
 	return this.options.has_legend;
     }
 
-    Line.prototype.addLegend = function(svg){
+    Line.prototype.disappear = function(){
+	this.mesh.material.opacity = 0;
+	this.mesh.material.needsUpdate = true;
+    }
+
+    Line.prototype.appear = function(){
+	this.mesh.material.opacity = 1;
+    }
+
+    Line.prototype.getLegend = function(){
+	return Legends.generateDiscreteLegend(this.options.name, this.options.colors[0], this);
     }
     
     Line.prototype.getMesh = function(){
@@ -1913,6 +1992,7 @@ define('charts/scatter',[
 ],function(Legends, Utils, Datasets, colorbrewer){
     function Scatter(data, options){
 	this.options = {
+	    name: "Scatter",
 	    shape: "circle",
 	    size: 1.5,
 	    stroke_width: 3,
@@ -2002,9 +2082,22 @@ define('charts/scatter',[
 	return this.options.has_legend;
     }
 
-    Scatter.prototype.addLegend = function(svg){
+    Scatter.prototype.disappear = function(){
+	for(var i=0;i<this.mesh.length;i++){
+	    this.mesh[i].material.opacity = 0;
+	}
     }
-    
+
+    Scatter.prototype.appear = function(){
+	for(var i=0;i<this.mesh.length;i++){
+	    this.mesh[i].material.opacity = 1;
+	}
+    }
+
+    Scatter.prototype.getLegend = function(){
+	return Legends.generateDiscreteLegend(this.options.name, this.options.fill_color, this);
+    }
+
     Scatter.prototype.getMesh = function(){
 	return this.mesh;
     };

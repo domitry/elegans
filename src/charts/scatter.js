@@ -6,6 +6,7 @@ define([
 ],function(Legends, Utils, Datasets, colorbrewer){
     function Scatter(data, options){
 	this.options = {
+	    name: "Scatter",
 	    shape: "circle",
 	    size: 1.5,
 	    stroke_width: 3,
@@ -95,9 +96,22 @@ define([
 	return this.options.has_legend;
     }
 
-    Scatter.prototype.addLegend = function(svg){
+    Scatter.prototype.disappear = function(){
+	for(var i=0;i<this.mesh.length;i++){
+	    this.mesh[i].material.opacity = 0;
+	}
     }
-    
+
+    Scatter.prototype.appear = function(){
+	for(var i=0;i<this.mesh.length;i++){
+	    this.mesh[i].material.opacity = 1;
+	}
+    }
+
+    Scatter.prototype.getLegend = function(){
+	return Legends.generateDiscreteLegend(this.options.name, this.options.fill_color, this);
+    }
+
     Scatter.prototype.getMesh = function(){
 	return this.mesh;
     };
