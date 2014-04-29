@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Elegans - elegance 3D plots generator with WebGL
+Elegans - Elegant 3D plots generator with WebGL
 ================================================
 
 Description
