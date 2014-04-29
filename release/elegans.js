@@ -1843,6 +1843,98 @@ define('charts/surface',[
     return Surface;
 });
 
+define('charts/wireframe',[
+    "components/legends",
+    "utils/utils",
+    "utils/datasets",
+    "utils/colorbrewer"
+],function(Legends, Utils, Datasets, colorbrewer){
+    function Wireframe(data, options){
+	this.options = {
+	    name: "wireframe",
+	    color: "#999999",
+	    thickness: 1,
+	    has_legend: true
+	};
+
+	if(arguments.length > 1){
+	    Utils.merge(this.options, options);
+	}
+
+	this.dataset = new Datasets.Matrix(data);
+	this.ranges = this.dataset.getRanges();
+    }
+
+    Wireframe.prototype.generateMesh = function(scales){
+	var data = this.dataset.raw;
+	var width = data.x.length, height = data.x[0].length;
+	var material = new THREE.LineBasicMaterial({ 
+	    color: this.options.color,
+	    type: THREE.LineStrip,
+	    linewidth: this.options.thickness,
+	    transparent: true
+	});
+	var meshes = [];
+	for(var i=0;i<width;i++){
+	    var geometry = new THREE.Geometry();
+	    for(var j=0;j<height;j++){
+		geometry.vertices.push(new THREE.Vector3(
+		    scales.x(data.x[i][j]),
+		    scales.y(data.y[i][j]),
+		    scales.z(data.z[i][j])
+		));
+	    }
+	    meshes.push(new THREE.Line(geometry, material));
+	}
+
+	for(var j=0;j<height;j++){
+	    var geometry = new THREE.Geometry();
+	    for(var i=0;i<width;i++){
+		geometry.vertices.push(new THREE.Vector3(
+		    scales.x(data.x[i][j]),
+		    scales.y(data.y[i][j]),
+		    scales.z(data.z[i][j])
+		));
+	    }
+	    meshes.push(new THREE.Line(geometry, material));
+	}
+
+	this.mesh = meshes;
+    }
+
+    Wireframe.prototype.getDataRanges = function(){
+	return this.ranges;
+    }
+    
+    Wireframe.prototype.hasLegend = function(){
+	return this.options.has_legend;
+    }
+
+    Wireframe.prototype.disappear = function(){
+	for(var i=0;i<this.mesh.length;i++){
+	    this.mesh[i].material.opacity = 0;
+	    this.mesh[i].material.needsUpdate = true;
+	}
+    }
+
+    Wireframe.prototype.appear = function(){
+	for(var i=0;i<this.mesh.length;i++){
+	    this.mesh[i].material.opacity = 1;
+	    this.mesh[i].material.needsUpdate = true;
+	}
+    }
+
+    Wireframe.prototype.getLegend = function(){
+	return Legends.generateDiscreteLegend(this.options.name, this.options.color, this);
+    }
+    
+    Wireframe.prototype.getMesh = function(){
+	return this.mesh;
+    };
+
+    return Wireframe;
+});
+
 define('charts/particles',[
     "components/legends",
     "utils/utils",
@@ -2169,6 +2261,50 @@ define('quick/surface_plot',[
     return SurfacePlot;
 });
 
+define('quick/wireframe_plot',[
+    "components/stage",
+    "quick/base",
+    "charts/wireframe",
+    "utils/utils"
+],function(Stage, Base, Wireframe, Utils){
+
+    function WireframePlot(selection){
+	selection.each(function(data){
+	    var stage = new Stage(this);
+	    stage.add(new Wireframe(data, options));
+	    stage.render();
+	});
+    }
+
+    WireframePlot.name = function(_){
+	this.options.name = _;
+	options = this.options;
+	return this;
+    }
+
+    WireframePlot.color = function(_){
+	this.options.color = _;
+	options = this.options;
+	return this;
+    }
+
+    WireframePlot.thickness = function(_){
+	this.options.thickness = _;
+	options = this.options;
+	return this;
+    }
+
+    WireframePlot.has_legend = function(_){
+	this.options.has_legend = _;
+	options = this.options;
+	return this;
+    }
+
+    Utils.mixin(WireframePlot, Base);
+
+    return WireframePlot;
+});
+
 define('quick/particles_plot',[
     "components/stage",
     "quick/base",
@@ -2326,7 +2462,7 @@ define('embed/embed',[
     return Embed;
 });
 
-define('main',['require','exports','module','components/stage','charts/surface','charts/particles','charts/line','charts/scatter','quick/surface_plot','quick/particles_plot','quick/line_plot','quick/scatter_plot','embed/embed'],function(require, exports, module){
+define('main',['require','exports','module','components/stage','charts/surface','charts/wireframe','charts/particles','charts/line','charts/scatter','quick/surface_plot','quick/wireframe_plot','quick/particles_plot','quick/line_plot','quick/scatter_plot','embed/embed'],function(require, exports, module){
     Elegans = {};
 
     /***************************
@@ -2338,6 +2474,7 @@ define('main',['require','exports','module','components/stage','charts/surface',
 
     Elegans.Stage = require("components/stage");
     Elegans.Surface = require("charts/surface");
+    Elegans.Wireframe = require("charts/wireframe");
     Elegans.Particles = require("charts/particles");
     Elegans.Line = require("charts/line");
     Elegans.Scatter = require("charts/scatter");
@@ -2348,6 +2485,7 @@ define('main',['require','exports','module','components/stage','charts/surface',
     ****************/
 
     Elegans.SurfacePlot = require("quick/surface_plot");
+    Elegans.WireframePlot = require("quick/wireframe_plot");
     Elegans.ParticlesPlot = require("quick/particles_plot");
     Elegans.LinePlot = require("quick/line_plot");
     Elegans.ScatterPlot = require("quick/scatter_plot");

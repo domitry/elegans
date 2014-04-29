@@ -15,9 +15,10 @@ Please see [documents](http://elegans.readthedocs.org) to learn more.
 | Name | Shortcuts function | Data type | Legend option | Link to examples |
 |:---- |:--------- |:--------- |:-----:|:----------------:|
 | Elegans.Surface | Elegans.SurfacePlot | Matrix | o | [example](http://bl.ocks.org/domitry/11322618) |
-| Elegans.Line | Elegans.LinePlot | Array | x | [example](http://bl.ocks.org/domitry/11338075) |
-| Elegans.Particles | Elegans.ParticlesPlot | Array | x | [example](http://bl.ocks.org/domitry/11322575) |
-| Elegans.Scatter | Elegans.ScatterPlot | Array | x | [example](http://bl.ocks.org/domitry/11373451) |
+| Elegans.Wireframe | Elegans.WireframePlot | Matrix | o | [example](http://bl.ocks.org/domitry/11392477) |
+| Elegans.Line | Elegans.LinePlot | Array | o | [example](http://bl.ocks.org/domitry/11338075) |
+| Elegans.Particles | Elegans.ParticlesPlot | Array | o | [example](http://bl.ocks.org/domitry/11322575) |
+| Elegans.Scatter | Elegans.ScatterPlot | Array | o | [example](http://bl.ocks.org/domitry/11373451) |
 
 ## Usage
 ### Getting Started
