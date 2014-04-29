@@ -2,15 +2,3 @@
     position:relative;
     width:600px;
 }
-
-.axis path,
-.axis line{
-    fill: none;
-    stroke: black;
-    shape-rendering: crispEdges;
-}
-
-.axis text {
-    font-family: san-serif;
-    font-size: 11px;
-}

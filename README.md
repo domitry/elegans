@@ -31,12 +31,6 @@ And add code below to your html file.
 <script type="text/javascript" src="your_link_to_elegans.min.js"></script>
 ```
 
-If you needs legends, add link to css file.
-
-```html:
-<link rel='stylesheet' href='https://rawgit.com/domitry/elegans/master/examples/common.css'>
-```
-
 ### Generating charts with JavaScript
 
 First you need to create stage, then generate some charts add them to the stage.

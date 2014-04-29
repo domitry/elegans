@@ -1356,6 +1356,21 @@ define('components/legends',[],function(){
 		  .scale(scale)
 		  .orient("right")
 		  .ticks(5));
+
+	svg.selectAll(".axis").selectAll("path")
+	    .style("fill", "none")
+	    .style("stroke", "black")
+	    .style("shape-rendering", "crispEdges");
+
+	svg.selectAll(".axis").selectAll("line")
+	    .style("fill", "none")
+	    .style("stroke", "black")
+	    .style("shape-rendering", "crispEdges");
+
+	svg.selectAll(".axis").selectAll("text")
+	    .style("font-family", "san-serif")
+	    .style("font-size", "11px");
+
 	return div;
     };
 
