@@ -6,9 +6,10 @@ define([],function(){
 	var div = d3.select(document.createElement("div"))
 	    .style("padding", "5px")
 	    .style("float", "left")
+	    .style("width","100")
 	    .style("height","auto");
 	
-	var svg = div.append("svg")	
+	var svg = div.append("svg")
 	    .style("height","100%"); // fixed for Mozilla Firefox Bug 736431
 
 	var gradient = svg.append("svg:defs")
