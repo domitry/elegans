@@ -13,7 +13,7 @@ define([
 	});
     }
 
-    LinePlot.name = function(_){
+    LinePlot.data_name = function(_){
 	this.options.name = _;
 	options = this.options;
 	return this;

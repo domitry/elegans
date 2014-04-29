@@ -13,7 +13,7 @@ define([
 	});
     }
 
-    WireframePlot.name = function(_){
+    WireframePlot.data_name = function(_){
 	this.options.name = _;
 	options = this.options;
 	return this;

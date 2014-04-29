@@ -13,6 +13,12 @@ define([
 	});
     }
 
+    ScatterPlot.data_name = function(_){
+	this.options.name = _;
+	options = this.options;
+	return this;
+    }
+
     ScatterPlot.shape = function(_){
 	this.options.shape = _;
 	options = this.options;
