@@ -1,5 +1,5 @@
 # Elegans
-A 3D plotting library for web browsers enabling WebGL.
+Elegant 3D plots generator with WebGL.
 
 ![alt text](https://dl.dropboxusercontent.com/u/47978121/ss561.png)
 
@@ -50,15 +50,15 @@ d3.select('#vis').datum(data).call(Elegans.SurfacePlot);
 
 
 ### Embed Elegans to your environment
-Elegans have api to make it easier to embed it into environments except browsers, like IPython notebook.
-What you have to do is to generate simple JSON object, and embed it to static html templates. See below.
+Elegans has API to make it easier to embed it into environments except browsers, like IPython notebook.
+What you have to do is only to generate simple JSON object, and embed it into static html templates. See below.
 
 ```javascript:
 var model = {charts:[{type:"Particles",data:{x:[1,2,3],y:[1,2,3],z:[1,2,3]},options:{color:"#000000"}}], options:{width:500, height:500}};
 Elegans.Embed.parse(model, "#vis");
 ```
 
-If you need more information, please see [latest examples](https://github.com/domitry/elegans/tree/master/examples).
+If you need more information, see [documents](http://elegans.readthedocs.org).
 
 ## Build Elegans
 First, pull repository from github.
