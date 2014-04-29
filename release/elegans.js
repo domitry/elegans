@@ -2373,6 +2373,12 @@ define('quick/line_plot',[
 	});
     }
 
+    LinePlot.name = function(_){
+	this.options.name = _;
+	options = this.options;
+	return this;
+    }
+
     LinePlot.colors = function(_){
 	this.options.colors = _;
 	options = this.options;
