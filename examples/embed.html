@@ -1,0 +1,21 @@
+<html lang="en">
+<head>
+  <title>Plot Sample - Embed</title>
+  <link rel='stylesheet' href='common.css'>
+  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/three.js/r66/three.min.js"></script>
+  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.4/d3.min.js"></script>
+  <script type="text/javascript" src="../release/elegans.js"></script>
+  <script type="text/javascript">
+window.onload = function(){
+var model = {
+plots:[{type:"Scatter",data:{x:[-1,4,15,2,3],y:[-14,2,1,2,3],z:[23,1,1,2,3]},options:{color:"#000000"}}],
+options:{width:500, height:500}
+};
+Elegans.Embed.parse("#vis",model).render();
+};
+  </script>
+</head>
+<body>
+<div id="vis">
+</div>
+</body>
