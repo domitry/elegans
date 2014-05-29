@@ -8,7 +8,10 @@
   <script type="text/javascript">
 window.onload = function(){
 var model = {
-plots:[{type:"Scatter",data:{x:[-1,4,15,2,3],y:[-14,2,1,2,3],z:[23,1,1,2,3]},options:{color:"#000000"}}],
+plots:[
+{type:"Scatter",data:{x:[-1,4,15,2,3],y:[-14,2,1,2,3],z:[23,1,1,2,3]},options:{color:"#000000", shape:"cross"}},
+{type:"Scatter",data:{x:[2,1,12,3,4],y:[14,2,2,2,3],z:[2,1,5,2,3]},options:{color:"#33ffff", shape:"circle"}}
+],
 options:{width:500, height:500}
 };
 Elegans.Embed.parse("#vis",model).render();

@@ -430,7 +430,7 @@ define("../lib/almond/almond", function(){});
  * @author Eberhard Graether / http://egraether.com/
  */
 define('utils/TrackballControls',[],function(){
-    THREE.TrackballControls = function ( object, domElement ) {
+    TrackballControls = function ( object, domElement ) {
 
 	var _this = this;
 	var STATE = { NONE: -1, ROTATE: 0, ZOOM: 1, PAN: 2, TOUCH_ROTATE: 3, TOUCH_ZOOM: 4, TOUCH_PAN: 5 };
@@ -972,12 +972,14 @@ define('utils/TrackballControls',[],function(){
 
     };
 
-    THREE.TrackballControls.prototype = Object.create( THREE.EventDispatcher.prototype );
+    TrackballControls.prototype = Object.create( THREE.EventDispatcher.prototype );
+    THREE.TrackballControls = TrackballControls;
+    return TrackballControls;
 });
 
 define('components/world',[
     "utils/TrackballControls"
-],function(){
+],function(TrackballControls){
 
     var world, animate;
 
@@ -999,7 +1001,7 @@ define('components/world',[
 	this.renderer = new THREE.WebGLRenderer({antialias:true});
 	this.renderer.setSize(options.width, options.height);
 	this.renderer.setClearColor(options.bg_color, 1);
-	this.controls = new THREE.TrackballControls(this.camera, this.renderer.domElement);
+	this.controls = new TrackballControls(this.camera, this.renderer.domElement);
 	this.camera.position.set(-30, 31,42);
 	this.camera.rotation.set(-0.6,-0.5,0.6);
 
