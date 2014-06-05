@@ -981,8 +981,6 @@ define('components/world',[
     "utils/TrackballControls"
 ],function(TrackballControls){
 
-    var world, animate;
-
     function World(options){
 	this.scene = new THREE.Scene();
 
@@ -1009,18 +1007,18 @@ define('components/world',[
     }
 
     World.prototype.begin = function(selection){
-	var element;
-	selection.each(function(){element = this});
-	element.appendChild(this.renderer.domElement);
-	world = this;
+	selection[0][0].appendChild(this.renderer.domElement);
+
+	var world = this;
+	this.animate = function(){
+	    requestAnimationFrame(world.animate);
+	    world.renderer.render(world.scene, world.camera);
+	    world.controls.update();
+	};
 	this.animate();
     }
 
-    World.prototype.animate = function(){
-	requestAnimationFrame(world.animate);
-	world.renderer.render(world.scene, world.camera);
-	world.controls.update();
-    }
+    World.prototype.animate = 
 
     World.prototype.addMesh = function(mesh){
 	if(mesh instanceof Array){
