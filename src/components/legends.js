@@ -64,7 +64,6 @@ define([],function(){
     function generateDiscreteLegend(name, color, chart){
 	var div = d3.select(document.createElement("div"))
 	    .style("padding", "4")
-	    .style("float", "left")
 	    .style("height","16")
 	    .style("width","100%");
 	
