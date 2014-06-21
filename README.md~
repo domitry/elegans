@@ -11,7 +11,7 @@ We began to develop Elegans in order to embed it into other languages like Ruby 
 Elegans is still in its alpha release, and some charts and options are not implemented yet.
 Please see [documents](http://elegans.readthedocs.org) to learn more.
 
-## Demos
+## Supporting charts
 | Name | Shortcuts function | Data type | Legend option | Link to examples |
 |:---- |:--------- |:--------- |:-----:|:----------------:|
 | Elegans.Surface | Elegans.SurfacePlot | Matrix | o | [example](http://bl.ocks.org/domitry/11322618) |
@@ -33,7 +33,7 @@ And add code below to your html file.
 
 ### Generating charts with JavaScript
 
-At first you need to create stage, then generate some charts add them to the stage.
+First you need to create stage, then generate some charts add them to the stage.
 
 ```javascript:
 var stage = new Elegans.Stage(d3.select(#vis));
@@ -61,7 +61,7 @@ Elegans.Embed.parse(model, "#vis");
 If you need more information, see [documents](http://elegans.readthedocs.org).
 
 ## Build Elegans
-At first, pull repository from github.
+First, pull repository from github.
 
 ```shell:
 git pull https://github.com/domitry/elegans.git
@@ -76,8 +76,8 @@ npm install
 grunt release
 ```
 
-## Supported browsers
-We are checking if Elegans works well on two browsers.
+## Supporting browsers
+We are checking if Elegans works well on these two browsers.
 * Google Chrome: Latest version
 * Firefox: Latest version
 
