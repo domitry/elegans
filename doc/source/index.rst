@@ -16,7 +16,7 @@ Contents:
    :maxdepth: 2
 
    getting_started
-   supporting_charts
+   demos
    api_reference
    contribution
    license
