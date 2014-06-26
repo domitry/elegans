@@ -1,4 +1,4 @@
-Supporting Charts
+Demos
 =================
 
 .. _import-docs:
