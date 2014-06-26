@@ -1321,7 +1321,7 @@ define('components/legends',[],function(){
 	    .style("height","auto");
 	
 	var svg = div.append("svg")
-	    .style("height","30px") // fixed for Mozilla Firefox Bug 736431
+	    .style("height","100%") // fixed for Mozilla Firefox Bug 736431
 	    .style("width", "100px");
 
 	var gradient = svg.append("svg:defs")
@@ -1380,7 +1380,8 @@ define('components/legends',[],function(){
 	    .style("width","100%");
 	
 	var svg = div.append("svg")
-	    .attr("height","100%");// fixed for Mozilla Firefox Bug 736431
+	    .style("height","30px") // fixed for Mozilla Firefox Bug 736431
+	    .style("width", "100px");
 	
 	var onclick_func = function(event){
 	    var element = event.target;
