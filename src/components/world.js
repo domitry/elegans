@@ -39,8 +39,6 @@ define([
 	this.animate();
     }
 
-    World.prototype.animate = 
-
     World.prototype.addMesh = function(mesh){
 	if(mesh instanceof Array){
 	    for(var i=0; i<mesh.length; i++){
