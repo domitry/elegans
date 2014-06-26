@@ -10,7 +10,8 @@ define([],function(){
 	    .style("height","auto");
 	
 	var svg = div.append("svg")
-	    .style("height","100%"); // fixed for Mozilla Firefox Bug 736431
+	    .style("height","30px") // fixed for Mozilla Firefox Bug 736431
+	    .style("width", "100px");
 
 	var gradient = svg.append("svg:defs")
 	    .append("svg:linearGradient")
