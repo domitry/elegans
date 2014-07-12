@@ -1,4 +1,6 @@
 (function (root, initialize){
-    root.Elegans = initialize();
+    var Elegans = initialize();
+    if(typeof define !== undefined && define.amd)define(Elegans);
+    root.Elegans = Elegans;
 }(this, function(){
     //modules here
