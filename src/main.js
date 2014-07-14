@@ -1,5 +1,5 @@
 define(function(require, exports, module){
-    Elegans = {};
+    var Elegans = {};
 
     /***************************
       Prototype Objects for plotting
@@ -33,6 +33,7 @@ define(function(require, exports, module){
     ****************/
 
     Elegans.Embed = require("embed/embed");
+    Elegans.Nya = require("embed/nyaplot");
 
     return Elegans;
 });
