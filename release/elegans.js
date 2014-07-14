@@ -1,6 +1,6 @@
 (function (root, initialize){
     var Elegans = initialize();
-    if(typeof define !== undefined && define.amd)define(Elegans);
+    if(typeof define !== "undefined" && define.amd)define(Elegans);
     root.Elegans = Elegans;
 }(this, function(){
     //modules here
@@ -2621,7 +2621,6 @@ define('main',['require','exports','module','components/stage','charts/surface',
 
     Elegans.Embed = require("embed/embed");
     Elegans.Nya = require("embed/nyaplot");
-    
 
     return Elegans;
 });
