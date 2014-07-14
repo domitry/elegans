@@ -26,6 +26,7 @@ define([
 
         var plot = new (diagrams[type].chart)(data, options);
         this.stage.add(plot);
+        this.stage.render();
     };
 
     function initComponent(df_id, options){
