@@ -46,7 +46,7 @@ define([
     function prepareMatrix(df_id, _options){
         var mat = {};
         var columns = initComponent(df_id, _options);
-        ['x','y'].forEach(function(){
+        ['x','y'].forEach(function(label){
             var column = columns[label];
             var values = d3.set(column).values();
             var continuous_num = values.map(function(val){
