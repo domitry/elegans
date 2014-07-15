@@ -64,9 +64,9 @@ define([
                     }
                     return result;
                 };
-                mat.x = generate_mat(column['x'], len);
-                mat.y = generate_mat(column['y'], len);
-                mat.z = generate_mat(column['z'], len);
+                mat.x = generate_mat(columns['x'], len);
+                mat.y = generate_mat(columns['y'], len);
+                mat.z = generate_mat(columns['z'], len);
                 return;
             }
         });
