@@ -2546,7 +2546,7 @@ define('embed/nyaplot',[
     function prepareMatrix(df_id, _options){
         var mat = {};
         var columns = initComponent(df_id, _options);
-        for(var label in ['x','y']){
+        ['x','y'].forEach(function(){
             var column = columns[label];
             var values = d3.set(column).values();
             var continuous_num = values.map(function(val){
@@ -2555,7 +2555,7 @@ define('embed/nyaplot',[
                 while(column[seek]==val)seek++;
                 return seek-first;
             });
-            if(continuous_num.every(function(val){return val==continuous_num[0];})){
+            if(continuous_num.every(function(val){return (val==continuous_num[0] && val!=1);})){
                 var len = continuous_num[0];
                 var generate_mat = function(arr, length){
                     var result = [];
@@ -2567,9 +2567,9 @@ define('embed/nyaplot',[
                 mat.x = generate_mat(column['x'], len);
                 mat.y = generate_mat(column['y'], len);
                 mat.z = generate_mat(column['z'], len);
-                break;
+                return;
             }
-        }
+        });
         return mat;
     }
 
