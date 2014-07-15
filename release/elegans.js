@@ -2548,19 +2548,19 @@ define('embed/nyaplot',[
         var columns = initComponent(df_id, _options);
         ['x','y'].forEach(function(label){
             var column = columns[label];
-            var values = d3.set(column).values();
+            var values = column.filter(function(x,i){return column.indexOf(x)==i;});
             var continuous_num = values.map(function(val){
                 var first = column.indexOf(val);
                 var seek = first;
                 while(column[seek]==val)seek++;
                 return seek-first;
             });
-            if(continuous_num.every(function(val){return (val==continuous_num[0] && val!=1);})){
+            if(continuous_num.every(function(val){return (val==continuous_num[0] && val != 1);})){
                 var len = continuous_num[0];
                 var generate_mat = function(arr, length){
                     var result = [];
                     for(var i=0;i<arr.length;i+=length){
-                        result.push(arr.slice(i, i+len-1));
+                        result.push(arr.slice(i, i+length));
                     }
                     return result;
                 };
