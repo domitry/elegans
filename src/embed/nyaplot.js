@@ -15,6 +15,7 @@ define([
 	};
 
     function Pane(parent, _options){
+        this.uuid = Nyaplot.uuid.v4();
         this.stage = new Stage(parent[0][0], _options);
         this.rendered = false;
     }
