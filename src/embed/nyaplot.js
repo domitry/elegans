@@ -16,6 +16,7 @@ define([
 
     function Pane(parent, _options){
         this.stage = new Stage(parent[0][0], _options);
+        this.rendered = false;
     }
 
     Pane.prototype.addDiagram = function(type, df_id, options){
@@ -26,7 +27,6 @@ define([
 
         var plot = new (diagrams[type].chart)(data, options);
         this.stage.add(plot);
-        this.stage.render();
     };
 
     function initComponent(df_id, options){
@@ -78,6 +78,10 @@ define([
     };
 
     Pane.prototype.update = function(){
+        if(!this.rendered){
+            this.stage.render();
+            this.rendered=true;
+        }
         return;
     };
 
