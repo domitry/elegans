@@ -14,6 +14,7 @@ define(function(require, exports, module){
     Elegans.Particles = require("charts/particles");
     Elegans.Line = require("charts/line");
     Elegans.Scatter = require("charts/scatter");
+    Elegans.Cylinder = require("charts/cylinder");
 
     /***************************
       Functions for quick plotting with method chain style  
@@ -32,6 +33,7 @@ define(function(require, exports, module){
             Elegans.Embed.parse(model).render();
     ****************/
 
+    Elegans.DataBase = require("utils/database");
     Elegans.Embed = require("embed/embed");
     Elegans.Nya = require("embed/nyaplot");
 

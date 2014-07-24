@@ -18,7 +18,7 @@ define([
 	var xz_plane = new THREE.Mesh(geometry, material);
 	var yz_plane = new THREE.Mesh(geometry, material);
 
-	var newV = function(x,y,z){return new THREE.Vector3(x,y,z);}
+	var newV = function(x,y,z){return new THREE.Vector3(x,y,z);};
 
 	xz_plane.rotateOnAxis(newV(1,0,0), Math.PI/2);
 	xz_plane.translateOnAxis(newV(0,1,0), 10);
@@ -29,9 +29,9 @@ define([
 	yz_plane.translateOnAxis(newV(0,0,1), 10);
 
 	this.scales = {};
-	this.scales.x = d3.scale.linear().domain([ranges.x.max, ranges.x.min]).range([-10, 10])
-	this.scales.y = d3.scale.linear().domain([ranges.y.max, ranges.y.min]).range([10, -10])
-	this.scales.z = d3.scale.linear().domain([ranges.z.max, ranges.z.min]).range([15,0])
+	this.scales.x = d3.scale.linear().domain([ranges.x.max, ranges.x.min]).range([-10, 10]);
+	this.scales.y = d3.scale.linear().domain([ranges.y.max, ranges.y.min]).range([10, -10]);
+	this.scales.z = d3.scale.linear().domain([ranges.z.max, ranges.z.min]).range([15,0]);
 
 	this.meshes = [];
 
@@ -76,7 +76,7 @@ define([
 	sprite.scale.set(1.5,1.5);
 	sprite.position = position;
 	return sprite;
-    }
+    };
 
     var generateAxisAndLabels = function(axis_label, axis_start, axis_end, nv_tick, scale){
 	var meshes = [];
@@ -95,7 +95,7 @@ define([
 	    .append("svg")
 	    .style("width", "500")
 	    .style("height", "500")
-	    .style("display", "none")
+	    .style("display", "none");
 	var ticks = svg.append("g")
 	    .call(d3.svg.axis()
 		  .scale(scale)
@@ -104,11 +104,11 @@ define([
 	    .selectAll(".tick");
 
 	// parse svg axis, and generate ticks and labels mimicing svg's.
-	tick_values = [];
+	var tick_values = [];
 	for(var i=0; i<ticks[0].length; i++){
 	    // generate tick line
-	    attr = ticks[0][i].getAttribute("transform");
-	    valueArr = /translate\(((?:-|\d|.)+),((?:-|\d|.)+)\)/g.exec(attr);
+	    var nattr = ticks[0][i].getAttribute("transform");
+	    var valueArr = /translate\(((?:-|\d|.)+),((?:-|\d|.)+)\)/g.exec(nattr);
 	    var tick_center = (new THREE.Vector3).addVectors(axis_start, nv_start2end.clone().multiplyScalar(valueArr[2]));
 	    var tick_start = (new THREE.Vector3).addVectors(tick_center, nv_tick.clone().multiplyScalar(0.3));
 	    var tick_end = (new THREE.Vector3).addVectors(tick_center, nv_tick.clone().multiplyScalar(-0.3));
@@ -118,7 +118,7 @@ define([
 	    //generate labels
 	    var text = ticks[0][i].children[1].childNodes[0].nodeValue;
 	    var label_center = (new THREE.Vector3).addVectors(tick_center ,nv_tick.clone().multiplyScalar(1.0));
-	    label = generateLabel(text, label_center);
+	    var label = generateLabel(text, label_center);
 	    meshes.push(label);
 	}
 
@@ -129,7 +129,7 @@ define([
 	line.type = THREE.LinePieces;
 	meshes.push(line);
 	return meshes;
-    }
+    };
 
     var generateGrid = function(x_range, y_range, z_range, interval){
 	var geometry = new THREE.Geometry();
@@ -150,7 +150,7 @@ define([
 	var line = new THREE.Line(geometry, material);
 	line.type = THREE.LinePieces;
 	return line;
-    }
+    };
 
     Space.prototype.getScales= function(){
 	return this.scales;

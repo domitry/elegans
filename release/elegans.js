@@ -1013,12 +1013,12 @@ define('components/world',[
 
 	var world = this;
 	this.animate = function(){
-	    requestAnimationFrame(world.animate);
+	    window.requestAnimationFrame(world.animate);
 	    world.renderer.render(world.scene, world.camera);
 	    world.controls.update();
 	};
 	this.animate();
-    }
+    };
 
     World.prototype.addMesh = function(mesh){
 	if(mesh instanceof Array){
@@ -1029,7 +1029,11 @@ define('components/world',[
 	else{
 	    this.scene.add(mesh);
 	}
-    }
+    };
+
+    World.prototype.removeMesh = function(mesh){
+	this.scene.remove(mesh);
+    };
 
     return World;
 });
@@ -1073,7 +1077,7 @@ define('components/space',[
 	var xz_plane = new THREE.Mesh(geometry, material);
 	var yz_plane = new THREE.Mesh(geometry, material);
 
-	var newV = function(x,y,z){return new THREE.Vector3(x,y,z);}
+	var newV = function(x,y,z){return new THREE.Vector3(x,y,z);};
 
 	xz_plane.rotateOnAxis(newV(1,0,0), Math.PI/2);
 	xz_plane.translateOnAxis(newV(0,1,0), 10);
@@ -1084,9 +1088,9 @@ define('components/space',[
 	yz_plane.translateOnAxis(newV(0,0,1), 10);
 
 	this.scales = {};
-	this.scales.x = d3.scale.linear().domain([ranges.x.max, ranges.x.min]).range([-10, 10])
-	this.scales.y = d3.scale.linear().domain([ranges.y.max, ranges.y.min]).range([10, -10])
-	this.scales.z = d3.scale.linear().domain([ranges.z.max, ranges.z.min]).range([15,0])
+	this.scales.x = d3.scale.linear().domain([ranges.x.max, ranges.x.min]).range([-10, 10]);
+	this.scales.y = d3.scale.linear().domain([ranges.y.max, ranges.y.min]).range([10, -10]);
+	this.scales.z = d3.scale.linear().domain([ranges.z.max, ranges.z.min]).range([15,0]);
 
 	this.meshes = [];
 
@@ -1131,7 +1135,7 @@ define('components/space',[
 	sprite.scale.set(1.5,1.5);
 	sprite.position = position;
 	return sprite;
-    }
+    };
 
     var generateAxisAndLabels = function(axis_label, axis_start, axis_end, nv_tick, scale){
 	var meshes = [];
@@ -1150,7 +1154,7 @@ define('components/space',[
 	    .append("svg")
 	    .style("width", "500")
 	    .style("height", "500")
-	    .style("display", "none")
+	    .style("display", "none");
 	var ticks = svg.append("g")
 	    .call(d3.svg.axis()
 		  .scale(scale)
@@ -1159,11 +1163,11 @@ define('components/space',[
 	    .selectAll(".tick");
 
 	// parse svg axis, and generate ticks and labels mimicing svg's.
-	tick_values = [];
+	var tick_values = [];
 	for(var i=0; i<ticks[0].length; i++){
 	    // generate tick line
-	    attr = ticks[0][i].getAttribute("transform");
-	    valueArr = /translate\(((?:-|\d|.)+),((?:-|\d|.)+)\)/g.exec(attr);
+	    var nattr = ticks[0][i].getAttribute("transform");
+	    var valueArr = /translate\(((?:-|\d|.)+),((?:-|\d|.)+)\)/g.exec(nattr);
 	    var tick_center = (new THREE.Vector3).addVectors(axis_start, nv_start2end.clone().multiplyScalar(valueArr[2]));
 	    var tick_start = (new THREE.Vector3).addVectors(tick_center, nv_tick.clone().multiplyScalar(0.3));
 	    var tick_end = (new THREE.Vector3).addVectors(tick_center, nv_tick.clone().multiplyScalar(-0.3));
@@ -1173,7 +1177,7 @@ define('components/space',[
 	    //generate labels
 	    var text = ticks[0][i].children[1].childNodes[0].nodeValue;
 	    var label_center = (new THREE.Vector3).addVectors(tick_center ,nv_tick.clone().multiplyScalar(1.0));
-	    label = generateLabel(text, label_center);
+	    var label = generateLabel(text, label_center);
 	    meshes.push(label);
 	}
 
@@ -1184,7 +1188,7 @@ define('components/space',[
 	line.type = THREE.LinePieces;
 	meshes.push(line);
 	return meshes;
-    }
+    };
 
     var generateGrid = function(x_range, y_range, z_range, interval){
 	var geometry = new THREE.Geometry();
@@ -1205,7 +1209,7 @@ define('components/space',[
 	var line = new THREE.Line(geometry, material);
 	line.type = THREE.LinePieces;
 	return line;
-    }
+    };
 
     Space.prototype.getScales= function(){
 	return this.scales;
@@ -1216,6 +1220,114 @@ define('components/space',[
     };
 
     return Space;
+});
+
+define('utils/database',[],function(){
+    var DataBase = {lists:{}};
+
+    // data -> [{t: 0, data: [{x:1, y:2, z:3}, ..., {x:10, y:2, z:5}]}, {t: 100, data: []}, ..., {}]
+    // this.lists -> {0:[], 1:[], ..., 100:[]}
+    DataBase.add = function(name, data, data_label, seek_label, init){
+	var raw = {}, range=[Infinity,-Infinity];
+	data.forEach(function(row){
+	    var val = row[seek_label];
+	    raw[row[seek_label]] = row[data_label];
+	    range[0] = (val > range[0] ? range[0] : val);
+	    range[1] = (val < range[1] ? range[1] : val);
+	});
+	this.lists[name] = {data:raw, seek:init};
+	this.range = range;
+    };
+
+    DataBase.seek = function(name, seek){
+	for(var n in this.lists){
+	    this.lists[n].seek = seek;
+	}
+	//this.lists[name].seek = seek;
+    };
+
+    DataBase.getRange = function(){
+	return this.range;
+    };
+
+    DataBase.find = function(name){
+	var seek = this.lists[name].seek;
+	return this.lists[name].data[seek];
+    };
+
+    return DataBase;
+});
+
+define('components/player',[
+    "utils/utils",
+    "utils/database"
+], function(Utils, DataBase){
+    function Player(element, stage, options){
+	this.options = {
+	    
+	};
+
+	if(arguments.length > 1){
+	    Utils.merge(this.options, options);
+	};
+
+	this.model = element;
+	this.stage = stage;
+    };
+    
+    Player.prototype.render = function(){
+	var range = DataBase.getRange();
+	var model = this.model.append("div")
+		.style("height", 27)
+		.style("width", 500)
+		.style("background-color", "#333");
+	model.append("button")
+	    .attr("title", "play")
+	    .style("float", "left")
+	    .text("\u25ba")
+	    .on("click", function(){
+		console.log("huga");
+	    });
+
+	var form = model.append("form")
+	    .style("height", 30)
+	    .style("width", 500);
+
+	var thisObj = this;
+
+	form.append("input")
+	    .attr("type", "range")
+	    .attr("name", "range")
+	    .attr("max", range[1])
+	    .attr("min", range[0])
+	    .attr("value", range[0])
+	    .style("width", 350)
+	    .style("float", "left")
+	    .on("change", function(){
+		thisObj.update(this.value);
+	    });
+
+	form.append("input")
+	    .attr("type", "text")
+	    .style("width", 30)
+	    .style("float", "left")
+	    .attr("value", range[0])
+	    .attr("class", "input_label");
+	
+	form.append("div")
+	    .style("color", "#fff")
+	    .append("p").style("line-height", 25)
+	    .text(range[1]);
+    };
+
+    Player.prototype.update = function(val){
+	DataBase.seek("", val);
+	this.model.select(".input_label").attr("value", val);
+	this.stage.clear();
+	this.stage.update();
+    };
+
+    return Player;
 });
 
 define('utils/range',[],function(){
@@ -1243,16 +1355,19 @@ define('utils/range',[],function(){
 define('components/stage',[
     "components/world",
     "components/space",
+    "components/player",
     "utils/utils",
     "utils/range"
-], function(World, Space, Utils, Range){
+], function(World, Space, Player, Utils, Range){
     function Stage(element, options){
 	this.options = {
 	    width:700,
-	    height:500,
+	    height:530,
 	    world_width:500,
+	    world_height:500,
 	    axis_labels: {x:"X", y:"Y", z:"Z"},
-	    bg_color:0xffffff
+	    bg_color:0xffffff,
+	    player: false
 	};
 
 	if(arguments.length > 1){
@@ -1265,18 +1380,26 @@ define('components/stage',[
 	this.world_space = selection.append("div")
 	    .style("float","left")
 	    .style("width",String(this.options.world_width))
-	    .style("height",String(this.options.height));
+	    .style("height",String(this.options.world_height));
 
 	this.legend_space = selection.append("div")
 	    .style("float","left")
 	    .style("width",String(this.options.width - this.options.world_width))
 	    .style("height",String(this.options.height));
 
+	if(this.options.player){
+	    var player_space = selection.append("div")
+		.style("width",String(this.options.width))
+		.style("height",String(this.options.height - this.options.world_height));
+
+	    this.player = new Player(player_space, this);
+	}
+
 	this.charts = [];
 
 	this.world = new World({
 	    width:this.options.world_width,
-	    height:this.options.height,
+	    height:this.options.world_height,
 	    bg_color:this.options.bg_color
 	});
 
@@ -1291,7 +1414,7 @@ define('components/stage',[
             this.data_ranges[i] = Range.expand(this.data_ranges[i], ranges[i]);
 	}
 	this.charts.push(chart);
-    }
+    };
 
     Stage.prototype.render = function(){
 	this.space = new Space(this.data_ranges, {axis_labels:this.options.axis_labels});
@@ -1305,8 +1428,28 @@ define('components/stage',[
 		this.legend_space[0][0].appendChild(legend[0][0]);
 	    }
         }
+
+	if(this.options.player){
+	    this.player.render();
+	}
+
 	this.world.begin(this.world_space);
-    }
+    };
+
+    Stage.prototype.clear = function(){
+        for(var i=0;i<this.charts.length;i++){
+            var chart=this.charts[i];
+	    this.world.removeMesh(chart.getMesh());
+	}
+    };
+
+    Stage.prototype.update = function(){
+        for(var i=0;i<this.charts.length;i++){
+            var chart=this.charts[i];
+            chart.generateMesh(this.space.getScales());
+	    this.world.addMesh(chart.getMesh());
+        }
+    };
 
     return Stage;
 });
@@ -1427,14 +1570,20 @@ define('components/legends',[],function(){
 });
 
 define('utils/datasets',[
-    "utils/range"
-],function(Range){
+    "utils/range",
+    "utils/database"
+],function(Range, DataBase){
     function MatrixDataset(data){
 	var ranges = {};
-	for(i in data){
+	if(typeof data == "string"){
+	    this.raw = DataBase.find(data);
+	}else{
+	    this.raw = data;
+	}
+	for(var i in data){
 	    ranges[i] = new Range(
-		d3.max(data[i], function(d){return Math.max.apply(null,d);}),
-		d3.min(data[i], function(d){return Math.min.apply(null,d);})
+		d3.max(this.raw[i], function(d){return Math.max.apply(null,d);}),
+		d3.min(this.raw[i], function(d){return Math.min.apply(null,d);})
 	    );
 	}
 	this.ranges = ranges;
@@ -1448,20 +1597,24 @@ define('utils/datasets',[
 
     function ArrayDataset(data){
 	this.ranges = {};
-	for(var i in data){
+	if(typeof data == "string"){
+	    this.raw = DataBase.find(data);
+	}else{
+	    this.raw = data;
+	}
+	for(var i in this.raw){
 	    this.ranges[i] = new Range(
-		d3.max(data[i], function(d){return d;}),
-		d3.min(data[i], function(d){return d;})
+		d3.max(this.raw[i], function(d){return d;}),
+		d3.min(this.raw[i], function(d){return d;})
 	    );
 	}
-	this.raw = data;
     }
 
     ArrayDataset.prototype.getRanges = function(){
 	return this.ranges;
     };
 
-    Datasets = {
+    var Datasets = {
 	Matrix:MatrixDataset,
 	Array:ArrayDataset
     };
@@ -2209,6 +2362,73 @@ define('charts/scatter',[
     return Scatter;
 });
 
+define('charts/cylinder',[
+    "components/legends",
+    "utils/utils",
+    "utils/datasets",
+    "utils/colorbrewer"
+],function(Legends, Utils, Datasets, colorbrewer){
+    function Cylinder(data, options){
+	this.options = {
+	    name: "Cylinder",
+	    color: "#756bb1",
+	    size: 0.3,
+	    has_legend: true
+	};
+
+	if(arguments.length > 1){
+	    Utils.merge(this.options, options);
+	}
+
+	this.data = data;
+	this.dataset = new Datasets.Array(data);
+	this.ranges = this.dataset.getRanges();
+    }
+
+    Cylinder.prototype.generateMesh = function(scales){
+	var data = new Datasets.Array(this.data).raw;
+	var geometry = new THREE.Geometry();
+	for(var i=0;i<data.x.length;i++){
+	    var mesh = new THREE.Mesh(new THREE.CylinderGeometry(0.5,0.5,1,16));
+	    mesh.position = new THREE.Vector3(
+		scales.x(data.x[i]),
+		scales.y(data.y[i]),
+		scales.z(data.z[i])
+	    );
+	    THREE.GeometryUtils.merge(geometry, mesh);
+	}
+	var material = new THREE.MeshBasicMaterial({transparent:true, color: this.options.color});
+	this.mesh = new THREE.Mesh(geometry, material);
+    };
+
+    Cylinder.prototype.getDataRanges = function(){
+	return this.ranges;
+    };
+    
+    Cylinder.prototype.hasLegend = function(){
+	return this.options.has_legend;
+    };
+
+    Cylinder.prototype.disappear = function(){
+	this.mesh.material.opacity = 0;
+	this.mesh.material.needsUpdate = true;
+    };
+
+    Cylinder.prototype.appear = function(){
+	this.mesh.material.opacity = 1;
+    };
+
+    Cylinder.prototype.getLegend = function(){
+	return Legends.generateDiscreteLegend(this.options.name, this.options.color, this);
+    };
+    
+    Cylinder.prototype.getMesh = function(){
+	return this.mesh;
+    };
+
+    return Cylinder;
+});
+
 define('quick/base',[],function(){
     /********************************
       Base function of all quick functions
@@ -2372,31 +2592,31 @@ define('quick/line_plot',[
 	    stage.add(new Line(data, options));
 	    stage.render();
 	});
-    }
+    };
 
     LinePlot.data_name = function(_){
 	this.options.name = _;
-	options = this.options;
+	var options = this.options;
 	return this;
-    }
+    };
 
     LinePlot.colors = function(_){
 	this.options.colors = _;
-	options = this.options;
+	var options = this.options;
 	return this;
-    }
+    };
 
     LinePlot.thickness = function(_){
 	this.options.thickness = _;
-	options = this.options;
+	var options = this.options;
 	return this;
-    }
+    };
 
     LinePlot.has_legend = function(_){
 	this.options.has_legend = _;
-	options = this.options;
+	var options = this.options;
 	return this;
-    }
+    };
 
     Utils.mixin(LinePlot, Base);
 
@@ -2591,7 +2811,7 @@ define('embed/nyaplot',[
     };
 });
 
-define('main',['require','exports','module','components/stage','charts/surface','charts/wireframe','charts/particles','charts/line','charts/scatter','quick/surface_plot','quick/wireframe_plot','quick/particles_plot','quick/line_plot','quick/scatter_plot','embed/embed','embed/nyaplot'],function(require, exports, module){
+define('main',['require','exports','module','components/stage','charts/surface','charts/wireframe','charts/particles','charts/line','charts/scatter','charts/cylinder','quick/surface_plot','quick/wireframe_plot','quick/particles_plot','quick/line_plot','quick/scatter_plot','utils/database','embed/embed','embed/nyaplot'],function(require, exports, module){
     var Elegans = {};
 
     /***************************
@@ -2607,6 +2827,7 @@ define('main',['require','exports','module','components/stage','charts/surface',
     Elegans.Particles = require("charts/particles");
     Elegans.Line = require("charts/line");
     Elegans.Scatter = require("charts/scatter");
+    Elegans.Cylinder = require("charts/cylinder");
 
     /***************************
       Functions for quick plotting with method chain style  
@@ -2625,6 +2846,7 @@ define('main',['require','exports','module','components/stage','charts/surface',
             Elegans.Embed.parse(model).render();
     ****************/
 
+    Elegans.DataBase = require("utils/database");
     Elegans.Embed = require("embed/embed");
     Elegans.Nya = require("embed/nyaplot");
 

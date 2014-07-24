@@ -11,31 +11,31 @@ define([
 	    stage.add(new Line(data, options));
 	    stage.render();
 	});
-    }
+    };
 
     LinePlot.data_name = function(_){
 	this.options.name = _;
-	options = this.options;
+	var options = this.options;
 	return this;
-    }
+    };
 
     LinePlot.colors = function(_){
 	this.options.colors = _;
-	options = this.options;
+	var options = this.options;
 	return this;
-    }
+    };
 
     LinePlot.thickness = function(_){
 	this.options.thickness = _;
-	options = this.options;
+	var options = this.options;
 	return this;
-    }
+    };
 
     LinePlot.has_legend = function(_){
 	this.options.has_legend = _;
-	options = this.options;
+	var options = this.options;
 	return this;
-    }
+    };
 
     Utils.mixin(LinePlot, Base);
 

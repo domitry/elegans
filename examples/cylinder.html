@@ -1,0 +1,49 @@
+<html lang="en">
+<head>
+  <title>Plot Sample - Cylinder</title>
+  <link rel='stylesheet' href='common.css'>
+  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/three.js/r66/three.min.js"></script>
+  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.4/d3.min.js"></script>
+  <script type="text/javascript" src="../release/elegans.js"></script>
+  <script type="text/javascript">
+   window.onload = function(){
+     var stage = new Elegans.Stage(d3.select("#vis")[0][0], {player:true});
+     var DATASET_NUM=4, FIELD_LENGTH=100, CROWD_NUM=20, CROWD_MIN = 10, CROWD_MAX=60;
+     
+     var x_arr = [], y_arr = [], z_arr = [];
+     var center = {
+       x:Math.random()*FIELD_LENGTH,
+       y:Math.random()*FIELD_LENGTH, 
+       z:Math.random()*FIELD_LENGTH
+     };
+     for(var i=0;i<CROWD_NUM;i++){
+       x_arr.push(center.x + Math.random()*(CROWD_MAX-CROWD_MIN) + CROWD_MIN);
+       y_arr.push(center.y + Math.random()*(CROWD_MAX-CROWD_MIN) + CROWD_MIN);
+       z_arr.push(center.z + Math.random()*(CROWD_MAX-CROWD_MIN) + CROWD_MIN);
+     }
+     
+     var data = [{t:0, df:{x:x_arr, y:y_arr, z:z_arr}}];
+     for(var i=1;i<10; i++){
+       var prev = data[i-1];
+       var df = {x:[], y:[], z:[]};
+       for(var label in df){
+	 df[label] = [];
+	 for(var j=0; j<prev.df[label].length; j++){
+	   df[label].push(prev.df[label][j] + Math.random()*2);
+	 }
+       }
+       data.push({t:prev.t+1, df:df});
+     }
+
+     Elegans.DataBase.add("database-1", data, "df", "t", 0)
+     stage.add(new Elegans.Cylinder("database-1", {
+       name: "data"+String(0)
+     }));
+     stage.render();
+   };
+  </script>
+</head>
+<body>
+  <div id="vis">
+  </div>
+</body>

@@ -32,12 +32,12 @@ define([
 
 	var world = this;
 	this.animate = function(){
-	    requestAnimationFrame(world.animate);
+	    window.requestAnimationFrame(world.animate);
 	    world.renderer.render(world.scene, world.camera);
 	    world.controls.update();
 	};
 	this.animate();
-    }
+    };
 
     World.prototype.addMesh = function(mesh){
 	if(mesh instanceof Array){
@@ -48,7 +48,11 @@ define([
 	else{
 	    this.scene.add(mesh);
 	}
-    }
+    };
+
+    World.prototype.removeMesh = function(mesh){
+	this.scene.remove(mesh);
+    };
 
     return World;
 });
