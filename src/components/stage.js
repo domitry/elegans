@@ -56,10 +56,11 @@ define([
 
     Stage.prototype.add = function(chart){
         var ranges = chart.getDataRanges();
-        for(var i in ranges){
-            this.data_ranges[i] = Range.expand(this.data_ranges[i], ranges[i]);
-	}
-	this.charts.push(chart);
+        var thisObj=this;
+        ['x', 'y', 'z'].forEach(function(i){
+            thisObj.data_ranges[i] = Range.expand(thisObj.data_ranges[i], ranges[i]);
+        });
+	    this.charts.push(chart);
     };
 
     Stage.prototype.render = function(){

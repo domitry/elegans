@@ -1021,18 +1021,23 @@ define('components/world',[
     };
 
     World.prototype.addMesh = function(mesh){
-	if(mesh instanceof Array){
-	    for(var i=0; i<mesh.length; i++){
-		this.scene.add(mesh[i]);
+	    if(mesh instanceof Array){
+	        for(var i=0; i<mesh.length; i++){
+		        this.scene.add(mesh[i]);
+	        }
+	    }else{
+	        this.scene.add(mesh);
 	    }
-	}
-	else{
-	    this.scene.add(mesh);
-	}
     };
 
     World.prototype.removeMesh = function(mesh){
-	this.scene.remove(mesh);
+        if(mesh instanceof Array){
+	    for(var i=0; i<mesh.length; i++){
+		    this.scene.remove(mesh[i]);
+	    }
+        }else{
+	        this.scene.remove(mesh);
+        }
     };
 
     return World;
@@ -1410,10 +1415,11 @@ define('components/stage',[
 
     Stage.prototype.add = function(chart){
         var ranges = chart.getDataRanges();
-        for(var i in ranges){
-            this.data_ranges[i] = Range.expand(this.data_ranges[i], ranges[i]);
-	}
-	this.charts.push(chart);
+        var thisObj=this;
+        ['x', 'y', 'z'].forEach(function(i){
+            thisObj.data_ranges[i] = Range.expand(thisObj.data_ranges[i], ranges[i]);
+        });
+	    this.charts.push(chart);
     };
 
     Stage.prototype.render = function(){
@@ -2386,19 +2392,22 @@ define('charts/cylinder',[
     }
 
     Cylinder.prototype.generateMesh = function(scales){
-	var data = new Datasets.Array(this.data).raw;
-	var geometry = new THREE.Geometry();
-	for(var i=0;i<data.x.length;i++){
-	    var mesh = new THREE.Mesh(new THREE.CylinderGeometry(0.5,0.5,1,16));
-	    mesh.position = new THREE.Vector3(
-		scales.x(data.x[i]),
-		scales.y(data.y[i]),
-		scales.z(data.z[i])
-	    );
-	    THREE.GeometryUtils.merge(geometry, mesh);
-	}
-	var material = new THREE.MeshBasicMaterial({transparent:true, color: this.options.color});
-	this.mesh = new THREE.Mesh(geometry, material);
+	    var data = new Datasets.Array(this.data).raw;
+	    var geometry = new THREE.Geometry();
+	    for(var i=0;i<data.x.length;i++){
+	        var mesh = new THREE.Mesh(new THREE.CylinderGeometry(0.5,0.5,data.height[i],16));
+	        mesh.position = new THREE.Vector3(
+		        scales.x(data.x[i]),
+		        scales.y(data.y[i]),
+		        scales.z(data.z[i])
+	        );
+            mesh.rotation.x = data.x_rad[i];
+            mesh.rotation.y = data.y_rad[i];
+            mesh.rotation.z = data.z_rad[i];
+	        THREE.GeometryUtils.merge(geometry, mesh);
+        }
+        var material = new THREE.MeshBasicMaterial({transparent:true, color: this.options.color});
+	    this.mesh = new THREE.Mesh(geometry, material);
     };
 
     Cylinder.prototype.getDataRanges = function(){

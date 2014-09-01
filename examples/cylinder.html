@@ -10,7 +10,7 @@
      var stage = new Elegans.Stage(d3.select("#vis")[0][0], {player:true});
      var DATASET_NUM=4, FIELD_LENGTH=100, CROWD_NUM=20, CROWD_MIN = 10, CROWD_MAX=60;
      
-     var x_arr = [], y_arr = [], z_arr = [];
+     var x_arr = [], y_arr = [], z_arr = [], h_arr = [], x_rad = [], y_rad = [], z_rad = [];
      var center = {
        x:Math.random()*FIELD_LENGTH,
        y:Math.random()*FIELD_LENGTH, 
@@ -20,12 +20,16 @@
        x_arr.push(center.x + Math.random()*(CROWD_MAX-CROWD_MIN) + CROWD_MIN);
        y_arr.push(center.y + Math.random()*(CROWD_MAX-CROWD_MIN) + CROWD_MIN);
        z_arr.push(center.z + Math.random()*(CROWD_MAX-CROWD_MIN) + CROWD_MIN);
+       h_arr.push(Math.random()*2);
+       x_rad.push(1/2*Math.PI);
+       y_rad.push(2/3*Math.PI);
+       z_rad.push(1/4*Math.PI);
      }
      
-     var data = [{t:0, df:{x:x_arr, y:y_arr, z:z_arr}}];
+     var data = [{t:0, df:{x:x_arr, y:y_arr, z:z_arr, height:h_arr, x_rad:x_rad, y_rad:y_rad, z_rad:z_rad}}];
      for(var i=1;i<10; i++){
        var prev = data[i-1];
-       var df = {x:[], y:[], z:[]};
+       var df = {x:[], y:[], z:[], height:[], x_rad:[], y_rad:[], z_rad:[]};
        for(var label in df){
 	 df[label] = [];
 	 for(var j=0; j<prev.df[label].length; j++){

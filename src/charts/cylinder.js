@@ -22,19 +22,22 @@ define([
     }
 
     Cylinder.prototype.generateMesh = function(scales){
-	var data = new Datasets.Array(this.data).raw;
-	var geometry = new THREE.Geometry();
-	for(var i=0;i<data.x.length;i++){
-	    var mesh = new THREE.Mesh(new THREE.CylinderGeometry(0.5,0.5,1,16));
-	    mesh.position = new THREE.Vector3(
-		scales.x(data.x[i]),
-		scales.y(data.y[i]),
-		scales.z(data.z[i])
-	    );
-	    THREE.GeometryUtils.merge(geometry, mesh);
-	}
-	var material = new THREE.MeshBasicMaterial({transparent:true, color: this.options.color});
-	this.mesh = new THREE.Mesh(geometry, material);
+	    var data = new Datasets.Array(this.data).raw;
+	    var geometry = new THREE.Geometry();
+	    for(var i=0;i<data.x.length;i++){
+	        var mesh = new THREE.Mesh(new THREE.CylinderGeometry(0.5,0.5,data.height[i],16));
+	        mesh.position = new THREE.Vector3(
+		        scales.x(data.x[i]),
+		        scales.y(data.y[i]),
+		        scales.z(data.z[i])
+	        );
+            mesh.rotation.x = data.x_rad[i];
+            mesh.rotation.y = data.y_rad[i];
+            mesh.rotation.z = data.z_rad[i];
+	        THREE.GeometryUtils.merge(geometry, mesh);
+        }
+        var material = new THREE.MeshBasicMaterial({transparent:true, color: this.options.color});
+	    this.mesh = new THREE.Mesh(geometry, material);
     };
 
     Cylinder.prototype.getDataRanges = function(){

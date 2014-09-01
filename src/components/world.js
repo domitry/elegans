@@ -40,18 +40,23 @@ define([
     };
 
     World.prototype.addMesh = function(mesh){
-	if(mesh instanceof Array){
-	    for(var i=0; i<mesh.length; i++){
-		this.scene.add(mesh[i]);
+	    if(mesh instanceof Array){
+	        for(var i=0; i<mesh.length; i++){
+		        this.scene.add(mesh[i]);
+	        }
+	    }else{
+	        this.scene.add(mesh);
 	    }
-	}
-	else{
-	    this.scene.add(mesh);
-	}
     };
 
     World.prototype.removeMesh = function(mesh){
-	this.scene.remove(mesh);
+        if(mesh instanceof Array){
+	    for(var i=0; i<mesh.length; i++){
+		    this.scene.remove(mesh[i]);
+	    }
+        }else{
+	        this.scene.remove(mesh);
+        }
     };
 
     return World;
