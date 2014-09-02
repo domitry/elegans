@@ -25,7 +25,9 @@ define([
 	    var data = new Datasets.Array(this.data).raw;
 	    var geometry = new THREE.Geometry();
 	    for(var i=0;i<data.x.length;i++){
-	        var mesh = new THREE.Mesh(new THREE.CylinderGeometry(0.5,0.5,data.height[i],16));
+            var height = Math.abs(scales.x(data.height[i]) - scales.x(0));
+            var rad = Math.abs(scales.x(data.radius[i]) - scales.x(0));
+	        var mesh = new THREE.Mesh(new THREE.CylinderGeometry(rad,rad,height,16));
 	        mesh.position = new THREE.Vector3(
 		        scales.x(data.x[i]),
 		        scales.y(data.y[i]),
@@ -36,7 +38,7 @@ define([
             mesh.rotation.z = data.z_rad[i];
 	        THREE.GeometryUtils.merge(geometry, mesh);
         }
-        var material = new THREE.MeshBasicMaterial({transparent:true, color: this.options.color});
+        var material = new THREE.MeshLambertMaterial({transparent:true, color: this.options.color});
 	    this.mesh = new THREE.Mesh(geometry, material);
     };
 
