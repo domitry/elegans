@@ -2172,6 +2172,7 @@ define('charts/particles',[
 	        Utils.merge(this.options, options);
 	    }
 
+	    this.data = data;
 	    this.dataset = new Datasets.Array(data);
 	    this.ranges = this.dataset.getRanges();
     }
@@ -2239,6 +2240,7 @@ define('charts/line',[
 	        Utils.merge(this.options, options);
 	    }
 
+	    this.data = data;
 	    this.dataset = new Datasets.Array(data);
 	    this.ranges = this.dataset.getRanges();
     }
