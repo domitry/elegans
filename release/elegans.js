@@ -2189,7 +2189,7 @@ define('charts/particles',[
 	        );
 	        THREE.GeometryUtils.merge(geometry, mesh);
 	    }
-	    var material = new THREE.MeshLambertMaterial({transparent:true, color: this.options.color});
+	    var material = new THREE.MeshBasicMaterial({transparent:true, color: this.options.color});
 	    this.mesh = new THREE.Mesh(geometry, material);
     };
 
