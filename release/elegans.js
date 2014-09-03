@@ -2189,7 +2189,7 @@ define('charts/particles',[
 	        );
 	        THREE.GeometryUtils.merge(geometry, mesh);
 	    }
-	    var material = new THREE.MeshBasicMaterial({transparent:true, color: this.options.color});
+	    var material = new THREE.MeshLambertMaterial({transparent:true, color: this.options.color});
 	    this.mesh = new THREE.Mesh(geometry, material);
     };
 
@@ -2432,9 +2432,9 @@ define('charts/cylinder',[
 	    Utils.merge(this.options, options);
 	}
 
-	this.data = data;
-	this.dataset = new Datasets.Array(data);
-	this.ranges = this.dataset.getRanges();
+	    this.data = data;
+	    this.dataset = new Datasets.Array(data);
+	    this.ranges = this.dataset.getRanges();
     }
 
     Cylinder.prototype.generateMesh = function(scales){

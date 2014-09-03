@@ -16,9 +16,9 @@ define([
 	    Utils.merge(this.options, options);
 	}
 
-	this.data = data;
-	this.dataset = new Datasets.Array(data);
-	this.ranges = this.dataset.getRanges();
+	    this.data = data;
+	    this.dataset = new Datasets.Array(data);
+	    this.ranges = this.dataset.getRanges();
     }
 
     Cylinder.prototype.generateMesh = function(scales){
