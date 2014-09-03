@@ -33,9 +33,12 @@ define([
 		        scales.y(data.y[i]),
 		        scales.z(data.z[i])
 	        );
-            mesh.rotation.x = data.x_rad[i];
-            mesh.rotation.y = data.y_rad[i];
-            mesh.rotation.z = data.z_rad[i];
+            mesh.useQuaternion = true;
+            var axis = new THREE.Vector3(data.x_rad[i], data.y_rad[i], data.z_rad[i]).normalize();
+            var angle = data.angle[i];
+            var q = new THREE.Quaternion();
+            q.setFromAxisAngle(axis, angle);
+            mesh.rotation.setFromQuaternion(q);
 	        THREE.GeometryUtils.merge(geometry, mesh);
         }
         var material = new THREE.MeshLambertMaterial({transparent:true, color: this.options.color});
