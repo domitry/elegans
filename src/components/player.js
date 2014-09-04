@@ -20,7 +20,7 @@ define([
 	    var model = this.model.append("div")
 		        .style("height", 27)
 		        .style("width", 500)
-		        .style("background-color", "#333");
+		        .style("background-color", "#fff");
 
 	    var thisObj = this;
 
