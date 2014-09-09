@@ -29,13 +29,20 @@ define([
 
     World.prototype.begin = function(selection){
 	    selection[0][0].appendChild(this.renderer.domElement);
-
 	    var world = this;
+        var interval = 1000/30;
+        var before = Date.now();
+
 	    this.animate = function(){
 	        window.requestAnimationFrame(world.animate);
-	        world.renderer.render(world.scene, world.camera);
-	        world.controls.update();
+            var now = Date.now();
+            if(now - before > interval){
+                before = now;
+	            world.renderer.render(world.scene, world.camera);
+	            world.controls.update();
+            }
 	    };
+
 	    this.animate();
     };
 
