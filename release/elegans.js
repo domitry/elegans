@@ -1075,7 +1075,8 @@ define('components/space',[
     function Space(ranges, options){
 	this.options = {
 	    axis_labels: {x:"X", y:"Y", z:"Z"},
-	    mode: 'solid'
+	    mode: 'solid',
+	    grid: true
 	};
 
 	if(arguments.length > 1){
@@ -1086,6 +1087,7 @@ define('components/space',[
 	var geometry = new THREE.PlaneGeometry(WIDTH,WIDTH);
 	var material = new THREE.MeshBasicMaterial({color:0xf0f0f0, shading: THREE.FlatShading, overdraw: 0.5, side: THREE.DoubleSide});
 	var newV = function(x,y,z){return new THREE.Vector3(x,y,z);};
+	this.meshes = [];
 
 	if(this.options.mode == "solid"){
 	    var xy_plane = new THREE.Mesh(geometry, material);
@@ -1100,21 +1102,30 @@ define('components/space',[
 	    yz_plane.translateOnAxis(newV(-1,0,0), 10);
 	    yz_plane.translateOnAxis(newV(0,0,1), 10);
 	}else{
-	    var cube = new THREE.Mesh(
-		new THREE.CubeGeometry(1, 1, 1),
-		new THREE.MeshPhongMaterial({
-		    color: 0x000,
-		    wireframe: true
-		})
-	    );
+	    var coordinates = [
+		[[-10, 10, 0], [-10, -10, 0],[10,-10,0]],
+		[[-10, 10, 20], [-10, -10, 20], [10,-10,20],[10,10,20], [-10, 10, 20]],
+		[[10, -10, 0], [10, -10, 20]],
+		[[-10, 10, 0], [-10, 10, 20]],
+		[[-10, -10, 0], [-10, -10, 20]],
+		[[10, -10, 0], [10, 10, 0]]
+	    ];
+	    var meshes = this.meshes;
+
+	    material = new THREE.LineBasicMaterial( { color: 0x000000, opacity: 0.2 } );
+	    coordinates.forEach(function(arr){
+		var geonetry = new THREE.Geometry();
+		arr.forEach(function(c){
+		    geonetry.vertices.push(newV.apply(null, c));
+		});
+		meshes.push(new THREE.Line(geonetry, material));
+	    });
 	}
 	
 	this.scales = {};
 	this.scales.x = d3.scale.linear().domain([ranges.x.max, ranges.x.min]).range([-10, 10]);
 	this.scales.y = d3.scale.linear().domain([ranges.y.max, ranges.y.min]).range([10, -10]);
 	this.scales.z = d3.scale.linear().domain([ranges.z.max, ranges.z.min]).range([15,0]);
-
-	this.meshes = [];
 
 	this.meshes.push(xy_plane);
 	this.meshes.push(xz_plane);
@@ -1129,9 +1140,11 @@ define('components/space',[
 	this.meshes = this.meshes.concat(generateAxisAndLabels(this.options.axis_labels.z, newV(10,10,0),newV(10,10,20),newV(0,1,0),z_scale));
 
 	// generate grids
-	this.meshes.push(generateGrid([-10,10],[-10,10],[0,0],2));//x-y
-	this.meshes.push(generateGrid([-10,10],[-10,-10],[0,20],2));//x-z
-	this.meshes.push(generateGrid([10,10],[-10,10],[0,20],2));//y-z
+	if(this.options.grid){
+	    this.meshes.push(generateGrid([-10,10],[-10,10],[0,0],2));//x-y
+	    this.meshes.push(generateGrid([-10,10],[-10,-10],[0,20],2));//x-z
+	    this.meshes.push(generateGrid([10,10],[-10,10],[0,20],2));//y-z
+	}
 
 	return this;
     }
@@ -1433,7 +1446,8 @@ define('components/stage',[
 	        player: false,
 		space_mode: 'solid',
 		range:{x:[0,0], y:[0,0], z:[0,0]},
-		autorange:true
+		autorange:true,
+		grid: true
 	    };
 
 	    if(arguments.length > 1){
@@ -1492,7 +1506,8 @@ define('components/stage',[
     Stage.prototype.render = function(){
 	this.space = new Space(this.data_ranges, {
 	    axis_labels:this.options.axis_labels,
-	    mode: this.options.space_mode
+	    mode: this.options.space_mode,
+	    grid: this.options.grid
 	});
 	this.world.addMesh(this.space.getMeshes());
         for(var i=0;i<this.charts.length;i++){

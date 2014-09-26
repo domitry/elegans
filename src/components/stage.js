@@ -16,7 +16,8 @@ define([
 	        player: false,
 		space_mode: 'solid',
 		range:{x:[0,0], y:[0,0], z:[0,0]},
-		autorange:true
+		autorange:true,
+		grid: true
 	    };
 
 	    if(arguments.length > 1){
@@ -75,7 +76,8 @@ define([
     Stage.prototype.render = function(){
 	this.space = new Space(this.data_ranges, {
 	    axis_labels:this.options.axis_labels,
-	    mode: this.options.space_mode
+	    mode: this.options.space_mode,
+	    grid: this.options.grid
 	});
 	this.world.addMesh(this.space.getMeshes());
         for(var i=0;i<this.charts.length;i++){
