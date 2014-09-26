@@ -3,7 +3,8 @@ define([
 ],function(Utils){
     function Space(ranges, options){
 	this.options = {
-	    axis_labels: {x:"X", y:"Y", z:"Z"}
+	    axis_labels: {x:"X", y:"Y", z:"Z"},
+	    mode: 'solid'
 	};
 
 	if(arguments.length > 1){
@@ -13,21 +14,30 @@ define([
 	var BIGIN=-10, END=10, WIDTH=END-BIGIN;
 	var geometry = new THREE.PlaneGeometry(WIDTH,WIDTH);
 	var material = new THREE.MeshBasicMaterial({color:0xf0f0f0, shading: THREE.FlatShading, overdraw: 0.5, side: THREE.DoubleSide});
-
-	var xy_plane = new THREE.Mesh(geometry, material);
-	var xz_plane = new THREE.Mesh(geometry, material);
-	var yz_plane = new THREE.Mesh(geometry, material);
-
 	var newV = function(x,y,z){return new THREE.Vector3(x,y,z);};
 
-	xz_plane.rotateOnAxis(newV(1,0,0), Math.PI/2);
-	xz_plane.translateOnAxis(newV(0,1,0), 10);
-	xz_plane.translateOnAxis(newV(0,0,1), 10);
+	if(this.options.mode == "solid"){
+	    var xy_plane = new THREE.Mesh(geometry, material);
+	    var xz_plane = new THREE.Mesh(geometry, material);
+	    var yz_plane = new THREE.Mesh(geometry, material);
 
-	yz_plane.rotateOnAxis(newV(0,1,0), Math.PI/2);
-	yz_plane.translateOnAxis(newV(-1,0,0), 10);
-	yz_plane.translateOnAxis(newV(0,0,1), 10);
+	    xz_plane.rotateOnAxis(newV(1,0,0), Math.PI/2);
+	    xz_plane.translateOnAxis(newV(0,1,0), 10);
+	    xz_plane.translateOnAxis(newV(0,0,1), 10);
 
+	    yz_plane.rotateOnAxis(newV(0,1,0), Math.PI/2);
+	    yz_plane.translateOnAxis(newV(-1,0,0), 10);
+	    yz_plane.translateOnAxis(newV(0,0,1), 10);
+	}else{
+	    var cube = new THREE.Mesh(
+		new THREE.CubeGeometry(1, 1, 1),
+		new THREE.MeshPhongMaterial({
+		    color: 0x000,
+		    wireframe: true
+		})
+	    );
+	}
+	
 	this.scales = {};
 	this.scales.x = d3.scale.linear().domain([ranges.x.max, ranges.x.min]).range([-10, 10]);
 	this.scales.y = d3.scale.linear().domain([ranges.y.max, ranges.y.min]).range([10, -10]);

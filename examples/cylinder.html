@@ -7,9 +7,15 @@
   <script type="text/javascript" src="../release/elegans.js"></script>
   <script type="text/javascript">
    window.onload = function(){
-     var stage = new Elegans.Stage(d3.select("#vis")[0][0], {player:true});
      var DATASET_NUM=4, FIELD_LENGTH=100, CROWD_NUM=20, CROWD_MIN = 10, CROWD_MAX=60;
-     
+     var stage = new Elegans.Stage(d3.select("#vis")[0][0], {
+       player:true,
+       fixed_range: true,
+       xrange: [-CROWD_MAX,FIELD_LENGTH+CROWD_MAX],
+       yrange: [-CROWD_MAX,FIELD_LENGTH+CROWD_MAX],
+       zrange: [-CROWD_MAX,FIELD_LENGTH+CROWD_MAX]
+     });     
+
      var x_arr = [], y_arr = [], z_arr = [];
      var center = {
        x:Math.random()*FIELD_LENGTH,

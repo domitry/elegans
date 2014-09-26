@@ -13,7 +13,12 @@ define([
 	    world_height:500,
 	    axis_labels: {x:"X", y:"Y", z:"Z"},
 	    bg_color:0xffffff,
-	    player: false
+	    player: false,
+	    space_mode: 'solid',
+	    fixed_range: false,
+	    xrange: [0, 0],
+	    yrange: [0, 0],
+	    zrange: [0, 0]
 	};
 
 	if(arguments.length > 1){
@@ -49,21 +54,30 @@ define([
 	    bg_color:this.options.bg_color
 	});
 
-	this.data_ranges = {x:new Range(0,0),y:new Range(0,0),z:new Range(0,0)};
+	this.data_ranges = {
+	    x:new Range(this.options.xrange),
+	    y:new Range(this.options.yrange),
+	    z:new Range(this.options.zrange)
+	};
 
 	return this;
     }
 
     Stage.prototype.add = function(chart){
-        var ranges = chart.getDataRanges();
-        for(var i in ranges){
-            this.data_ranges[i] = Range.expand(this.data_ranges[i], ranges[i]);
+	if(!this.options.fixed_range){
+            var ranges = chart.getDataRanges();
+            for(var i in ranges){
+		this.data_ranges[i] = Range.expand(this.data_ranges[i], ranges[i]);
+	    }
 	}
 	this.charts.push(chart);
     };
 
     Stage.prototype.render = function(){
-	this.space = new Space(this.data_ranges, {axis_labels:this.options.axis_labels});
+	this.space = new Space(this.data_ranges, {
+	    axis_labels:this.options.axis_labels,
+	    mode: this.options.space_mode
+	});
 	this.world.addMesh(this.space.getMeshes());
         for(var i=0;i<this.charts.length;i++){
             var chart=this.charts[i];

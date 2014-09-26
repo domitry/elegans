@@ -1062,7 +1062,8 @@ define('components/space',[
 ],function(Utils){
     function Space(ranges, options){
 	this.options = {
-	    axis_labels: {x:"X", y:"Y", z:"Z"}
+	    axis_labels: {x:"X", y:"Y", z:"Z"},
+	    mode: 'solid'
 	};
 
 	if(arguments.length > 1){
@@ -1072,21 +1073,30 @@ define('components/space',[
 	var BIGIN=-10, END=10, WIDTH=END-BIGIN;
 	var geometry = new THREE.PlaneGeometry(WIDTH,WIDTH);
 	var material = new THREE.MeshBasicMaterial({color:0xf0f0f0, shading: THREE.FlatShading, overdraw: 0.5, side: THREE.DoubleSide});
-
-	var xy_plane = new THREE.Mesh(geometry, material);
-	var xz_plane = new THREE.Mesh(geometry, material);
-	var yz_plane = new THREE.Mesh(geometry, material);
-
 	var newV = function(x,y,z){return new THREE.Vector3(x,y,z);};
 
-	xz_plane.rotateOnAxis(newV(1,0,0), Math.PI/2);
-	xz_plane.translateOnAxis(newV(0,1,0), 10);
-	xz_plane.translateOnAxis(newV(0,0,1), 10);
+	if(this.options.mode == "solid"){
+	    var xy_plane = new THREE.Mesh(geometry, material);
+	    var xz_plane = new THREE.Mesh(geometry, material);
+	    var yz_plane = new THREE.Mesh(geometry, material);
 
-	yz_plane.rotateOnAxis(newV(0,1,0), Math.PI/2);
-	yz_plane.translateOnAxis(newV(-1,0,0), 10);
-	yz_plane.translateOnAxis(newV(0,0,1), 10);
+	    xz_plane.rotateOnAxis(newV(1,0,0), Math.PI/2);
+	    xz_plane.translateOnAxis(newV(0,1,0), 10);
+	    xz_plane.translateOnAxis(newV(0,0,1), 10);
 
+	    yz_plane.rotateOnAxis(newV(0,1,0), Math.PI/2);
+	    yz_plane.translateOnAxis(newV(-1,0,0), 10);
+	    yz_plane.translateOnAxis(newV(0,0,1), 10);
+	}else{
+	    var cube = new THREE.Mesh(
+		new THREE.CubeGeometry(1, 1, 1),
+		new THREE.MeshPhongMaterial({
+		    color: 0x000,
+		    wireframe: true
+		})
+	    );
+	}
+	
 	this.scales = {};
 	this.scales.x = d3.scale.linear().domain([ranges.x.max, ranges.x.min]).range([-10, 10]);
 	this.scales.y = d3.scale.linear().domain([ranges.y.max, ranges.y.min]).range([10, -10]);
@@ -1331,9 +1341,14 @@ define('components/player',[
 });
 
 define('utils/range',[],function(){
-    function Range(max, min){
-	this.max = max;
-	this.min = min;
+    function Range(arg0, arg1){
+	if(arguments.length > 1){
+	    this.max = arg0;
+	    this.min = arg1;
+	}else{
+	    this.max  = arg0[1];
+	    this.min  = arg0[0];
+	}
     }
 
     Range.prototype.divide = function(num){
@@ -1343,11 +1358,11 @@ define('utils/range',[],function(){
 	    arr.push(this.min + interval*i);
 	}
 	return arr;
-    }
+    };
 
     Range.expand = function(range1, range2){
 	return new Range(Math.max(range1.max, range2.max), Math.min(range1.min, range2.min));
-    }
+    };
 
     return Range;
 });
@@ -1367,7 +1382,12 @@ define('components/stage',[
 	    world_height:500,
 	    axis_labels: {x:"X", y:"Y", z:"Z"},
 	    bg_color:0xffffff,
-	    player: false
+	    player: false,
+	    space_mode: 'solid',
+	    fixed_range: false,
+	    xrange: [0, 0],
+	    yrange: [0, 0],
+	    zrange: [0, 0]
 	};
 
 	if(arguments.length > 1){
@@ -1403,21 +1423,30 @@ define('components/stage',[
 	    bg_color:this.options.bg_color
 	});
 
-	this.data_ranges = {x:new Range(0,0),y:new Range(0,0),z:new Range(0,0)};
+	this.data_ranges = {
+	    x:new Range(this.options.xrange),
+	    y:new Range(this.options.yrange),
+	    z:new Range(this.options.zrange)
+	};
 
 	return this;
     }
 
     Stage.prototype.add = function(chart){
-        var ranges = chart.getDataRanges();
-        for(var i in ranges){
-            this.data_ranges[i] = Range.expand(this.data_ranges[i], ranges[i]);
+	if(!this.options.fixed_range){
+            var ranges = chart.getDataRanges();
+            for(var i in ranges){
+		this.data_ranges[i] = Range.expand(this.data_ranges[i], ranges[i]);
+	    }
 	}
 	this.charts.push(chart);
     };
 
     Stage.prototype.render = function(){
-	this.space = new Space(this.data_ranges, {axis_labels:this.options.axis_labels});
+	this.space = new Space(this.data_ranges, {
+	    axis_labels:this.options.axis_labels,
+	    mode: this.options.space_mode
+	});
 	this.world.addMesh(this.space.getMeshes());
         for(var i=0;i<this.charts.length;i++){
             var chart=this.charts[i];
