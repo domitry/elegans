@@ -16,25 +16,33 @@ define([
 	    Utils.merge(this.options, options);
 	}
 
-	this.data = data;
-	this.dataset = new Datasets.Array(data);
-	this.ranges = this.dataset.getRanges();
+	    this.data = data;
+	    this.dataset = new Datasets.Array(data);
+	    this.ranges = this.dataset.getRanges();
     }
 
     Cylinder.prototype.generateMesh = function(scales){
-	var data = new Datasets.Array(this.data).raw;
-	var geometry = new THREE.Geometry();
-	for(var i=0;i<data.x.length;i++){
-	    var mesh = new THREE.Mesh(new THREE.CylinderGeometry(0.5,0.5,1,16));
-	    mesh.position = new THREE.Vector3(
-		scales.x(data.x[i]),
-		scales.y(data.y[i]),
-		scales.z(data.z[i])
-	    );
-	    THREE.GeometryUtils.merge(geometry, mesh);
-	}
-	var material = new THREE.MeshBasicMaterial({transparent:true, color: this.options.color});
-	this.mesh = new THREE.Mesh(geometry, material);
+	    var data = new Datasets.Array(this.data).raw;
+	    var geometry = new THREE.Geometry();
+	    for(var i=0;i<data.x.length;i++){
+            var height = Math.abs(scales.x(data.height[i]) - scales.x(0));
+            var rad = Math.abs(scales.x(data.radius[i]) - scales.x(0));
+	        var mesh = new THREE.Mesh(new THREE.CylinderGeometry(rad,rad,height,16));
+	        mesh.position = new THREE.Vector3(
+		        scales.x(data.x[i]),
+		        scales.y(data.y[i]),
+		        scales.z(data.z[i])
+	        );
+            mesh.useQuaternion = true;
+            var axis = new THREE.Vector3(data.x_rad[i], data.y_rad[i], data.z_rad[i]).normalize();
+            var angle = data.angle[i];
+            var q = new THREE.Quaternion();
+            q.setFromAxisAngle(axis, angle);
+            mesh.rotation.setFromQuaternion(q);
+	        THREE.GeometryUtils.merge(geometry, mesh);
+        }
+        var material = new THREE.MeshLambertMaterial({transparent:true, color: this.options.color});
+	    this.mesh = new THREE.Mesh(geometry, material);
     };
 
     Cylinder.prototype.getDataRanges = function(){

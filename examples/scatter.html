@@ -4,35 +4,35 @@
   <link rel='stylesheet' href='common.css'>
   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/three.js/r66/three.min.js"></script>
   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.4/d3.min.js"></script>
-  <script type="text/javascript" src="../release/elegans.min.js"></script>
+  <script type="text/javascript" src="../release/elegans.js"></script>
   <script type="text/javascript">
     window.onload = function(){
-    var stage = new Elegans.Stage(d3.select("#vis")[0][0]);
-    var DATASET_NUM=4, FIELD_LENGTH=100, CROWD_NUM=20, CROWD_MIN = 10, CROWD_MAX=60;
-    var shapes = ["circle","cross","rect","diamond"];
-    var color_scale = d3.scale.category10();
+      var stage = new Elegans.Stage(d3.select("#vis")[0][0]);
+      var DATASET_NUM=4, FIELD_LENGTH=100, CROWD_NUM=20, CROWD_MIN = 10, CROWD_MAX=60;
+      var shapes = ["circle","cross","rect","diamond"];
+      var color_scale = d3.scale.category10();
 
-    for(var n=0;n<DATASET_NUM;n++){
+      for(var n=0;n < DATASET_NUM;n++){
         var x_arr = [], y_arr = [], z_arr = [];
         var center = {
-		    x:Math.random()*FIELD_LENGTH,
-		    y:Math.random()*FIELD_LENGTH, 
-		    z:Math.random()*FIELD_LENGTH
-		    };
-	for(var i=0;i<CROWD_NUM;i++){
-	    x_arr.push(center.x + Math.random()*(CROWD_MAX-CROWD_MIN) + CROWD_MIN);
-	    y_arr.push(center.y + Math.random()*(CROWD_MAX-CROWD_MIN) + CROWD_MIN);
-	    z_arr.push(center.z + Math.random()*(CROWD_MAX-CROWD_MIN) + CROWD_MIN);
+		  x:Math.random()*FIELD_LENGTH,
+		  y:Math.random()*FIELD_LENGTH, 
+		  z:Math.random()*FIELD_LENGTH
+		};
+	    for(var i=0;i < CROWD_NUM;i++){
+	      x_arr.push(center.x + Math.random()*(CROWD_MAX-CROWD_MIN) + CROWD_MIN);
+	      y_arr.push(center.y + Math.random()*(CROWD_MAX-CROWD_MIN) + CROWD_MIN);
+	      z_arr.push(center.z + Math.random()*(CROWD_MAX-CROWD_MIN) + CROWD_MIN);
         }
         var data = {x:x_arr, y:y_arr, z:z_arr};
         var color = color_scale(n);
         stage.add(new Elegans.Scatter(data, {
-		fill_color: color, 
-		shape: shapes[n], 
-		name: "data"+String(n)
-	}));
-    }
-    stage.render();
+		  fill_color: color,
+		  shape: shapes[n], 
+		  name: "data"+String(n)
+	    }));
+      }
+      stage.render();
     };
   </script>
 </head>

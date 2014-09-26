@@ -984,55 +984,67 @@ define('components/world',[
 ],function(TrackballControls){
 
     function World(options){
-	this.scene = new THREE.Scene();
+	    this.scene = new THREE.Scene();
 
-	this.camera = new THREE.OrthographicCamera(-20,20,-20,20);
-	this.camera.position.set(-30, 31,42);
-	this.camera.rotation.set(-0.6,-0.5,0.6);
-	this.scene.add(this.camera);
+	    this.camera = new THREE.OrthographicCamera(-20,20,-20,20);
+	    this.camera.position.set(-30, 31,42);
+	    this.camera.rotation.set(-0.6,-0.5,0.6);
+	    this.scene.add(this.camera);
 
-	var positions = [[1,1,1],[-1,-1,1],[-1,1,1],[1,-1,1]];
-	for(var i=0;i<4;i++){
-	    var light=new THREE.DirectionalLight(0xdddddd);
-	    light.position.set(positions[i][0],positions[i][1],1*positions[i][2]);
-	    this.scene.add(light);
-	}
+	    var positions = [[1,1,1],[-1,-1,1],[-1,1,1],[1,-1,1]];
+	    for(var i=0;i<4;i++){
+	        var light=new THREE.DirectionalLight(0xdddddd);
+	        light.position.set(positions[i][0],positions[i][1],1*positions[i][2]);
+	        this.scene.add(light);
+	    }
 
-	this.renderer = new THREE.WebGLRenderer({antialias:true});
-	this.renderer.setSize(options.width, options.height);
-	this.renderer.setClearColor(options.bg_color, 1);
-	this.controls = new TrackballControls(this.camera, this.renderer.domElement);
-	this.camera.position.set(-30, 31,42);
-	this.camera.rotation.set(-0.6,-0.5,0.6);
+	    this.renderer = new THREE.WebGLRenderer({antialias:true});
+	    this.renderer.setSize(options.width, options.height);
+	    this.renderer.setClearColor(options.bg_color, 1);
+	    this.controls = new TrackballControls(this.camera, this.renderer.domElement);
+	    this.camera.position.set(-30, 31,42);
+	    this.camera.rotation.set(-0.6,-0.5,0.6);
 
-	return this;
+	    return this;
     }
 
     World.prototype.begin = function(selection){
-	selection[0][0].appendChild(this.renderer.domElement);
+	    selection[0][0].appendChild(this.renderer.domElement);
+	    var world = this;
+        var interval = 1000/30;
+        var before = Date.now();
 
-	var world = this;
-	this.animate = function(){
-	    window.requestAnimationFrame(world.animate);
-	    world.renderer.render(world.scene, world.camera);
-	    world.controls.update();
-	};
-	this.animate();
+	    this.animate = function(){
+	        window.requestAnimationFrame(world.animate);
+            var now = Date.now();
+            if(now - before > interval){
+                before = now;
+	            world.renderer.render(world.scene, world.camera);
+	            world.controls.update();
+            }
+	    };
+
+	    this.animate();
     };
 
     World.prototype.addMesh = function(mesh){
-	if(mesh instanceof Array){
-	    for(var i=0; i<mesh.length; i++){
-		this.scene.add(mesh[i]);
+	    if(mesh instanceof Array){
+	        for(var i=0; i<mesh.length; i++){
+		        this.scene.add(mesh[i]);
+	        }
+	    }else{
+	        this.scene.add(mesh);
 	    }
-	}
-	else{
-	    this.scene.add(mesh);
-	}
     };
 
     World.prototype.removeMesh = function(mesh){
-	this.scene.remove(mesh);
+        if(mesh instanceof Array){
+	        for(var i=0; i<mesh.length; i++){
+		        this.scene.remove(mesh[i]);
+	        }
+        }else{
+	        this.scene.remove(mesh);
+        }
     };
 
     return World;
@@ -1125,108 +1137,108 @@ define('components/space',[
     }
 
     var generateLabel = function(text, position){
-	var canvas = document.createElement('canvas');
-	canvas.width = 100;
-	canvas.height = 100;
-	var context = canvas.getContext('2d');
-	context.fillStyle = "rgb(0, 0, 0)";
-	context.font = "60px sans-serif";
-	text_width = context.measureText(text).width;
-	context.fillText(text, (100-text_width)/2, 80);
-	var texture = new THREE.Texture(canvas);
-	texture.flipY = false;
-	texture.needsUpdate = true;
-	var material = new THREE.SpriteMaterial({
-	    map: texture,
-	    transparent: true,
-	    useScreenCoordinates: false
-	});
-	var sprite = new THREE.Sprite(material);
-	sprite.scale.set(1.5,1.5);
-	sprite.position = position;
-	return sprite;
+	    var canvas = document.createElement('canvas');
+	    canvas.width = 100;
+	    canvas.height = 100;
+	    var context = canvas.getContext('2d');
+	    context.fillStyle = "rgb(0, 0, 0)";
+	    context.font = "60px sans-serif";
+	    text_width = context.measureText(text).width;
+	    context.fillText(text, (100-text_width)/2, 80);
+	    var texture = new THREE.Texture(canvas);
+	    texture.flipY = false;
+	    texture.needsUpdate = true;
+	    var material = new THREE.SpriteMaterial({
+	        map: texture,
+	        transparent: true,
+	        useScreenCoordinates: false
+	    });
+	    var sprite = new THREE.Sprite(material);
+	    sprite.scale.set(1.5,1.5);
+	    sprite.position = position;
+	    return sprite;
     };
 
     var generateAxisAndLabels = function(axis_label, axis_start, axis_end, nv_tick, scale){
-	var meshes = [];
-	var geometry = new THREE.Geometry();
-	var nv_start2end = (new THREE.Vector3).subVectors(axis_end, axis_start).normalize();
+	    var meshes = [];
+	    var geometry = new THREE.Geometry();
+	    var nv_start2end = (new THREE.Vector3).subVectors(axis_end, axis_start).normalize();
 
-	geometry.vertices.push(axis_start);
-	geometry.vertices.push(axis_end);
+	    geometry.vertices.push(axis_start);
+	    geometry.vertices.push(axis_end);
 
-	var label_position = (new THREE.Vector3).addVectors(axis_end, axis_start).divideScalar(2);
-	label_position.add(nv_tick.clone().multiplyScalar(3));
-	meshes.push(generateLabel(axis_label, label_position));
+	    var label_position = (new THREE.Vector3).addVectors(axis_end, axis_start).divideScalar(2);
+	    label_position.add(nv_tick.clone().multiplyScalar(3));
+	    meshes.push(generateLabel(axis_label, label_position));
 
-	// generate d3.js axis
-	var svg = d3.select("body")
-	    .append("svg")
-	    .style("width", "500")
-	    .style("height", "500")
-	    .style("display", "none");
-	var ticks = svg.append("g")
-	    .call(d3.svg.axis()
-		  .scale(scale)
-		  .orient("left")
-		  .ticks(5))
-	    .selectAll(".tick");
+	    // generate d3.js axis
+	    var svg = d3.select("body")
+	            .append("svg")
+	            .style("width", "500")
+	            .style("height", "500")
+	            .style("display", "none");
+	    var ticks = svg.append("g")
+	            .call(d3.svg.axis()
+		              .scale(scale)
+		              .orient("left")
+		              .ticks(5))
+	            .selectAll(".tick");
 
-	// parse svg axis, and generate ticks and labels mimicing svg's.
-	var tick_values = [];
-	for(var i=0; i<ticks[0].length; i++){
-	    // generate tick line
-	    var nattr = ticks[0][i].getAttribute("transform");
-	    var valueArr = /translate\(((?:-|\d|.)+),((?:-|\d|.)+)\)/g.exec(nattr);
-	    var tick_center = (new THREE.Vector3).addVectors(axis_start, nv_start2end.clone().multiplyScalar(valueArr[2]));
-	    var tick_start = (new THREE.Vector3).addVectors(tick_center, nv_tick.clone().multiplyScalar(0.3));
-	    var tick_end = (new THREE.Vector3).addVectors(tick_center, nv_tick.clone().multiplyScalar(-0.3));
-	    geometry.vertices.push(tick_start);
-	    geometry.vertices.push(tick_end);
+	    // parse svg axis, and generate ticks and labels mimicing svg's.
+	    var tick_values = [];
+	    for(var i=0; i<ticks[0].length; i++){
+	        // generate tick line
+	        var nattr = ticks[0][i].getAttribute("transform");
+	        var valueArr = /translate\(((?:-|\d|.)+),((?:-|\d|.)+)\)/g.exec(nattr);
+	        var tick_center = (new THREE.Vector3).addVectors(axis_start, nv_start2end.clone().multiplyScalar(valueArr[2]));
+	        var tick_start = (new THREE.Vector3).addVectors(tick_center, nv_tick.clone().multiplyScalar(0.3));
+	        var tick_end = (new THREE.Vector3).addVectors(tick_center, nv_tick.clone().multiplyScalar(-0.3));
+	        geometry.vertices.push(tick_start);
+	        geometry.vertices.push(tick_end);
 
-	    //generate labels
-	    var text = ticks[0][i].children[1].childNodes[0].nodeValue;
-	    var label_center = (new THREE.Vector3).addVectors(tick_center ,nv_tick.clone().multiplyScalar(1.0));
-	    var label = generateLabel(text, label_center);
-	    meshes.push(label);
-	}
+	        //generate labels
+	        var text = ticks[0][i].children[1].childNodes[0].nodeValue;
+	        var label_center = (new THREE.Vector3).addVectors(tick_center ,nv_tick.clone().multiplyScalar(1.0));
+	        var label = generateLabel(text, label_center);
+	        meshes.push(label);
+	    }
 
-	svg.remove();
+	    svg.remove();
 
-	var material = new THREE.LineBasicMaterial( { color: 0x000000, opacity: 0.2 } );
-	var line = new THREE.Line(geometry, material);
-	line.type = THREE.LinePieces;
-	meshes.push(line);
-	return meshes;
+	    var material = new THREE.LineBasicMaterial( { color: 0x000000, opacity: 0.2 } );
+	    var line = new THREE.Line(geometry, material);
+	    line.type = THREE.LinePieces;
+	    meshes.push(line);
+	    return meshes;
     };
 
     var generateGrid = function(x_range, y_range, z_range, interval){
-	var geometry = new THREE.Geometry();
+	    var geometry = new THREE.Geometry();
 
-	if(x_range[0]!=x_range[1])for(var x=x_range[0];x<=x_range[1];x+=interval){
-	    geometry.vertices.push(new THREE.Vector3(x,y_range[0],z_range[0]));
-	    geometry.vertices.push(new THREE.Vector3(x,y_range[1],z_range[1]));
-	}
-	if(y_range[0]!=y_range[1])for(var y=y_range[0];y<=y_range[1];y+=interval){
-	    geometry.vertices.push(new THREE.Vector3(x_range[0],y,z_range[0]));
-	    geometry.vertices.push(new THREE.Vector3(x_range[1],y,z_range[1]));
-	}
-	if(z_range[0]!=z_range[1])for(var z=z_range[0];z<=z_range[1];z+=interval){
-	    geometry.vertices.push(new THREE.Vector3(x_range[0],y_range[0],z));
-	    geometry.vertices.push(new THREE.Vector3(x_range[1],y_range[1],z));
-	}
-	var material = new THREE.LineBasicMaterial( { color: 0xcccccc, opacity: 0.2 } );
-	var line = new THREE.Line(geometry, material);
-	line.type = THREE.LinePieces;
-	return line;
+	    if(x_range[0]!=x_range[1])for(var x=x_range[0];x<=x_range[1];x+=interval){
+	        geometry.vertices.push(new THREE.Vector3(x,y_range[0],z_range[0]));
+	        geometry.vertices.push(new THREE.Vector3(x,y_range[1],z_range[1]));
+	    }
+	    if(y_range[0]!=y_range[1])for(var y=y_range[0];y<=y_range[1];y+=interval){
+	        geometry.vertices.push(new THREE.Vector3(x_range[0],y,z_range[0]));
+	        geometry.vertices.push(new THREE.Vector3(x_range[1],y,z_range[1]));
+	    }
+	    if(z_range[0]!=z_range[1])for(var z=z_range[0];z<=z_range[1];z+=interval){
+	        geometry.vertices.push(new THREE.Vector3(x_range[0],y_range[0],z));
+	        geometry.vertices.push(new THREE.Vector3(x_range[1],y_range[1],z));
+	    }
+	    var material = new THREE.LineBasicMaterial( { color: 0xcccccc, opacity: 0.2 } );
+	    var line = new THREE.Line(geometry, material);
+	    line.type = THREE.LinePieces;
+	    return line;
     };
 
     Space.prototype.getScales= function(){
-	return this.scales;
+	    return this.scales;
     };
 
     Space.prototype.getMeshes = function(){
-	return this.meshes;
+	    return this.meshes;
     };
 
     return Space;
@@ -1273,68 +1285,104 @@ define('components/player',[
     "utils/database"
 ], function(Utils, DataBase){
     function Player(element, stage, options){
-	this.options = {
-	    
-	};
+	    this.options = {
+	        
+	    };
 
-	if(arguments.length > 1){
-	    Utils.merge(this.options, options);
-	};
+	    if(arguments.length > 1){
+	        Utils.merge(this.options, options);
+	    };
 
-	this.model = element;
-	this.stage = stage;
+	    this.model = element;
+	    this.stage = stage;
     };
     
     Player.prototype.render = function(){
-	var range = DataBase.getRange();
-	var model = this.model.append("div")
-		.style("height", 27)
-		.style("width", 500)
-		.style("background-color", "#333");
-	model.append("button")
-	    .attr("title", "play")
-	    .style("float", "left")
-	    .text("\u25ba")
-	    .on("click", function(){
-		console.log("huga");
-	    });
+	    var range = DataBase.getRange();
+	    var model = this.model.append("div")
+		        .style("height", 27)
+		        .style("width", 500)
+		        .style("background-color", "#fff");
 
-	var form = model.append("form")
-	    .style("height", 30)
-	    .style("width", 500);
+	    var thisObj = this;
 
-	var thisObj = this;
+	    model.append("button")
+	        .attr("title", "play")
+	        .style("float", "left")
+	        .text("\u25ba")
+	        .on("click", function(){
+		        console.log("huga");
+                thisObj.start();
+	        });
 
-	form.append("input")
-	    .attr("type", "range")
-	    .attr("name", "range")
-	    .attr("max", range[1])
-	    .attr("min", range[0])
-	    .attr("value", range[0])
-	    .style("width", 350)
-	    .style("float", "left")
-	    .on("change", function(){
-		thisObj.update(this.value);
-	    });
+	    var form = model.append("form")
+	            .style("height", 30)
+	            .style("width", 500);
 
-	form.append("input")
-	    .attr("type", "text")
-	    .style("width", 30)
-	    .style("float", "left")
-	    .attr("value", range[0])
-	    .attr("class", "input_label");
-	
-	form.append("div")
-	    .style("color", "#fff")
-	    .append("p").style("line-height", 25)
-	    .text(range[1]);
+	    form.append("input")
+	        .attr("type", "range")
+	        .attr("name", "range")
+            .attr("class", "range")
+	        .attr("max", range[1])
+	        .attr("min", range[0])
+            .attr("step", 1)
+	        .attr("value", range[0])
+	        .style("width", 350)
+	        .style("float", "left")
+	        .on("change", function(){
+		        thisObj.update(this.value);
+	        });
+
+	    form.append("input")
+	        .attr("type", "text")
+	        .style("width", 30)
+	        .style("float", "left")
+	        .attr("value", range[0])
+	        .attr("class", "input_label");
+	    
+	    form.append("div")
+	        .style("color", "#fff")
+	        .append("p").style("line-height", 25)
+	        .text(range[1]);
+
+        this.form = form;
+    };
+
+    Player.prototype.start = function(){
+        var target_player = this;
+        var timer = window.setInterval("timer_func()", 400);
+
+        window["timer_func"] = function(){
+            var val, step, max;
+            target_player
+                .form
+                .select(".range")
+                .each(function(){
+                    var selector = d3.select(this);
+                    val = parseInt(this.value);
+                    step = parseInt(selector.attr("step"));
+                    max = parseInt(selector.attr("max"));
+                });
+
+            if(val+step <= max){
+                console.log("called!");
+                target_player.form
+                    .select(".range")
+                    .each(function(selector){
+                        this.value = val + step;
+                    });
+                target_player.update(val + step);
+            }else{
+                window.clearInterval(timer);
+            }
+        };
     };
 
     Player.prototype.update = function(val){
-	DataBase.seek("", val);
-	this.model.select(".input_label").attr("value", val);
-	this.stage.clear();
-	this.stage.update();
+	    DataBase.seek("", val);
+	    this.model.select(".input_label").attr("value", val);
+	    this.stage.clear();
+	    this.stage.update();
     };
 
     return Player;
@@ -1375,71 +1423,70 @@ define('components/stage',[
     "utils/range"
 ], function(World, Space, Player, Utils, Range){
     function Stage(element, options){
-	this.options = {
-	    width:700,
-	    height:530,
-	    world_width:500,
-	    world_height:500,
-	    axis_labels: {x:"X", y:"Y", z:"Z"},
-	    bg_color:0xffffff,
-	    player: false,
-	    space_mode: 'solid',
-	    fixed_range: false,
-	    xrange: [0, 0],
-	    yrange: [0, 0],
-	    zrange: [0, 0]
-	};
+	    this.options = {
+	        width:700,
+	        height:530,
+	        world_width:500,
+	        world_height:500,
+	        axis_labels: {x:"X", y:"Y", z:"Z"},
+	        bg_color:0xffffff,
+	        player: false,
+		space_mode: 'solid',
+		range:{x:[0,0], y:[0,0], z:[0,0]},
+		autorange:true
+	    };
 
-	if(arguments.length > 1){
-	    Utils.merge(this.options, options);
-	};
-	
-	var selection = d3.select(element);
-	selection.style("width",String(this.options.width));
+	    if(arguments.length > 1){
+	        Utils.merge(this.options, options);
+	    };
+	    
+	    var selection = d3.select(element);
+	    selection.style("width",String(this.options.width));
 
-	this.world_space = selection.append("div")
-	    .style("float","left")
-	    .style("width",String(this.options.world_width))
-	    .style("height",String(this.options.world_height));
+	    this.world_space = selection.append("div")
+	        .style("float","left")
+	        .style("width",String(this.options.world_width))
+	        .style("height",String(this.options.world_height));
 
-	this.legend_space = selection.append("div")
-	    .style("float","left")
-	    .style("width",String(this.options.width - this.options.world_width))
-	    .style("height",String(this.options.height));
+	    this.legend_space = selection.append("div")
+	        .style("float","left")
+	        .style("width",String(this.options.width - this.options.world_width))
+	        .style("height",String(this.options.height));
 
-	if(this.options.player){
-	    var player_space = selection.append("div")
-		.style("width",String(this.options.width))
-		.style("height",String(this.options.height - this.options.world_height));
+	    if(this.options.player){
+	        var player_space = selection.append("div")
+		            .style("width",String(this.options.width))
+		            .style("height",String(this.options.height - this.options.world_height));
 
-	    this.player = new Player(player_space, this);
-	}
+	        this.player = new Player(player_space, this);
+	    }
 
-	this.charts = [];
+	    this.charts = [];
 
-	this.world = new World({
-	    width:this.options.world_width,
-	    height:this.options.world_height,
-	    bg_color:this.options.bg_color
-	});
+	    this.world = new World({
+	        width:this.options.world_width,
+	        height:this.options.world_height,
+	        bg_color:this.options.bg_color
+	    });
 
-	this.data_ranges = {
-	    x:new Range(this.options.xrange),
-	    y:new Range(this.options.yrange),
-	    z:new Range(this.options.zrange)
-	};
+	    this.data_ranges = {
+            x:new Range(this.options.range.x[0], this.options.range.x[1]),
+            y:new Range(this.options.range.y[0], this.options.range.y[1]),
+            z:new Range(this.options.range.z[0], this.options.range.z[1])
+        };
 
-	return this;
+	    return this;
     }
 
     Stage.prototype.add = function(chart){
-	if(!this.options.fixed_range){
+        if(this.options.autorange){
             var ranges = chart.getDataRanges();
-            for(var i in ranges){
-		this.data_ranges[i] = Range.expand(this.data_ranges[i], ranges[i]);
-	    }
-	}
-	this.charts.push(chart);
+            var thisObj=this;
+            ['x', 'y', 'z'].forEach(function(i){
+                thisObj.data_ranges[i] = Range.expand(thisObj.data_ranges[i], ranges[i]);
+            });
+        }
+	    this.charts.push(chart);
     };
 
     Stage.prototype.render = function(){
@@ -2140,60 +2187,61 @@ define('charts/particles',[
     "utils/colorbrewer"
 ],function(Legends, Utils, Datasets, colorbrewer){
     function Particles(data, options){
-	this.options = {
-	    name: "Particle",
-	    color: colorbrewer.Reds[3][1],
-	    size: 0.3,
-	    has_legend: true
-	};
+	    this.options = {
+	        name: "Particle",
+	        color: colorbrewer.Reds[3][1],
+	        size: 0.3,
+	        has_legend: true
+	    };
 
-	if(arguments.length > 1){
-	    Utils.merge(this.options, options);
-	}
+	    if(arguments.length > 1){
+	        Utils.merge(this.options, options);
+	    }
 
-	this.dataset = new Datasets.Array(data);
-	this.ranges = this.dataset.getRanges();
+	    this.data = data;
+	    this.dataset = new Datasets.Array(data);
+	    this.ranges = this.dataset.getRanges();
     }
 
     Particles.prototype.generateMesh = function(scales){
-	var data = this.dataset.raw;
-	var geometry = new THREE.Geometry();
-	for(var i=0;i<data.x.length;i++){
-	    var mesh = new THREE.Mesh(new THREE.SphereGeometry(this.options.size));
-	    mesh.position = new THREE.Vector3(
-		scales.x(data.x[i]),
-		scales.y(data.y[i]),
-		scales.z(data.z[i])
-	    );
-	    THREE.GeometryUtils.merge(geometry, mesh);
-	}
-	var material = new THREE.MeshBasicMaterial({transparent:true, color: this.options.color});
-	this.mesh = new THREE.Mesh(geometry, material);
-    }
+	    var data = new Datasets.Array(this.data).raw;
+	    var geometry = new THREE.Geometry();
+	    for(var i=0;i<data.x.length;i++){
+	        var mesh = new THREE.Mesh(new THREE.SphereGeometry(this.options.size));
+	        mesh.position = new THREE.Vector3(
+		        scales.x(data.x[i]),
+		        scales.y(data.y[i]),
+		        scales.z(data.z[i])
+	        );
+	        THREE.GeometryUtils.merge(geometry, mesh);
+	    }
+	    var material = new THREE.MeshBasicMaterial({transparent:true, color: this.options.color});
+	    this.mesh = new THREE.Mesh(geometry, material);
+    };
 
     Particles.prototype.getDataRanges = function(){
-	return this.ranges;
-    }
+	    return this.ranges;
+    };
     
     Particles.prototype.hasLegend = function(){
-	return this.options.has_legend;
-    }
+	    return this.options.has_legend;
+    };
 
     Particles.prototype.disappear = function(){
-	this.mesh.material.opacity = 0;
-	this.mesh.material.needsUpdate = true;
-    }
+	    this.mesh.material.opacity = 0;
+	    this.mesh.material.needsUpdate = true;
+    };
 
     Particles.prototype.appear = function(){
-	this.mesh.material.opacity = 1;
-    }
+	    this.mesh.material.opacity = 1;
+    };
 
     Particles.prototype.getLegend = function(){
-	return Legends.generateDiscreteLegend(this.options.name, this.options.color, this);
-    }
+	    return Legends.generateDiscreteLegend(this.options.name, this.options.color, this);
+    };
     
     Particles.prototype.getMesh = function(){
-	return this.mesh;
+	    return this.mesh;
     };
 
     return Particles;
@@ -2207,64 +2255,65 @@ define('charts/line',[
     "utils/colorbrewer"
 ],function(Legends, Utils, Range, Datasets, colorbrewer){
     function Line(data, options){
-	this.options = {
-	    name: "Line",
-	    colors: colorbrewer.Blues[3],
-	    thickness: 1,
-	    has_legend: true
-	};
+	    this.options = {
+	        name: "Line",
+	        colors: colorbrewer.Blues[3],
+	        thickness: 1,
+	        has_legend: true
+	    };
 
-	if(arguments.length > 1){
-	    Utils.merge(this.options, options);
-	}
+	    if(arguments.length > 1){
+	        Utils.merge(this.options, options);
+	    }
 
-	this.dataset = new Datasets.Array(data);
-	this.ranges = this.dataset.getRanges();
+	    this.data = data;
+	    this.dataset = new Datasets.Array(data);
+	    this.ranges = this.dataset.getRanges();
     }
 
     Line.prototype.generateMesh = function(scales){
-	var data = this.dataset.raw;
-	var geometry = new THREE.Geometry();
-	var range = new Range(data.x.length, 0);
-	var color_scale = d3.scale.linear()
-	    .domain(range.divide(this.options.colors.length))
-	    .range(this.options.colors);
-	for(var i=0;i<data.x.length;i++){
-	    geometry.vertices.push(new THREE.Vector3(
-		scales.x(data.x[i]),
-		scales.y(data.y[i]),
-		scales.z(data.z[i])
-	    ));
-	    geometry.colors.push(new THREE.Color(color_scale(i)));
-	}
-	geometry.colorsNeedUpdate = true;
-	var material = new THREE.LineBasicMaterial({vertexColors:THREE.VertexColors, linewidth:this.options.thickness, transparent:true});
-	this.mesh = new THREE.Line(geometry, material);
-    }
+        var data = new Datasets.Array(this.data).raw;
+	    var geometry = new THREE.Geometry();
+	    var range = new Range(data.x.length, 0);
+	    var color_scale = d3.scale.linear()
+	            .domain(range.divide(this.options.colors.length))
+	            .range(this.options.colors);
+	    for(var i=0;i<data.x.length;i++){
+	        geometry.vertices.push(new THREE.Vector3(
+		        scales.x(data.x[i]),
+		        scales.y(data.y[i]),
+		        scales.z(data.z[i])
+	        ));
+	        geometry.colors.push(new THREE.Color(color_scale(i)));
+	    }
+	    geometry.colorsNeedUpdate = true;
+	    var material = new THREE.LineBasicMaterial({vertexColors:THREE.VertexColors, linewidth:this.options.thickness, transparent:true});
+	    this.mesh = new THREE.Line(geometry, material);
+    };
 
     Line.prototype.getDataRanges = function(){
-	return this.ranges;
-    }
+	    return this.ranges;
+    };
     
     Line.prototype.hasLegend = function(){
-	return this.options.has_legend;
-    }
+	    return this.options.has_legend;
+    };
 
     Line.prototype.disappear = function(){
-	this.mesh.material.opacity = 0;
-	this.mesh.material.needsUpdate = true;
-    }
+	    this.mesh.material.opacity = 0;
+	    this.mesh.material.needsUpdate = true;
+    };
 
     Line.prototype.appear = function(){
-	this.mesh.material.opacity = 1;
-    }
+	    this.mesh.material.opacity = 1;
+    };
 
     Line.prototype.getLegend = function(){
-	return Legends.generateDiscreteLegend(this.options.name, this.options.colors[0], this);
-    }
+	    return Legends.generateDiscreteLegend(this.options.name, this.options.colors[0], this);
+    };
     
     Line.prototype.getMesh = function(){
-	return this.mesh;
+	    return this.mesh;
     };
 
     return Line;
@@ -2409,25 +2458,33 @@ define('charts/cylinder',[
 	    Utils.merge(this.options, options);
 	}
 
-	this.data = data;
-	this.dataset = new Datasets.Array(data);
-	this.ranges = this.dataset.getRanges();
+	    this.data = data;
+	    this.dataset = new Datasets.Array(data);
+	    this.ranges = this.dataset.getRanges();
     }
 
     Cylinder.prototype.generateMesh = function(scales){
-	var data = new Datasets.Array(this.data).raw;
-	var geometry = new THREE.Geometry();
-	for(var i=0;i<data.x.length;i++){
-	    var mesh = new THREE.Mesh(new THREE.CylinderGeometry(0.5,0.5,1,16));
-	    mesh.position = new THREE.Vector3(
-		scales.x(data.x[i]),
-		scales.y(data.y[i]),
-		scales.z(data.z[i])
-	    );
-	    THREE.GeometryUtils.merge(geometry, mesh);
-	}
-	var material = new THREE.MeshBasicMaterial({transparent:true, color: this.options.color});
-	this.mesh = new THREE.Mesh(geometry, material);
+	    var data = new Datasets.Array(this.data).raw;
+	    var geometry = new THREE.Geometry();
+	    for(var i=0;i<data.x.length;i++){
+            var height = Math.abs(scales.x(data.height[i]) - scales.x(0));
+            var rad = Math.abs(scales.x(data.radius[i]) - scales.x(0));
+	        var mesh = new THREE.Mesh(new THREE.CylinderGeometry(rad,rad,height,16));
+	        mesh.position = new THREE.Vector3(
+		        scales.x(data.x[i]),
+		        scales.y(data.y[i]),
+		        scales.z(data.z[i])
+	        );
+            mesh.useQuaternion = true;
+            var axis = new THREE.Vector3(data.x_rad[i], data.y_rad[i], data.z_rad[i]).normalize();
+            var angle = data.angle[i];
+            var q = new THREE.Quaternion();
+            q.setFromAxisAngle(axis, angle);
+            mesh.rotation.setFromQuaternion(q);
+	        THREE.GeometryUtils.merge(geometry, mesh);
+        }
+        var material = new THREE.MeshLambertMaterial({transparent:true, color: this.options.color});
+	    this.mesh = new THREE.Mesh(geometry, material);
     };
 
     Cylinder.prototype.getDataRanges = function(){
