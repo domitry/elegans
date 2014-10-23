@@ -70,7 +70,7 @@ define([
                 thisObj.data_ranges[i] = Range.expand(thisObj.data_ranges[i], ranges[i]);
             });
         }
-	    this.charts.push(chart);
+	this.charts.push(chart);
     };
 
     Stage.prototype.render = function(){

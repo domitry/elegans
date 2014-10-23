@@ -1125,7 +1125,7 @@ define('components/space',[
 	this.scales = {};
 	this.scales.x = d3.scale.linear().domain([ranges.x.max, ranges.x.min]).range([-10, 10]);
 	this.scales.y = d3.scale.linear().domain([ranges.y.max, ranges.y.min]).range([10, -10]);
-	this.scales.z = d3.scale.linear().domain([ranges.z.max, ranges.z.min]).range([15,0]);
+	this.scales.z = d3.scale.linear().domain([ranges.z.max, ranges.z.min]).range([20,0]);
 
 	this.meshes.push(xy_plane);
 	this.meshes.push(xz_plane);
@@ -1134,7 +1134,7 @@ define('components/space',[
 	// generate axis
 	var x_scale = d3.scale.linear().domain([ranges.x.max, ranges.x.min]).range([20, 0]);
 	var y_scale = d3.scale.linear().domain([ranges.y.max, ranges.y.min]).range([20, 0]);
-	var z_scale = d3.scale.linear().domain([ranges.z.max, ranges.z.min]).range([15,0]);
+	var z_scale = d3.scale.linear().domain([ranges.z.max, ranges.z.min]).range([20,0]);
 	this.meshes = this.meshes.concat(generateAxisAndLabels(this.options.axis_labels.x, newV(10,10,0),newV(-10,10,0),newV(0,1,0),x_scale));
 	this.meshes = this.meshes.concat(generateAxisAndLabels(this.options.axis_labels.y, newV(-10,-10,0),newV(-10,10,0),newV(-1,0,0),y_scale));
 	this.meshes = this.meshes.concat(generateAxisAndLabels(this.options.axis_labels.z, newV(10,10,0),newV(10,10,20),newV(0,1,0),z_scale));
@@ -1156,7 +1156,7 @@ define('components/space',[
 	    var context = canvas.getContext('2d');
 	    context.fillStyle = "rgb(0, 0, 0)";
 	    context.font = "60px sans-serif";
-	    text_width = context.measureText(text).width;
+	    var text_width = context.measureText(text).width;
 	    context.fillText(text, (100-text_width)/2, 80);
 	    var texture = new THREE.Texture(canvas);
 	    texture.flipY = false;
@@ -1500,7 +1500,7 @@ define('components/stage',[
                 thisObj.data_ranges[i] = Range.expand(thisObj.data_ranges[i], ranges[i]);
             });
         }
-	    this.charts.push(chart);
+	this.charts.push(chart);
     };
 
     Stage.prototype.render = function(){
