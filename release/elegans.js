@@ -2573,37 +2573,47 @@ define('charts/debug_object',[
 		options = Utils.merge({
 		    width: 1,
 		    height: 1,
-		    depth: 1
+		    depth: 1,
+		    widthSegments: 1,
+		    heightSegments: 1,
+		    depthSegments: 1
 		}, data.options[i]);
 		geo = new THREE.BoxGeometry(
 		    Math.abs(scales.x(options.width) - scales.x(0)),
 		    Math.abs(scales.y(options.height) - scales.y(0)),
-		    Math.abs(scales.z(options.depth) - scales.z(0))
+		    Math.abs(scales.z(options.depth) - scales.z(0)),
+		    options.widthSegments,
+		    options.heightSegments,
+		    options.depthSegments
 		);
 		break;
 
 	    case "cylinder":
 		options = Utils.merge({
 		    radius: 1,
-		    height: 100
+		    height: 100,
+		    radiusSegments: 8,
+		    heightSegments: 1
 		}, data.options[i]);
 		geo = new THREE.CylinderGeometry(
 		    Math.abs(scales.x(options.radius) - scales.x(0)),
 		    Math.abs(scales.x(options.radius) - scales.x(0)),
-		    Math.abs(scales.y(options.height) - scales.y(0))
+		    Math.abs(scales.y(options.height) - scales.y(0)),
+		    options.radiusSegments,
+		    options.heightSegments
 		);
 		break;
 
 	    case "sphere":
 		options = Utils.merge({
 		    radius: 1,
-		    widthSegments: 8,
-		    heightSegments: 6
+		    horizontalSegments: 8,
+		    verticalSegments: 6
 		}, data.options[i]);
 		geo = new THREE.SphereGeometry(
 		    Math.abs(scales.x(options.radius) - scales.x(0)),
-		    options.widthSegments,
-		    options.heightSegments
+		    options.horizontalSegments,
+		    options.verticalSegments
 		);
 		break;
 

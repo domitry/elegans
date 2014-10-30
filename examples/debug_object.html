@@ -10,13 +10,25 @@
        var data = {x: [], y: [], z: [], type: [], options: []};
        var types = ["box"];
        for(var i=0; i<10; i++){
-	 data.type.push("box");
+	 data.type.push("plane");
 	 switch(data.type[i]){
 	     case "box":
+	     case "plane":
 	     data.options.push({
 	       width: 2,
 	       height: 2,
 	       depth: 2
+	     });
+	     break;
+	     case "sphere":
+	     data.options.push({
+	       radius: 2,
+	     });
+	     break;
+	     case "cylinder":
+	     data.options.push({
+	       radius: 1,
+	       height: 2
 	     });
 	     break;
 	 }
