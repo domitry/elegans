@@ -1,0 +1,43 @@
+<html lang="en">
+  <head>
+    <title>Plot Sample - Wireframe</title>
+    <link rel='stylesheet' href='common.css'>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/three.js/r66/three.min.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.4/d3.min.js"></script>
+    <script type="text/javascript" src="../release/elegans.js"></script>
+    <script type="text/javascript">
+     window.onload = function(){
+       var data = {x: [], y: [], z: [], type: [], options: []};
+       var types = ["box"];
+       for(var i=0; i<10; i++){
+	 data.type.push("box");
+	 switch(data.type[i]){
+	     case "box":
+	     data.options.push({
+	       width: 2,
+	       height: 2,
+	       depth: 2
+	     });
+	     break;
+	 }
+	 data.x.push(10*Math.random());
+	 data.y.push(10*Math.random());
+	 data.z.push(10*Math.random());
+       }
+
+       var stage = new Elegans.Stage(d3.select("#vis")[0][0], {
+	 autorange: false,
+	 range: {x: [0, 10], y: [0, 10], z: [0, 10]},
+	 space_mode: "wireframe",
+	 grid: false
+       });
+       stage.add(new Elegans.DebugObject(data))
+       stage.render();
+     };
+    </script>
+  </head>
+
+  <body>
+    <div id="vis">
+    </div>
+  </body>
