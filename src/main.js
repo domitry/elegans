@@ -15,6 +15,7 @@ define(function(require, exports, module){
     Elegans.Line = require("charts/line");
     Elegans.Scatter = require("charts/scatter");
     Elegans.Cylinder = require("charts/cylinder");
+    Elegans.DebugObject = require("charts/debug_object");
 
     /***************************
       Functions for quick plotting with method chain style  

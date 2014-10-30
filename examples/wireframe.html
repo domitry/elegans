@@ -32,6 +32,8 @@
 	 }
        }
        var stage = new Elegans.Stage(d3.select("#vis")[0][0], {
+	 autorange: false,
+	 range: {x: [-10, 10], y: [-10, 5], z: [1, 0]},
 	 space_mode: "wireframe",
 	 grid: false
        });
@@ -40,8 +42,8 @@
      };
     </script>
   </head>
-  <body>
 
+  <body>
     <div id="vis">
     </div>
   </body>

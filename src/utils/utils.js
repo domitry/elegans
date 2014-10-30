@@ -7,7 +7,8 @@ define([],function(){
 	for(var key in src){
 	    dest[key] = src[key];
 	}
-    }
+	return dest;
+    };
 
     exports = {
 	mixin:mixin,

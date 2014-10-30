@@ -11,13 +11,13 @@
     var stage = new Elegans.Stage(d3.select("#vis")[0][0]);
     var MAX=10, DATA_NUM=3, INTERVAL_MIN=0.5, INTERVAL_MAX=3, X_NUM=10, Y_NUM=10;
     var color_scale = d3.scale.category20();
-    for(var n=0;n<DATA_NUM;n++){
+    for(var n=0;n < DATA_NUM;n++){
         var x_arr = [], y_arr = [], z_arr = [];
         var point = {x:Math.random()*MAX,y:Math.random()*MAX};
 	var noise = ImprovedNoise();
-	for(var i=0;i<X_NUM;i++){
+	for(var i=0;i < X_NUM;i++){
             point.x = point.x + Math.random()*(INTERVAL_MAX - INTERVAL_MIN) + INTERVAL_MIN;
-            for(var j=0;j<Y_NUM;j++){
+            for(var j=0;j < Y_NUM;j++){
                 point.y = point.y + Math.random()*(INTERVAL_MAX - INTERVAL_MIN) + INTERVAL_MIN;
                 point.z = noise.noise(point.x,point.y,0);
                 x_arr.push(point.x);
