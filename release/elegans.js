@@ -2223,8 +2223,6 @@ define('charts/particles',[
 	    }
 
 	    this.data = data;
-	    this.dataset = new Datasets.Array(data);
-	    this.ranges = this.dataset.getRanges();
     }
 
     Particles.prototype.generateMesh = function(scales){
@@ -2241,7 +2239,7 @@ define('charts/particles',[
 	}
 
 	if(this.options.fill_by){
-	    var fill_by_column = this.dataset.raw[this.options.fill_by];
+	    var fill_by_column = data[this.options.fill_by];
 	    var range = _.map(['min', 'max'], function(name){return _[name](fill_by_column);});
 	    var domain = _.range(range[0], range[1]+1, (range[1]-range[0])/(this.options.color.length));
 	    var color_scale = d3.scale.linear()
@@ -2262,7 +2260,8 @@ define('charts/particles',[
     };
 
     Particles.prototype.getDataRanges = function(){
-	    return this.ranges;
+	    var dataset = new Datasets.Array(this.data);
+	    return dataset.getRanges();
     };
     
     Particles.prototype.hasLegend = function(){
