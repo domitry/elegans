@@ -4,6 +4,7 @@ module.exports = function(grunt){
             options: {
                 baseUrl: 'src',
                 name: '../lib/almond/almond',
+		mainConfigFile: './src/config.js',
 		include: ['main'],
                 wrap: {
                     startFile: 'src/wrap/start.js',
