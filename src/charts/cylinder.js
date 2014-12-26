@@ -42,7 +42,7 @@ define([
 	        THREE.GeometryUtils.merge(geometry, mesh);
         }
         var material = new THREE.MeshLambertMaterial({transparent:true, color: this.options.color});
-	    this.mesh = new THREE.Mesh(geometry, material);
+	this.mesh = new THREE.Mesh(geometry, material);
     };
 
     Cylinder.prototype.getDataRanges = function(){
