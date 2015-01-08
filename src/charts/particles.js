@@ -11,7 +11,8 @@ define([
 	        color: colorbrewer.Reds[3],
 	        size: 0.3,
 	        has_legend: true,
-		fill_by: null
+		fill_by: null,
+		fill_by_range: null
 	    };
 
 	    if(arguments.length > 1){
@@ -36,7 +37,12 @@ define([
 
 	if(this.options.fill_by){
 	    var fill_by_column = data[this.options.fill_by];
-	    var range = _.map(['min', 'max'], function(name){return _[name](fill_by_column);});
+	    var range;
+	    if(_.isNull(this.options.fill_by_range))
+		range = _.map(['min', 'max'], function(name){return _[name](fill_by_column);});
+	    else
+		range = this.options.fill_by_range;
+
 	    var domain = _.range(range[0], range[1]+1, (range[1]-range[0])/(this.options.color.length));
 	    var color_scale = d3.scale.linear()
 		    .domain(domain)
