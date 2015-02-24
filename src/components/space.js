@@ -24,20 +24,20 @@ define([
 	    var yz_plane = new THREE.Mesh(geometry, material);
 
 	    xz_plane.rotateOnAxis(newV(1,0,0), Math.PI/2);
-	    xz_plane.translateOnAxis(newV(0,1,0), 10);
-	    xz_plane.translateOnAxis(newV(0,0,1), 10);
+	    xz_plane.translateOnAxis(newV(0,0,-1), -10);
 
 	    yz_plane.rotateOnAxis(newV(0,1,0), Math.PI/2);
-	    yz_plane.translateOnAxis(newV(-1,0,0), 10);
-	    yz_plane.translateOnAxis(newV(0,0,1), 10);
+	    yz_plane.translateOnAxis(newV(0,0,-1), -10);
+
+	    xy_plane.translateOnAxis(newV(0,0,1), -10);
 	}else{
 	    var coordinates = [
-		[[-10, 10, 0], [-10, -10, 0],[10,-10,0]],
-		[[-10, 10, 20], [-10, -10, 20], [10,-10,20],[10,10,20], [-10, 10, 20]],
-		[[10, -10, 0], [10, -10, 20]],
-		[[-10, 10, 0], [-10, 10, 20]],
-		[[-10, -10, 0], [-10, -10, 20]],
-		[[10, -10, 0], [10, 10, 0]]
+		[[-10, 10, -10], [-10, -10, -10],[10,-10,-10]],
+		[[-10, 10, 20], [-10, -10, 10], [10,-10,10],[10,10,10], [-10, 10, 10]],
+		[[10, -10, -10], [10, -10, 10]],
+		[[-10, 10, -10], [-10, 10, 10]],
+		[[-10, -10, -10], [-10, -10, 10]],
+		[[10, -10, -10], [10, 10, -10]]
 	    ];
 	    var meshes = this.meshes;
 
@@ -54,7 +54,7 @@ define([
 	this.scales = {};
 	this.scales.x = d3.scale.linear().domain([ranges.x.max, ranges.x.min]).range([-10, 10]);
 	this.scales.y = d3.scale.linear().domain([ranges.y.max, ranges.y.min]).range([10, -10]);
-	this.scales.z = d3.scale.linear().domain([ranges.z.max, ranges.z.min]).range([20,0]);
+	this.scales.z = d3.scale.linear().domain([ranges.z.max, ranges.z.min]).range([10,-10]);
 
 	this.meshes.push(xy_plane);
 	this.meshes.push(xz_plane);
@@ -64,15 +64,15 @@ define([
 	var x_scale = d3.scale.linear().domain([ranges.x.max, ranges.x.min]).range([20, 0]);
 	var y_scale = d3.scale.linear().domain([ranges.y.max, ranges.y.min]).range([20, 0]);
 	var z_scale = d3.scale.linear().domain([ranges.z.max, ranges.z.min]).range([20,0]);
-	this.meshes = this.meshes.concat(generateAxisAndLabels(this.options.axis_labels.x, newV(10,10,0),newV(-10,10,0),newV(0,1,0),x_scale));
-	this.meshes = this.meshes.concat(generateAxisAndLabels(this.options.axis_labels.y, newV(-10,-10,0),newV(-10,10,0),newV(-1,0,0),y_scale));
-	this.meshes = this.meshes.concat(generateAxisAndLabels(this.options.axis_labels.z, newV(10,10,0),newV(10,10,20),newV(0,1,0),z_scale));
+	this.meshes = this.meshes.concat(generateAxisAndLabels(this.options.axis_labels.x, newV(10,10,-10),newV(-10,10,-10),newV(0,1,0),x_scale));
+	this.meshes = this.meshes.concat(generateAxisAndLabels(this.options.axis_labels.y, newV(-10,-10,-10),newV(-10,10,-10),newV(-1,0,0),y_scale));
+	this.meshes = this.meshes.concat(generateAxisAndLabels(this.options.axis_labels.z, newV(10,10,-10),newV(10,10,10),newV(0,1,0),z_scale));
 
 	// generate grids
 	if(this.options.grid){
-	    this.meshes.push(generateGrid([-10,10],[-10,10],[0,0],2));//x-y
-	    this.meshes.push(generateGrid([-10,10],[-10,-10],[0,20],2));//x-z
-	    this.meshes.push(generateGrid([10,10],[-10,10],[0,20],2));//y-z
+	    this.meshes.push(generateGrid([-10,10],[-10,10],[-10,-10],2));//x-y
+	    this.meshes.push(generateGrid([-10,10],[-10,-10],[-10,10],2));//x-z
+	    this.meshes.push(generateGrid([10,10],[-10,10],[-10,10],2));//y-z
 	}
 
 	return this;
