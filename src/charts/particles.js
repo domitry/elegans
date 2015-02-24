@@ -53,11 +53,10 @@ define([
 		return mesh;
 	    }, this));
 	}else{
-	    var geometry = new THREE.Geometry();
-	    _.each(meshes, function(mesh){THREE.GeometryUtils.merge(geometry, mesh);});
 	    var color = (_.isArray(this.options.color) ? this.options.color.shift() : this.options.color);
 	    var material = new THREE.MeshBasicMaterial({transparent:true, color: color});
-	    this.mesh = new THREE.Mesh(geometry, material);
+	    _.each(meshes, function(mesh){mesh.material = material;});
+	    this.mesh = meshes;
 	}
     };
 
@@ -71,12 +70,16 @@ define([
     };
 
     Particles.prototype.disappear = function(){
-	    this.mesh.material.opacity = 0;
-	    this.mesh.material.needsUpdate = true;
+	_.each(this.mesh, function(mesh){
+	    mesh.material.opacity = 0;
+	    mesh.material.needsUpdate = true;
+	});
     };
 
     Particles.prototype.appear = function(){
-	    this.mesh.material.opacity = 1;
+	_.each(this.mesh, function(mesh){
+	    mesh.material.opacity = 1;
+	});
     };
 
     Particles.prototype.getLegend = function(){
