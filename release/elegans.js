@@ -1529,6 +1529,7 @@ define('components/stage',[
     };
 
     Stage.prototype.dispose = function(){
+	this.clear();
 	var disposeMesh = function(m){
 	    if(m.geometry)m.geometry.dispose();
 	    if(m.material){
