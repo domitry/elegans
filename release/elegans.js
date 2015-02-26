@@ -1538,7 +1538,6 @@ define('components/stage',[
 		    });
 		}else m.material.dispose();
 	    }
-	    m.dispose();
 	};
 
         for(var i=0;i<this.charts.length;i++){
