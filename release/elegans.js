@@ -1530,26 +1530,7 @@ define('components/stage',[
 
     Stage.prototype.dispose = function(){
 	this.clear();
-	var disposeMesh = function(m){
-	    if(m.geometry)m.geometry.dispose();
-	    if(m.material){
-		if(m.material instanceof THREE.MeshFaceMaterial){
-		    m.material.materials.forEach(function(material){
-			material.dispose();
-		    });
-		}else m.material.dispose();
-	    }
-	};
-
-        for(var i=0;i<this.charts.length;i++){
-            var mesh = this.charts[i].getMesh();
-	    if(mesh instanceof Array)
-		mesh.forEach(function(m){
-		    disposeMesh(m);
-		});
-	    else
-		disposeMesh(mesh);
-        }
+	this.world.renderer.clear();
     };
 
     Stage.prototype.clear = function(){
