@@ -30,7 +30,7 @@ define([
 	    yz_plane.translateOnAxis(newV(0,0,-1), -10);
 
 	    xy_plane.translateOnAxis(newV(0,0,1), -10);
-	}else{
+	}else if(this.options.mode == "wireframe"){
 	    var coordinates = [
 		[[-10, 10, -10], [-10, -10, -10],[10,-10,-10]],
 		[[-10, 10, 10], [-10, -10, 10], [10,-10,10],[10,10,10], [-10, 10, 10]],
