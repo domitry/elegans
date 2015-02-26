@@ -1528,6 +1528,30 @@ define('components/stage',[
 	this.world.begin(this.world_space);
     };
 
+    Stage.prototype.dispose = function(){
+	var disposeMesh = function(m){
+	    if(m.geometry)m.geometry.dispose();
+	    if(m.material){
+		if(m.material instanceof THREE.MeshFaceMaterial){
+		    m.material.materials.forEach(function(material){
+			material.dispose();
+		    });
+		}else m.material.dispose();
+	    }
+	    m.dispose();
+	};
+
+        for(var i=0;i<this.charts.length;i++){
+            var mesh = this.charts[i].getMesh();
+	    if(mesh instanceof Array)
+		mesh.forEach(function(m){
+		    disposeMesh(m);
+		});
+	    else
+		disposeMesh(mesh);
+        }
+    };
+
     Stage.prototype.clear = function(){
         for(var i=0;i<this.charts.length;i++){
             var chart=this.charts[i];
