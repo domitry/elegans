@@ -131,7 +131,23 @@ define([],function(){
 	};
 
 	this.rotateCamera = function () {
-
+		if (_rotateStart.x==_rotateEnd.x && _rotateStart.y==_rotateEnd.y) return;		
+		var axis = new THREE.Vector3(0,0,1);
+		quaternion = new THREE.Quaternion();
+		console.log(_rotateStart,_rotateEnd);
+		quaternion.setFromAxisAngle( axis,(_rotateEnd.x-_rotateStart.x)*0.0003 );
+		_eye.applyQuaternion( quaternion );
+		_this.object.up.applyQuaternion( quaternion );		
+		
+		
+		var axis = ( new THREE.Vector3() ).crossVectors(_eye, _this.object.up ).normalize(),
+		quaternion = new THREE.Quaternion();		
+		quaternion.setFromAxisAngle( axis,-(_rotateEnd.y-_rotateStart.y)*0.0003 );
+		_eye.applyQuaternion( quaternion );
+		_this.object.up.applyQuaternion( quaternion );
+		
+		if ( _this.staticMoving ) _rotateStart=_rotateEnd;else _rotateEnd=_rotateStart;
+/*	
 	    var angle = Math.acos( _rotateStart.dot( _rotateEnd ) / _rotateStart.length() / _rotateEnd.length() );
 
 	    if ( angle ) {
@@ -148,19 +164,20 @@ define([],function(){
 
 		_rotateEnd.applyQuaternion( quaternion );
 
+				_eye.applyQuaternion( quaternion );
+		_this.object.up.applyQuaternion( quaternion );
 		if ( _this.staticMoving ) {
-
+			
 		    _rotateStart.copy( _rotateEnd );
 
 		} else {
-
-		    quaternion.setFromAxisAngle( axis, angle * ( _this.dynamicDampingFactor - 1.0 ) );
-		    _rotateStart.applyQuaternion( quaternion );
+			_rotateStart.rotateY(Math.PI / 180);
+		    //quaternion.setFromAxisAngle( axis, angle * ( _this.dynamicDampingFactor - 1.0 ) );
+		    //_rotateStart.applyQuaternion( quaternion );
 
 		}
-
 	    }
-
+*/
 	};
 
 	this.zoomCamera = function () {
@@ -365,7 +382,7 @@ define([],function(){
 
 	    if ( _state === STATE.ROTATE && !_this.noRotate ) {
 
-		_rotateStart = _rotateEnd = _this.getMouseProjectionOnBall( event.clientX, event.clientY );
+		_rotateStart = _rotateEnd ={x:event.clientX, y:event.clientY};// _this.getMouseProjectionOnBall( event.clientX, event.clientY );
 
 	    } else if ( _state === STATE.ZOOM && !_this.noZoom ) {
 
@@ -391,7 +408,7 @@ define([],function(){
 
 	    if ( _state === STATE.ROTATE && !_this.noRotate ) {
 
-		_rotateEnd = _this.getMouseProjectionOnBall( event.clientX, event.clientY );
+		_rotateEnd ={x:event.clientX, y:event.clientY};// _this.getMouseProjectionOnBall( event.clientX, event.clientY );
 
 	    } else if ( _state === STATE.ZOOM && !_this.noZoom ) {
 
@@ -450,7 +467,7 @@ define([],function(){
 
 	    case 1:
 		_state = STATE.TOUCH_ROTATE;
-		_rotateStart = _rotateEnd = _this.getMouseProjectionOnBall( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
+		_rotateStart = _rotateEnd = {x:event.touches[ 0 ].pageX, y:event.touches[ 0 ].pageY};//_this.getMouseProjectionOnBall( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
 		break;
 
 	    case 2:
@@ -482,7 +499,7 @@ define([],function(){
 	    switch ( event.touches.length ) {
 
 	    case 1:
-		_rotateEnd = _this.getMouseProjectionOnBall( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
+		_rotateEnd = {x:event.touches[ 0 ].pageX, y:event.touches[ 0 ].pageY};//_this.getMouseProjectionOnBall( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
 		break;
 
 	    case 2:
@@ -509,7 +526,7 @@ define([],function(){
 	    switch ( event.touches.length ) {
 
 	    case 1:
-		_rotateStart = _rotateEnd = _this.getMouseProjectionOnBall( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
+		_rotateStart = _rotateEnd = {x:event.touches[ 0 ].pageX, y:event.touches[ 0 ].pageY};//_this.getMouseProjectionOnBall( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
 		break;
 
 	    case 2:

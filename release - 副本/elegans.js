@@ -561,23 +561,7 @@ define('utils/TrackballControls',[],function(){
 	};
 
 	this.rotateCamera = function () {
-		if (_rotateStart.x==_rotateEnd.x && _rotateStart.y==_rotateEnd.y) return;		
-		var axis = new THREE.Vector3(0,0,1);
-		quaternion = new THREE.Quaternion();
-		console.log(_rotateStart,_rotateEnd);
-		quaternion.setFromAxisAngle( axis,(_rotateEnd.x-_rotateStart.x)*0.0003 );
-		_eye.applyQuaternion( quaternion );
-		_this.object.up.applyQuaternion( quaternion );		
-		
-		
-		var axis = ( new THREE.Vector3() ).crossVectors(_eye, _this.object.up ).normalize(),
-		quaternion = new THREE.Quaternion();		
-		quaternion.setFromAxisAngle( axis,-(_rotateEnd.y-_rotateStart.y)*0.0003 );
-		_eye.applyQuaternion( quaternion );
-		_this.object.up.applyQuaternion( quaternion );
-		
-		if ( _this.staticMoving ) _rotateStart=_rotateEnd;else _rotateEnd=_rotateStart;
-/*	
+
 	    var angle = Math.acos( _rotateStart.dot( _rotateEnd ) / _rotateStart.length() / _rotateEnd.length() );
 
 	    if ( angle ) {
@@ -594,20 +578,19 @@ define('utils/TrackballControls',[],function(){
 
 		_rotateEnd.applyQuaternion( quaternion );
 
-				_eye.applyQuaternion( quaternion );
-		_this.object.up.applyQuaternion( quaternion );
 		if ( _this.staticMoving ) {
-			
+
 		    _rotateStart.copy( _rotateEnd );
 
 		} else {
-			_rotateStart.rotateY(Math.PI / 180);
-		    //quaternion.setFromAxisAngle( axis, angle * ( _this.dynamicDampingFactor - 1.0 ) );
-		    //_rotateStart.applyQuaternion( quaternion );
+
+		    quaternion.setFromAxisAngle( axis, angle * ( _this.dynamicDampingFactor - 1.0 ) );
+		    _rotateStart.applyQuaternion( quaternion );
 
 		}
+
 	    }
-*/
+
 	};
 
 	this.zoomCamera = function () {
@@ -812,7 +795,7 @@ define('utils/TrackballControls',[],function(){
 
 	    if ( _state === STATE.ROTATE && !_this.noRotate ) {
 
-		_rotateStart = _rotateEnd ={x:event.clientX, y:event.clientY};// _this.getMouseProjectionOnBall( event.clientX, event.clientY );
+		_rotateStart = _rotateEnd = _this.getMouseProjectionOnBall( event.clientX, event.clientY );
 
 	    } else if ( _state === STATE.ZOOM && !_this.noZoom ) {
 
@@ -838,7 +821,7 @@ define('utils/TrackballControls',[],function(){
 
 	    if ( _state === STATE.ROTATE && !_this.noRotate ) {
 
-		_rotateEnd ={x:event.clientX, y:event.clientY};// _this.getMouseProjectionOnBall( event.clientX, event.clientY );
+		_rotateEnd = _this.getMouseProjectionOnBall( event.clientX, event.clientY );
 
 	    } else if ( _state === STATE.ZOOM && !_this.noZoom ) {
 
@@ -897,7 +880,7 @@ define('utils/TrackballControls',[],function(){
 
 	    case 1:
 		_state = STATE.TOUCH_ROTATE;
-		_rotateStart = _rotateEnd = {x:event.touches[ 0 ].pageX, y:event.touches[ 0 ].pageY};//_this.getMouseProjectionOnBall( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
+		_rotateStart = _rotateEnd = _this.getMouseProjectionOnBall( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
 		break;
 
 	    case 2:
@@ -929,7 +912,7 @@ define('utils/TrackballControls',[],function(){
 	    switch ( event.touches.length ) {
 
 	    case 1:
-		_rotateEnd = {x:event.touches[ 0 ].pageX, y:event.touches[ 0 ].pageY};//_this.getMouseProjectionOnBall( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
+		_rotateEnd = _this.getMouseProjectionOnBall( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
 		break;
 
 	    case 2:
@@ -956,7 +939,7 @@ define('utils/TrackballControls',[],function(){
 	    switch ( event.touches.length ) {
 
 	    case 1:
-		_rotateStart = _rotateEnd = {x:event.touches[ 0 ].pageX, y:event.touches[ 0 ].pageY};//_this.getMouseProjectionOnBall( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
+		_rotateStart = _rotateEnd = _this.getMouseProjectionOnBall( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
 		break;
 
 	    case 2:
@@ -1004,8 +987,8 @@ define('components/world',[
 	this.scene = new THREE.Scene();
 
 	this.camera = new THREE.OrthographicCamera(-20,20,-20,20);
-	//this.camera.position.set(-30, 31,0);
-	//this.camera.rotation.set(0,0,0);//this.camera.rotation.set(-0.6,-0.5,0.6);
+	this.camera.position.set(-30, 31,42);
+	this.camera.rotation.set(-0.6,-0.5,0.6);
 	this.scene.add(this.camera);
 
 	var positions = [[1,1,1],[-1,-1,1],[-1,1,1],[1,-1,1]];
@@ -1019,8 +1002,8 @@ define('components/world',[
 	this.renderer.setSize(options.width, options.height);
 	this.renderer.setClearColor(options.bg_color, 1);
 	this.controls = new TrackballControls(this.camera, this.renderer.domElement);
-	this.camera.position.set(0,0,100);
-	this.camera.rotation.set(0,0,0);//this.camera.rotation.set(0,-Math.PI/2,Math.PI);//this.camera.rotation.set(-0.6,-0.5,0.6);
+	this.camera.position.set(-30, 31,42);
+	this.camera.rotation.set(-0.6,-0.5,0.6);
 
 	return this;
     }

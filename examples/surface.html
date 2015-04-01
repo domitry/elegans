@@ -4,35 +4,56 @@
   <link rel='stylesheet' href='common.css'>
   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/three.js/r66/three.min.js"></script>
   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.4/d3.min.js"></script>
-  <script type="text/javascript" src="../release/elegans.min.js"></script>
+  <script type="text/javascript" src="../release/elegans.js"></script>
   <script type="text/javascript">
 window.onload = function(){
+	/*
     var data = {};
     var BIGIN=-10, END=10, INTERVAL = 0.5;
     width = height = (END - BIGIN)/INTERVAL + 1;
     data.x = [], data.y = [], data.z = [];
     for(var i=0;i<height;i++)data.x.push([]);
     for(var j=0;j<height;j++){
-	var x = BIGIN + INTERVAL*j;
-	for(var i=0;i<width;i++){
-	    data.x[i][j] = x;
-	}
+		var x = BIGIN + INTERVAL*j;
+		for(var i=0;i<width;i++)data.x[i][j] = x;	
     }
     for(var i=0;i<width;i++){
-	data.y.push([]);
-	var y = BIGIN + INTERVAL*i;
-	for(var j=0;j<height;j++){
-	    data.y[i][j] = y;
-	}
+		data.y.push([]);
+		var y = BIGIN + INTERVAL*i;
+		for(var j=0;j<height;j++)data.y[i][j] = y;	
     }
     for(var i=0;i<width;i++){
-	data.z.push([]);
-	for(var j=0;j<height;j++){
-	    var x=data.x[i][j], y=data.y[i][j];
-	    data.z[i][j] = Math.cos(Math.sqrt(x*x+y*y));
-	}
+		data.z.push([]);
+		for(var j=0;j<height;j++){
+			var x=data.x[i][j], y=data.y[i][j];
+			data.z[i][j] = Math.cos(Math.sqrt(x*x+y*y));
+		}
     }
-    d3.select('#vis').datum(data).call(Elegans.SurfacePlot);
+	console.log(data);
+	if(false)
+	*/
+	data={
+		 x:	[[0,5,10]
+			,[0,5,10]
+			,[0,5,10]]
+		,y:	[[0,0,0]
+			,[10,10,10]
+			,[20,20,20]]
+		,z:	[[0,10,10]
+			,[0,5,10]
+			,[0,5,10]]
+	}
+	console.log(data);
+	var jet=["#000083","#003CAA","#05ffff","#ffff00","#ff0000","#800000"];
+	var hsv=["#FF0000","#FDFF02","#F7FF92","#00FC04","#00FC0A","#01F9FF","#0200FD","#FF00FB","#FF00F5","#FF00F5","#FF0006","#000000","#E60000","#FFF200","#FFFFFF"]. reverse();	
+	console.log("!!!!!",d3.select("#vis")[0][0]);
+	var stage = new Elegans.Stage(d3.select("#vis")[0][0]);	
+	//,stage.add(new Elegans.SurfacePlot(data));
+	stage.add(new Elegans.Surface(data,{fill_colors:hsv}));
+	stage.add(new Elegans.Wireframe(data,{color: "#000000",thickness: 1}));
+	stage.render();	
+    //d3.select('#vis').datum(data).call(Elegans.SurfacePlot.fill_colors(hsv));
+	//d3.select('#vis').datum(data).call(Elegans.Wireframe);
 };
   </script>
 </head>
