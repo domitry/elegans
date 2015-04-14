@@ -6,8 +6,8 @@ define([
 	this.scene = new THREE.Scene();
 
 	this.camera = new THREE.OrthographicCamera(-20,20,-20,20);
-	this.camera.position.set(-30, 31,42);
-	this.camera.rotation.set(-0.6,-0.5,0.6);
+	//this.camera.position.set(-30, 31,0);
+	//this.camera.rotation.set(0,0,0);//this.camera.rotation.set(-0.6,-0.5,0.6);
 	this.scene.add(this.camera);
 
 	var positions = [[1,1,1],[-1,-1,1],[-1,1,1],[1,-1,1]];
@@ -21,8 +21,8 @@ define([
 	this.renderer.setSize(options.width, options.height);
 	this.renderer.setClearColor(options.bg_color, 1);
 	this.controls = new TrackballControls(this.camera, this.renderer.domElement);
-	this.camera.position.set(-30, 31,42);
-	this.camera.rotation.set(-0.6,-0.5,0.6);
+	this.camera.position.set(0,0,100);
+	this.camera.rotation.set(0,0,0);//this.camera.rotation.set(0,-Math.PI/2,Math.PI);//this.camera.rotation.set(-0.6,-0.5,0.6);
 
 	return this;
     }

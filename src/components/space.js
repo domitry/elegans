@@ -17,8 +17,22 @@ define([
 	var material = new THREE.MeshBasicMaterial({color:0xf0f0f0, shading: THREE.FlatShading, overdraw: 0.5, side: THREE.DoubleSide});
 	var newV = function(x,y,z){return new THREE.Vector3(x,y,z);};
 	this.meshes = [];
+	if(this.options.mode == "opacity"){
+	
+		var material = new THREE.MeshBasicMaterial({color:0xf0f0f0, shading: THREE.FlatShading, overdraw: 0.5, side: THREE.DoubleSide,transparent: true,opacity: 0.5});
+	    var xy_plane = new THREE.Mesh(geometry, material);
+	    var xz_plane = new THREE.Mesh(geometry, material);
+	    var yz_plane = new THREE.Mesh(geometry, material);
 
-	if(this.options.mode == "solid"){
+	    xz_plane.rotateOnAxis(newV(1,0,0), Math.PI/2);
+	    xz_plane.translateOnAxis(newV(0,0,-1), -10);
+
+	    yz_plane.rotateOnAxis(newV(0,1,0), Math.PI/2);
+	    yz_plane.translateOnAxis(newV(0,0,-1), -10);
+
+	    xy_plane.translateOnAxis(newV(0,0,1), -10);
+	}
+	else if(this.options.mode == "solid"){
 	    var xy_plane = new THREE.Mesh(geometry, material);
 	    var xz_plane = new THREE.Mesh(geometry, material);
 	    var yz_plane = new THREE.Mesh(geometry, material);
@@ -78,25 +92,33 @@ define([
 	return this;
     }
 
-    var generateLabel = function(text, position){
-	    var canvas = document.createElement('canvas');
-	    canvas.width = 100;
-	    canvas.height = 100;
+    var generateLabel = function(text, position,fontsize,font){
+		if (!fontsize) fontsize=60;
+		if (!font) font="sans-serif";
+		/////////////////
+		var canvas = document.createElement('canvas');
+	    canvas.width = 1000;canvas.height = fontsize+40;var context = canvas.getContext('2d');
+	    context.fillStyle = "rgb(0, 0, 0)";context.font = fontsize+"px "+font;		
+		var text_width = context.measureText(text).width;
+		/////////////////
+	    var canvas = document.createElement('canvas');canvas.width = text_width+20;canvas.height = fontsize+40;
 	    var context = canvas.getContext('2d');
-	    context.fillStyle = "rgb(0, 0, 0)";
-	    context.font = "60px sans-serif";
-	    var text_width = context.measureText(text).width;
-	    context.fillText(text, (100-text_width)/2, 80);
+	    context.fillStyle = "rgb(0, 0, 0)";context.font = fontsize+"px "+font;
+	    //var text_width = context.measureText(text).width;
+	    context.fillText(text,0, fontsize+20);
 	    var texture = new THREE.Texture(canvas);
+		//anisotropy
 	    texture.flipY = false;
 	    texture.needsUpdate = true;
+		texture.anisotropy=16;//无效
 	    var material = new THREE.SpriteMaterial({
 	        map: texture,
 	        transparent: true,
 	        useScreenCoordinates: false
 	    });
 	    var sprite = new THREE.Sprite(material);
-	    sprite.scale.set(1.5,1.5);
+	    //sprite.scale.set(0.5+text_width/100,1.5);
+		sprite.scale.set(canvas.width/canvas.height*1.5,1.5);
 	    sprite.position = position;
 	    return sprite;
     };
@@ -111,7 +133,7 @@ define([
 
 	    var label_position = (new THREE.Vector3).addVectors(axis_end, axis_start).divideScalar(2);
 	    label_position.add(nv_tick.clone().multiplyScalar(3));
-	    meshes.push(generateLabel(axis_label, label_position));
+	    meshes.push(generateLabel(axis_label, label_position,250,"bold Microsoft YaHei"));
 
 	    // generate d3.js axis
 	    var svg = d3.select("body")

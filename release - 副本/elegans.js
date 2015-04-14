@@ -561,22 +561,7 @@ define('utils/TrackballControls',[],function(){
 	};
 
 	this.rotateCamera = function () {
-		if (_rotateStart.x==_rotateEnd.x && _rotateStart.y==_rotateEnd.y) return;		
-		var axis = new THREE.Vector3(0,0,1);
-		quaternion = new THREE.Quaternion();		
-		quaternion.setFromAxisAngle( axis,(_rotateEnd.x-_rotateStart.x)*0.0003 );
-		_eye.applyQuaternion( quaternion );
-		_this.object.up.applyQuaternion( quaternion );		
-		
-		
-		var axis = ( new THREE.Vector3() ).crossVectors(_eye, _this.object.up ).normalize(),
-		quaternion = new THREE.Quaternion();		
-		quaternion.setFromAxisAngle( axis,-(_rotateEnd.y-_rotateStart.y)*0.0003 );
-		_eye.applyQuaternion( quaternion );
-		_this.object.up.applyQuaternion( quaternion );
-		
-		if ( _this.staticMoving ) _rotateStart=_rotateEnd;else _rotateEnd=_rotateStart;
-/*	
+
 	    var angle = Math.acos( _rotateStart.dot( _rotateEnd ) / _rotateStart.length() / _rotateEnd.length() );
 
 	    if ( angle ) {
@@ -593,20 +578,19 @@ define('utils/TrackballControls',[],function(){
 
 		_rotateEnd.applyQuaternion( quaternion );
 
-				_eye.applyQuaternion( quaternion );
-		_this.object.up.applyQuaternion( quaternion );
 		if ( _this.staticMoving ) {
-			
+
 		    _rotateStart.copy( _rotateEnd );
 
 		} else {
-			_rotateStart.rotateY(Math.PI / 180);
-		    //quaternion.setFromAxisAngle( axis, angle * ( _this.dynamicDampingFactor - 1.0 ) );
-		    //_rotateStart.applyQuaternion( quaternion );
+
+		    quaternion.setFromAxisAngle( axis, angle * ( _this.dynamicDampingFactor - 1.0 ) );
+		    _rotateStart.applyQuaternion( quaternion );
 
 		}
+
 	    }
-*/
+
 	};
 
 	this.zoomCamera = function () {
@@ -811,7 +795,7 @@ define('utils/TrackballControls',[],function(){
 
 	    if ( _state === STATE.ROTATE && !_this.noRotate ) {
 
-		_rotateStart = _rotateEnd ={x:event.clientX, y:event.clientY};// _this.getMouseProjectionOnBall( event.clientX, event.clientY );
+		_rotateStart = _rotateEnd = _this.getMouseProjectionOnBall( event.clientX, event.clientY );
 
 	    } else if ( _state === STATE.ZOOM && !_this.noZoom ) {
 
@@ -837,7 +821,7 @@ define('utils/TrackballControls',[],function(){
 
 	    if ( _state === STATE.ROTATE && !_this.noRotate ) {
 
-		_rotateEnd ={x:event.clientX, y:event.clientY};// _this.getMouseProjectionOnBall( event.clientX, event.clientY );
+		_rotateEnd = _this.getMouseProjectionOnBall( event.clientX, event.clientY );
 
 	    } else if ( _state === STATE.ZOOM && !_this.noZoom ) {
 
@@ -896,7 +880,7 @@ define('utils/TrackballControls',[],function(){
 
 	    case 1:
 		_state = STATE.TOUCH_ROTATE;
-		_rotateStart = _rotateEnd = {x:event.touches[ 0 ].pageX, y:event.touches[ 0 ].pageY};//_this.getMouseProjectionOnBall( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
+		_rotateStart = _rotateEnd = _this.getMouseProjectionOnBall( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
 		break;
 
 	    case 2:
@@ -928,7 +912,7 @@ define('utils/TrackballControls',[],function(){
 	    switch ( event.touches.length ) {
 
 	    case 1:
-		_rotateEnd = {x:event.touches[ 0 ].pageX, y:event.touches[ 0 ].pageY};//_this.getMouseProjectionOnBall( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
+		_rotateEnd = _this.getMouseProjectionOnBall( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
 		break;
 
 	    case 2:
@@ -955,7 +939,7 @@ define('utils/TrackballControls',[],function(){
 	    switch ( event.touches.length ) {
 
 	    case 1:
-		_rotateStart = _rotateEnd = {x:event.touches[ 0 ].pageX, y:event.touches[ 0 ].pageY};//_this.getMouseProjectionOnBall( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
+		_rotateStart = _rotateEnd = _this.getMouseProjectionOnBall( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
 		break;
 
 	    case 2:
@@ -1003,8 +987,8 @@ define('components/world',[
 	this.scene = new THREE.Scene();
 
 	this.camera = new THREE.OrthographicCamera(-20,20,-20,20);
-	//this.camera.position.set(-30, 31,0);
-	//this.camera.rotation.set(0,0,0);//this.camera.rotation.set(-0.6,-0.5,0.6);
+	this.camera.position.set(-30, 31,42);
+	this.camera.rotation.set(-0.6,-0.5,0.6);
 	this.scene.add(this.camera);
 
 	var positions = [[1,1,1],[-1,-1,1],[-1,1,1],[1,-1,1]];
@@ -1018,8 +1002,8 @@ define('components/world',[
 	this.renderer.setSize(options.width, options.height);
 	this.renderer.setClearColor(options.bg_color, 1);
 	this.controls = new TrackballControls(this.camera, this.renderer.domElement);
-	this.camera.position.set(0,0,100);
-	this.camera.rotation.set(0,0,0);//this.camera.rotation.set(0,-Math.PI/2,Math.PI);//this.camera.rotation.set(-0.6,-0.5,0.6);
+	this.camera.position.set(-30, 31,42);
+	this.camera.rotation.set(-0.6,-0.5,0.6);
 
 	return this;
     }
@@ -1105,22 +1089,8 @@ define('components/space',[
 	var material = new THREE.MeshBasicMaterial({color:0xf0f0f0, shading: THREE.FlatShading, overdraw: 0.5, side: THREE.DoubleSide});
 	var newV = function(x,y,z){return new THREE.Vector3(x,y,z);};
 	this.meshes = [];
-	if(this.options.mode == "opacity"){
-	
-		var material = new THREE.MeshBasicMaterial({color:0xf0f0f0, shading: THREE.FlatShading, overdraw: 0.5, side: THREE.DoubleSide,transparent: true,opacity: 0.5});
-	    var xy_plane = new THREE.Mesh(geometry, material);
-	    var xz_plane = new THREE.Mesh(geometry, material);
-	    var yz_plane = new THREE.Mesh(geometry, material);
 
-	    xz_plane.rotateOnAxis(newV(1,0,0), Math.PI/2);
-	    xz_plane.translateOnAxis(newV(0,0,-1), -10);
-
-	    yz_plane.rotateOnAxis(newV(0,1,0), Math.PI/2);
-	    yz_plane.translateOnAxis(newV(0,0,-1), -10);
-
-	    xy_plane.translateOnAxis(newV(0,0,1), -10);
-	}
-	else if(this.options.mode == "solid"){
+	if(this.options.mode == "solid"){
 	    var xy_plane = new THREE.Mesh(geometry, material);
 	    var xz_plane = new THREE.Mesh(geometry, material);
 	    var yz_plane = new THREE.Mesh(geometry, material);
@@ -1180,33 +1150,25 @@ define('components/space',[
 	return this;
     }
 
-    var generateLabel = function(text, position,fontsize,font){
-		if (!fontsize) fontsize=60;
-		if (!font) font="sans-serif";
-		/////////////////
-		var canvas = document.createElement('canvas');
-	    canvas.width = 1000;canvas.height = fontsize+40;var context = canvas.getContext('2d');
-	    context.fillStyle = "rgb(0, 0, 0)";context.font = fontsize+"px "+font;		
-		var text_width = context.measureText(text).width;
-		/////////////////
-	    var canvas = document.createElement('canvas');canvas.width = text_width+20;canvas.height = fontsize+40;
+    var generateLabel = function(text, position){
+	    var canvas = document.createElement('canvas');
+	    canvas.width = 100;
+	    canvas.height = 100;
 	    var context = canvas.getContext('2d');
-	    context.fillStyle = "rgb(0, 0, 0)";context.font = fontsize+"px "+font;
-	    //var text_width = context.measureText(text).width;
-	    context.fillText(text,0, fontsize+20);
+	    context.fillStyle = "rgb(0, 0, 0)";
+	    context.font = "60px sans-serif";
+	    var text_width = context.measureText(text).width;
+	    context.fillText(text, (100-text_width)/2, 80);
 	    var texture = new THREE.Texture(canvas);
-		//anisotropy
 	    texture.flipY = false;
 	    texture.needsUpdate = true;
-		texture.anisotropy=16;//无效
 	    var material = new THREE.SpriteMaterial({
 	        map: texture,
 	        transparent: true,
 	        useScreenCoordinates: false
 	    });
 	    var sprite = new THREE.Sprite(material);
-	    //sprite.scale.set(0.5+text_width/100,1.5);
-		sprite.scale.set(canvas.width/canvas.height*1.5,1.5);
+	    sprite.scale.set(1.5,1.5);
 	    sprite.position = position;
 	    return sprite;
     };
@@ -1221,7 +1183,7 @@ define('components/space',[
 
 	    var label_position = (new THREE.Vector3).addVectors(axis_end, axis_start).divideScalar(2);
 	    label_position.add(nv_tick.clone().multiplyScalar(3));
-	    meshes.push(generateLabel(axis_label, label_position,250,"bold Microsoft YaHei"));
+	    meshes.push(generateLabel(axis_label, label_position));
 
 	    // generate d3.js axis
 	    var svg = d3.select("body")
@@ -1445,8 +1407,7 @@ define('utils/range',[],function(){
 	if(arguments.length > 1){
 	    this.max = arg0;
 	    this.min = arg1;
-	}else
-	if(arguments.length > 9){	
+	}else{
 	    this.max  = arg0[1];
 	    this.min  = arg0[0];
 	}
@@ -1462,17 +1423,7 @@ define('utils/range',[],function(){
     };
 
     Range.expand = function(range1, range2){
-		var a,b;
-		if 		(typeof(range1.max)=="undefined") a=range2.max;
-		else if	(typeof(range2.max)=="undefined") a=range1.max;
-		else a=Math.max(range1.max, range2.max);
-		
-		if 		(typeof(range1.min)=="undefined") b=range2.min;
-		else if	(typeof(range2.min)=="undefined") b=range1.min;
-		else b=Math.max(range1.min, range2.min);
-		console.log("extend",range1, range2,new Range(a,b));
-		return new Range(a,b);
-		
+	return new Range(Math.max(range1.max, range2.max), Math.min(range1.min, range2.min));
     };
 
     return Range;
@@ -1495,7 +1446,7 @@ define('components/stage',[
 	        bg_color:0xffffff,
 	        player: false,
 		space_mode: 'solid',
-		range:{x:[], y:[], z:[]},  //{x:[0,0], y:[0,0], z:[0,0]}, P.S:this is not working for nagitave number. i.e: [-10,-15]
+		range:{x:[0,0], y:[0,0], z:[0,0]},
 		autorange:true,
 		grid: true
 	    };
@@ -1559,7 +1510,6 @@ define('components/stage',[
 	    mode: this.options.space_mode,
 	    grid: this.options.grid
 	});
-	console.log("this.data_ranges",this.data_ranges);
 	this.world.addMesh(this.space.getMeshes());
         for(var i=0;i<this.charts.length;i++){
             var chart=this.charts[i];

@@ -15,7 +15,7 @@ define([
 	        bg_color:0xffffff,
 	        player: false,
 		space_mode: 'solid',
-		range:{x:[0,0], y:[0,0], z:[0,0]},
+		range:{x:[], y:[], z:[]},  //{x:[0,0], y:[0,0], z:[0,0]}, P.S:this is not working for nagitave number. i.e: [-10,-15]
 		autorange:true,
 		grid: true
 	    };
@@ -79,6 +79,7 @@ define([
 	    mode: this.options.space_mode,
 	    grid: this.options.grid
 	});
+	console.log("this.data_ranges",this.data_ranges);
 	this.world.addMesh(this.space.getMeshes());
         for(var i=0;i<this.charts.length;i++){
             var chart=this.charts[i];
