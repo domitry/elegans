@@ -1198,7 +1198,7 @@ define('components/space',[
 		//anisotropy
 	    texture.flipY = false;
 	    texture.needsUpdate = true;
-		texture.anisotropy=16;//无效
+		texture.anisotropy=166;
 	    var material = new THREE.SpriteMaterial({
 	        map: texture,
 	        transparent: true,

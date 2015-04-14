@@ -133,8 +133,7 @@ define([],function(){
 	this.rotateCamera = function () {
 		if (_rotateStart.x==_rotateEnd.x && _rotateStart.y==_rotateEnd.y) return;		
 		var axis = new THREE.Vector3(0,0,1);
-		quaternion = new THREE.Quaternion();
-		console.log(_rotateStart,_rotateEnd);
+		quaternion = new THREE.Quaternion();		
 		quaternion.setFromAxisAngle( axis,(_rotateEnd.x-_rotateStart.x)*0.0003 );
 		_eye.applyQuaternion( quaternion );
 		_this.object.up.applyQuaternion( quaternion );		
