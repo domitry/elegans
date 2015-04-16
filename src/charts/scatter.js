@@ -76,7 +76,7 @@ define([
 	var meshes = [];
 	for(var i=0;i<data.x.length;i++){
 	    var sprite = new THREE.Sprite(material);
-	    sprite.position = new THREE.Vector3(
+	    sprite.position.set(
 		scales.x(data.x[i]),
 		scales.y(data.y[i]),
 		scales.z(data.z[i])

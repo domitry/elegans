@@ -47,7 +47,7 @@ define([
 		arr.forEach(function(c){
 		    geonetry.vertices.push(newV.apply(null, c));
 		});
-		meshes.push(new THREE.Line(geonetry, material));
+		meshes.push(new THREE.Line(geonetry, material, THREE.LinePieces));
 	    });
 	}
 	
@@ -97,7 +97,7 @@ define([
 	    });
 	    var sprite = new THREE.Sprite(material);
 	    sprite.scale.set(1.5,1.5);
-	    sprite.position = position;
+	    sprite.position.set.apply(sprite.position, position.toArray());
 	    return sprite;
     };
 
@@ -105,10 +105,10 @@ define([
 	    var meshes = [];
 	    var geometry = new THREE.Geometry();
 	    var nv_start2end = (new THREE.Vector3).subVectors(axis_end, axis_start).normalize();
-
+	
 	    geometry.vertices.push(axis_start);
 	    geometry.vertices.push(axis_end);
-
+ 
 	    var label_position = (new THREE.Vector3).addVectors(axis_end, axis_start).divideScalar(2);
 	    label_position.add(nv_tick.clone().multiplyScalar(3));
 	    meshes.push(generateLabel(axis_label, label_position));
@@ -140,7 +140,7 @@ define([
 
 	        //generate labels
 	        var text = ticks[0][i].children[1].childNodes[0].nodeValue;
-	        var label_center = (new THREE.Vector3).addVectors(tick_center ,nv_tick.clone().multiplyScalar(1.0));
+	        var label_center = (new THREE.Vector3).addVectors(tick_center, nv_tick.clone().multiplyScalar(1.0));
 	        var label = generateLabel(text, label_center);
 	        meshes.push(label);
 	    }
@@ -148,8 +148,7 @@ define([
 	    svg.remove();
 
 	    var material = new THREE.LineBasicMaterial( { color: 0x000000, opacity: 0.2 } );
-	    var line = new THREE.Line(geometry, material);
-	    line.type = THREE.LinePieces;
+	    var line = new THREE.Line(geometry, material, THREE.LinePieces);
 	    meshes.push(line);
 	    return meshes;
     };
@@ -170,8 +169,7 @@ define([
 	        geometry.vertices.push(new THREE.Vector3(x_range[1],y_range[1],z));
 	    }
 	    var material = new THREE.LineBasicMaterial( { color: 0xcccccc, opacity: 0.2 } );
-	    var line = new THREE.Line(geometry, material);
-	    line.type = THREE.LinePieces;
+	    var line = new THREE.Line(geometry, material, THREE.LinePieces);
 	    return line;
     };
 
