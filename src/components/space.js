@@ -30,6 +30,10 @@ define([
 	    yz_plane.translateOnAxis(newV(0,0,-1), -10);
 
 	    xy_plane.translateOnAxis(newV(0,0,1), -10);
+
+	    this.meshes.push(xy_plane);
+	    this.meshes.push(xz_plane);
+	    this.meshes.push(yz_plane);
 	}else if(this.options.mode == "wireframe"){
 	    var coordinates = [
 		[[-10, 10, -10], [-10, -10, -10],[10,-10,-10]],
