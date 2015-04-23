@@ -27,7 +27,7 @@ define([
 	var meshes = [];
 	for(var i=0;i<data.x.length;i++){
 	    var mesh = new THREE.Mesh(new THREE.SphereGeometry(this.options.size));
-	    mesh.position = new THREE.Vector3(
+	    mesh.position.set(
 		scales.x(data.x[i]),
 		scales.y(data.y[i]),
 		scales.z(data.z[i])
