@@ -28,7 +28,7 @@ define([
             var height = Math.abs(scales.x(data.height[i]) - scales.x(0));
             var rad = Math.abs(scales.x(data.radius[i]) - scales.x(0));
 	        var mesh = new THREE.Mesh(new THREE.CylinderGeometry(rad,rad,height,16));
-	        mesh.position = new THREE.Vector3(
+	        mesh.position.set(
 		        scales.x(data.x[i]),
 		        scales.y(data.y[i]),
 		        scales.z(data.z[i])
