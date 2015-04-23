@@ -1762,7 +1762,7 @@ define('utils/utils',[],function(){
 	return dest;
     };
 
-    exports = {
+    var exports = {
 	mixin:mixin,
 	merge:merge
     };
