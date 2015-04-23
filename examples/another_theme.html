@@ -1,0 +1,43 @@
+<html lang="en">
+<head>
+  <title>Plot Sample - Particles</title>
+  <link rel='stylesheet' href='common.css'>
+  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.min.js"></script>
+  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.4/d3.min.js"></script>
+  <script type="text/javascript" src="../release/elegans.min.js"></script>
+  <script src="http://github.com/mrdoob/three.js/raw/r49/examples/js/ImprovedNoise.js"></script>
+  <script type="text/javascript">
+    window.onload = function(){
+    var stage = new Elegans.Stage(d3.select("#vis")[0][0], {
+       space_mode: "solid"
+    });
+
+    var MAX=10, DATA_NUM=3, INTERVAL_MIN=0.5, INTERVAL_MAX=3, X_NUM=10, Y_NUM=10;
+    var color_scale = d3.scale.category20();
+    for(var n=0;n < DATA_NUM;n++){
+        var x_arr = [], y_arr = [], z_arr = [];
+        var point = {x:Math.random()*MAX,y:Math.random()*MAX};
+	var noise = ImprovedNoise();
+	for(var i=0;i < X_NUM;i++){
+            point.x = point.x + Math.random()*(INTERVAL_MAX - INTERVAL_MIN) + INTERVAL_MIN;
+            for(var j=0;j < Y_NUM;j++){
+                point.y = point.y + Math.random()*(INTERVAL_MAX - INTERVAL_MIN) + INTERVAL_MIN;
+                point.z = noise.noise(point.x,point.y,0);
+                x_arr.push(point.x);
+                y_arr.push(point.y);
+                z_arr.push(point.z);
+            }
+        }
+        var data = {x:x_arr, y:y_arr, z:z_arr};
+        var color = color_scale(n);
+        stage.add(new Elegans.Particles(data, {color: color, name: "molecule"+String(n)}));
+    }
+    stage.render();
+    };
+  </script>
+</head>
+<body>
+
+<div id="vis">
+</div>
+</body>
