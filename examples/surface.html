@@ -11,23 +11,23 @@ window.onload = function(){
     var BIGIN=-10, END=10, INTERVAL = 0.5;
     width = height = (END - BIGIN)/INTERVAL + 1;
     data.x = [], data.y = [], data.z = [];
-    for(var i=0;i<height;i++)data.x.push([]);
-    for(var j=0;j<height;j++){
+     for(var i=0;i< height;i++)data.x.push([]);
+    for(var j=0;j< height;j++){
 	var x = BIGIN + INTERVAL*j;
-	for(var i=0;i<width;i++){
+	for(var i=0;i< width;i++){
 	    data.x[i][j] = x;
 	}
     }
-    for(var i=0;i<width;i++){
+    for(var i=0;i< width;i++){
 	data.y.push([]);
 	var y = BIGIN + INTERVAL*i;
-	for(var j=0;j<height;j++){
+	for(var j=0;j< height;j++){
 	    data.y[i][j] = y;
 	}
     }
-    for(var i=0;i<width;i++){
+    for(var i=0;i< width;i++){
 	data.z.push([]);
-	for(var j=0;j<height;j++){
+	for(var j=0;j< height;j++){
 	    var x=data.x[i][j], y=data.y[i][j];
 	    data.z[i][j] = Math.cos(Math.sqrt(x*x+y*y));
 	}
