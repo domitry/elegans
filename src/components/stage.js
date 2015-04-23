@@ -14,7 +14,7 @@ define([
 	        axis_labels: {x:"X", y:"Y", z:"Z"},
 	        bg_color:0xffffff,
 	        player: false,
-		space_mode: 'solid',
+		space_mode: 'wireframe',
 		range:{x:[0,0], y:[0,0], z:[0,0]},
 		autorange:true,
 		grid: true,

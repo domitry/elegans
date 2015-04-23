@@ -4,7 +4,7 @@ define([
     function Space(ranges, options){
 	this.options = {
 	    axis_labels: {x:"X", y:"Y", z:"Z"},
-	    mode: 'solid',
+	    mode: 'wireframe',
 	    grid: true
 	};
 
