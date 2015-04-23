@@ -17,7 +17,8 @@ define([
 		space_mode: 'solid',
 		range:{x:[0,0], y:[0,0], z:[0,0]},
 		autorange:true,
-		grid: true
+		grid: true,
+		perspective: true
 	    };
 
 	    if(arguments.length > 1){
@@ -50,7 +51,8 @@ define([
 	    this.world = new World({
 	        width:this.options.world_width,
 	        height:this.options.world_height,
-	        bg_color:this.options.bg_color
+	        bg_color:this.options.bg_color,
+		perspective: this.options.perspective
 	    });
 
 	    this.data_ranges = {
