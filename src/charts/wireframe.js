@@ -54,33 +54,33 @@ define([
 	}
 
 	this.mesh = meshes;
-    }
+    };
 
     Wireframe.prototype.getDataRanges = function(){
 	return this.ranges;
-    }
+    };
     
     Wireframe.prototype.hasLegend = function(){
 	return this.options.has_legend;
-    }
+    };
 
     Wireframe.prototype.disappear = function(){
 	for(var i=0;i<this.mesh.length;i++){
 	    this.mesh[i].material.opacity = 0;
 	    this.mesh[i].material.needsUpdate = true;
 	}
-    }
+    };
 
     Wireframe.prototype.appear = function(){
 	for(var i=0;i<this.mesh.length;i++){
 	    this.mesh[i].material.opacity = 1;
 	    this.mesh[i].material.needsUpdate = true;
 	}
-    }
+    };
 
     Wireframe.prototype.getLegend = function(){
 	return Legends.generateDiscreteLegend(this.options.name, this.options.color, this);
-    }
+    };
     
     Wireframe.prototype.getMesh = function(){
 	return this.mesh;
