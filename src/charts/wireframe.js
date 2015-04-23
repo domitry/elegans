@@ -25,7 +25,6 @@ define([
 	var width = data.x.length, height = data.x[0].length;
 	var material = new THREE.LineBasicMaterial({ 
 	    color: this.options.color,
-	    type: THREE.LineStrip,
 	    linewidth: this.options.thickness,
 	    transparent: true
 	});
