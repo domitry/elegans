@@ -44,25 +44,12 @@ define([
 		[[10, -10, -10], [10, 10, -10]]
 	    ];
 	    var meshes = this.meshes;
-
-	    material = new THREE.LineBasicMaterial( { color: 0x000000, opacity: 0.2 } );
-	    coordinates.forEach(function(arr){
-		var geonetry = new THREE.Geometry();
-		arr.forEach(function(c){
-		    geonetry.vertices.push(newV.apply(null, c));
-		});
-		meshes.push(new THREE.Line(geonetry, material, THREE.LinePieces));
-	    });
 	}
 	
 	this.scales = {};
 	this.scales.x = d3.scale.linear().domain([ranges.x.max, ranges.x.min]).range([-10, 10]);
 	this.scales.y = d3.scale.linear().domain([ranges.y.max, ranges.y.min]).range([10, -10]);
 	this.scales.z = d3.scale.linear().domain([ranges.z.max, ranges.z.min]).range([10,-10]);
-
-	this.meshes.push(xy_plane);
-	this.meshes.push(xz_plane);
-	this.meshes.push(yz_plane);
 
 	// generate axis
 	var x_scale = d3.scale.linear().domain([ranges.x.max, ranges.x.min]).range([20, 0]);
