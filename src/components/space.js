@@ -79,7 +79,7 @@ define([
 	    var text_width = context.measureText(text).width;
 	    context.fillText(text, (100-text_width)/2, 80);
 	    var texture = new THREE.Texture(canvas);
-	    texture.flipY = false;
+	    texture.flipY = true;
 	    texture.needsUpdate = true;
 	    var material = new THREE.SpriteMaterial({
 	        map: texture,
