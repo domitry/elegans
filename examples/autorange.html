@@ -31,7 +31,10 @@
 	   data.z[i][j] = Math.sin(Math.sqrt(x*x+y*y))/Math.sqrt(x*x+y*y);
 	 }
        }
-       var stage = new Elegans.Stage(d3.select("#vis")[0][0]);
+       var stage = new Elegans.Stage(d3.select("#vis")[0][0], {
+	 autorange: false,
+	 range: {x: [-10, 10], y: [-10, 10], z: [2, -0.5]}
+       });
        stage.add(new Elegans.Wireframe(data, {color: "#999999"}))
        stage.render();
      };
