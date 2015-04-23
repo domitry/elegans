@@ -841,17 +841,17 @@ define('utils/TrackballControls',[],function(){
 	    }
 
 	    if ( _state === STATE.ROTATE && !_this.noRotate ) {
-		_rotateStart.copy(getMouseProjectionOnBall( event.pageX, event.pageY ));
+		_rotateStart.copy(getMouseProjectionOnBall( event.layerX, event.layerY ));
 		_rotateEnd.copy( _rotateStart );
 
 	    } else if ( _state === STATE.ZOOM && !_this.noZoom ) {
 
-		_zoomStart.copy( getMouseOnScreen( event.pageX, event.pageY ) );
+		_zoomStart.copy( getMouseOnScreen( event.layerX, event.layerY ) );
 		_zoomEnd.copy(_zoomStart);
 
 	    } else if ( _state === STATE.PAN && !_this.noPan ) {
 
-		_panStart.copy( getMouseOnScreen( event.pageX, event.pageY ) );
+		_panStart.copy( getMouseOnScreen( event.layerX, event.layerY ) );
 		_panEnd.copy(_panStart);
 
 	    }
@@ -872,15 +872,15 @@ define('utils/TrackballControls',[],function(){
 
 	    if ( _state === STATE.ROTATE && !_this.noRotate ) {
 
-		_rotateEnd.copy( getMouseProjectionOnBall( event.pageX, event.pageY ) );
+		_rotateEnd.copy( getMouseProjectionOnBall( event.layerX, event.layerY ) );
 
 	    } else if ( _state === STATE.ZOOM && !_this.noZoom ) {
 
-		_zoomEnd.copy( getMouseOnScreen( event.pageX, event.pageY ) );
+		_zoomEnd.copy( getMouseOnScreen( event.layerX, event.layerY ) );
 
 	    } else if ( _state === STATE.PAN && !_this.noPan ) {
 
-		_panEnd.copy( getMouseOnScreen( event.pageX, event.pageY ) );
+		_panEnd.copy( getMouseOnScreen( event.layerX, event.layerY ) );
 
 	    }
 
