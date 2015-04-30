@@ -29,14 +29,18 @@ define([
 	    selection.style("width",String(this.options.width));
 
 	    this.world_space = selection.append("div")
-	        .style("float","left")
-	        .style("width",String(this.options.world_width))
-	        .style("height",String(this.options.world_height));
+	        .style({
+		    "float":"left",
+		    "width":String(this.options.world_width),
+		    "height": String(this.options.world_height)
+		});
 
 	    this.legend_space = selection.append("div")
-	        .style("float","left")
-	        .style("width",String(this.options.width - this.options.world_width))
-	        .style("height",String(this.options.height));
+	        .style({
+		    "float":"left",
+		    "width":String(this.options.width - this.options.world_width),
+		    "height":String(this.options.height)
+		});
 
 	    if(this.options.player){
 	        var player_space = selection.append("div")
