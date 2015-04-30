@@ -1,7 +1,8 @@
 define([
     "utils/TrackballControls",
-    "utils/OrthographicTrackballControls"
-],function(TrackballControls, OrthographicTrackballControls){
+    "utils/OrthographicTrackballControls",
+    "utils/utils"
+],function(TrackballControls, OrthographicTrackballControls, Utils){
 
     function World(options){
 	this.options = {
