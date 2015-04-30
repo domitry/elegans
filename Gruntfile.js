@@ -24,12 +24,26 @@ module.exports = function(grunt){
                     out: "release/elegans.js"
 		}
 	    }
+	},
+	shell: {
+	    make_shader: {
+		command: "\
+		cd ./src/shaders;\
+		for file in *.glsl; do\
+		    c=`cat \"${file}\"`;\
+		    c=`echo \"$c\" | sed -e \"s/$/\\\\\\\\\\\\/g\"`\
+		    c=\"define(function(){return \\\"$c\n\\\";});\";\
+		    fname=\`echo ${file} | sed -e s/.glsl/.js/g\`;\
+		    echo \"$c\" > $fname;\
+		done"
+	    }
 	}
     });
     
     grunt.loadNpmTasks("grunt-contrib-requirejs");
+    grunt.loadNpmTasks("grunt-shell");
 
     grunt.registerTask("default", ["release"]);
-    grunt.registerTask("deploy", ["requirejs"]);
+    grunt.registerTask("deploy", ["shell:make_shader", "requirejs"]);
     grunt.registerTask("release", ["deploy"]);
 };
