@@ -33,8 +33,8 @@ define([
 	}
 	for(var i in this.raw){
 	    this.ranges[i] = new Range(
-		d3.max(this.raw[i], function(d){return d;}),
-		d3.min(this.raw[i], function(d){return d;})
+		d3.max(this.raw[i]),
+		d3.min(this.raw[i])
 	    );
 	}
     }
