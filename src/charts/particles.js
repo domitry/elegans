@@ -62,7 +62,7 @@ define([
 
     Particles.prototype.getDataRanges = function(){
 	    var dataset = new Datasets.Array(this.data);
-	    return dataset.getRanges();
+	    return dataset.ranges;
     };
     
     Particles.prototype.hasLegend = function(){

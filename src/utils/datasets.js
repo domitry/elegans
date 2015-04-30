@@ -20,9 +20,6 @@ define([
 	return this;
     }
 
-    MatrixDataset.prototype.getRanges = function(){
-	return this.ranges;
-    };
 
     function ArrayDataset(data){
 	this.ranges = {};
@@ -39,9 +36,6 @@ define([
 	}
     }
 
-    ArrayDataset.prototype.getRanges = function(){
-	return this.ranges;
-    };
 
     var Datasets = {
 	Matrix:MatrixDataset,

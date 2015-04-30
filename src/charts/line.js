@@ -19,7 +19,7 @@ define([
 
 	    this.data = data;
 	    this.dataset = new Datasets.Array(data);
-	    this.ranges = this.dataset.getRanges();
+	    this.ranges = this.dataset.ranges;
     }
 
     Line.prototype.generateMesh = function(scales){

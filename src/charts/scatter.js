@@ -20,7 +20,7 @@ define([
 	}
 
 	this.dataset = new Datasets.Array(data);
-	this.ranges = this.dataset.getRanges();
+	this.ranges = this.dataset.ranges;
     }
 
     Scatter.prototype.generateMesh = function(scales){

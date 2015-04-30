@@ -15,7 +15,7 @@ define([
 	}
 
 	this.dataset = new Datasets.Matrix(data);
-	this.ranges = this.dataset.getRanges();
+	this.ranges = this.dataset.ranges;
     }
 
     Surface.prototype.generateMesh = function(scales){

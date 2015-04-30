@@ -17,7 +17,7 @@ define([
 	}
 
 	this.dataset = new Datasets.Matrix(data);
-	this.ranges = this.dataset.getRanges();
+	this.ranges = this.dataset.ranges;
     }
 
     Wireframe.prototype.generateMesh = function(scales){
