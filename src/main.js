@@ -14,6 +14,7 @@ define(function(require, exports, module){
     Elegans.Particles = require("charts/particles");
     Elegans.Line = require("charts/line");
     Elegans.Scatter = require("charts/scatter");
+    Elegans.Volume = require("charts/volume");
     Elegans.Cylinder = require("charts/cylinder");
     Elegans.DebugObject = require("charts/debug_object");
 
