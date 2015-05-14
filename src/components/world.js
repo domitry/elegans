@@ -8,17 +8,18 @@ define([
 	this.options = {
 	    width: 0,
 	    height: 0,
-	    perspective: true
+	    perspective: true,
+	    bg_color: 0xffffff
 	};
 
-	if(arguments.length > 1){
+	if(arguments.length > 0){
 	    Utils.merge(this.options, options);
 	};
 
 	this.scene = new THREE.Scene();
 
-	if(options.perspective)
-	    this.camera = new THREE.PerspectiveCamera(45, options.width/options.height, 1, 1000);
+	if(this.options.perspective)
+	    this.camera = new THREE.PerspectiveCamera(45, this.options.width/this.options.height, 1, 1000);
 	else
 	    this.camera = new THREE.OrthographicCamera(-20,20,-20,20);
 
@@ -31,16 +32,18 @@ define([
 	    this.scene.add(light);
 	}
 
-	this.renderer = new THREE.WebGLRenderer({antialias:true});
-	this.renderer.setSize(options.width, options.height);
-	this.renderer.setClearColor(options.bg_color, 1);
+	this.renderer = new THREE.WebGLRenderer({antialias:true,  clearAlpha: 1});
+	this.renderer.setSize(this.options.width, this.options.height);
+	this.renderer.setClearColor(this.options.bg_color, 1);
+	
+	this.renderer.sortObjects = false;
 
-	if(options.perspective)
+	if(this.options.perspective)
 	    this.controls = new TrackballControls(this.camera, this.renderer.domElement);
 	else
 	    this.controls = new OrthographicTrackballControls(this.camera, this.renderer.domElement);
 
-	this.controls.screen = {left: 0, top: 0, width: options.width, height: options.height};
+	this.controls.screen = {left: 0, top: 0, width: this.options.width, height: this.options.height};
 	this.controls.rotateSpeed = 0.5;
 
 	this.camera.position.set(-30, 31,42);
