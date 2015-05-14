@@ -31,15 +31,14 @@ module.exports = function(grunt){
 		cd ./src/shaders;\
 		for file in *.glsl; do\
 		    c=`cat \"${file}\"`;\
-		    c=`echo \"$c\" | sed -e \"s/$/\\\\\\\\\\\\/g\"`\
-		    c=\"define(function(){return \\\"$c\n\\\";});\";\
+		    c=`echo \"$c\" | sed -e \"s/$/__terminate__\\\\\\\\\\\\/g\"`\
+		    c=\"define(function(){return \\\"$c\n\\\".replace(\/__terminate__\/g, \\\"\\\\\\n\\\");});\";\
 		    fname=\`echo ${file} | sed -e s/.glsl/.js/g\`;\
 		    echo \"$c\" > $fname;\
 		done"
 	    }
 	}
     });
-    
     grunt.loadNpmTasks("grunt-contrib-requirejs");
     grunt.loadNpmTasks("grunt-shell");
 
