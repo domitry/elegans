@@ -46,8 +46,6 @@ define([
 	this.camera.position.set(-30, 31,42);
 	this.camera.rotation.set(-0.6,-0.5,0.6);
 
-	window.camera = this.camera;
-
 	return this;
     }
 
