@@ -74,10 +74,34 @@ define([
 	}
     }
 
+    /*
+     CompressedDataset: compressed data for volume rendering
+
+     *** arguments ***
+     data: [string] base64 encoded image
+     e.g.
+     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAIAAAD/gAIDAAAANElEQVR4nO3BAQ0AAADCoPd
+     PbQ43oAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfgx1lAABqFDyOQAAAABJRU5ErkJggolQTkcNChoKAAAADUlIR
+     FIAAABkAAAAZAgCAAAA/4ACAwAAADRJREFUeJztwQENAAAAwqD3T20ON6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+     AAH4MdZQAAahQ8jkAAAAASUVORK5CYII='
+
+     *** properties ***
+     ranges: the range of each column
+     */
+    function CompressedDataset(data){
+	this.raw = data;
+	this.ranges = {
+	    x: [0, 1],
+	    y: [0, 1],
+	    z: [0, 1]
+	};
+	return this;
+    }
 
     var Datasets = {
 	Matrix:MatrixDataset,
-	Array:ArrayDataset
+	Array:ArrayDataset,
+	Compressed: CompressedDataset
     };
 
     return Datasets;
