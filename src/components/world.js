@@ -9,7 +9,8 @@ define([
 	    width: 0,
 	    height: 0,
 	    perspective: true,
-	    bg_color: 0xffffff
+	    bg_color: 0xffffff,
+	    save_image: false
 	};
 
 	if(arguments.length > 0){
@@ -32,7 +33,12 @@ define([
 	    this.scene.add(light);
 	}
 
-	this.renderer = new THREE.WebGLRenderer({antialias:true,  clearAlpha: 1});
+	this.renderer = new THREE.WebGLRenderer({
+	    antialias:true, 
+	    clearAlpha: 1,
+	    preserveDrawingBuffer: this.options.save_image
+	});
+
 	this.renderer.setSize(this.options.width, this.options.height);
 	this.renderer.setClearColor(this.options.bg_color, 1);
 	
