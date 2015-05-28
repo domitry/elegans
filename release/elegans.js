@@ -1717,8 +1717,8 @@ define('components/world',[
 	    preserveDrawingBuffer: this.options.save_image
 	});
 
-	this.renderer.setSize(this.options.width, this.options.height);
-	this.renderer.setClearColor(this.options.bg_color, 1);
+	this.renderer.setSize(options.width, options.height);
+	this.renderer.setClearColor(options.bg_color, 1);
 
 	if(options.perspective)
 	    this.controls = new TrackballControls(this.camera, this.renderer.domElement);
