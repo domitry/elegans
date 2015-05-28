@@ -8,7 +8,9 @@ define([
 	this.options = {
 	    width: 0,
 	    height: 0,
-	    perspective: true
+	    perspective: true,
+	    bg_color: 0xffffff,
+	    save_image: false
 	};
 
 	if(arguments.length > 1){
@@ -31,9 +33,14 @@ define([
 	    this.scene.add(light);
 	}
 
-	this.renderer = new THREE.WebGLRenderer({antialias:true});
-	this.renderer.setSize(options.width, options.height);
-	this.renderer.setClearColor(options.bg_color, 1);
+	this.renderer = new THREE.WebGLRenderer({
+	    antialias:true, 
+	    clearAlpha: 1,
+	    preserveDrawingBuffer: this.options.save_image
+	});
+
+	this.renderer.setSize(this.options.width, this.options.height);
+	this.renderer.setClearColor(this.options.bg_color, 1);
 
 	if(options.perspective)
 	    this.controls = new TrackballControls(this.camera, this.renderer.domElement);

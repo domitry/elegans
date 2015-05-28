@@ -1656,16 +1656,39 @@ define('utils/OrthographicTrackballControls',[], function(){
     return OrthographicTrackballControls;
 });
 
+define('utils/utils',[],function(){
+    var mixin = function(sub, sup) {
+	sup.call(sub);
+    };
+
+    var merge = function(dest, src){
+	for(var key in src){
+	    dest[key] = src[key];
+	}
+	return dest;
+    };
+
+    var exports = {
+	mixin:mixin,
+	merge:merge
+    };
+
+    return exports;
+});
+
 define('components/world',[
     "utils/TrackballControls",
-    "utils/OrthographicTrackballControls"
-],function(TrackballControls, OrthographicTrackballControls){
+    "utils/OrthographicTrackballControls",
+    "utils/utils"
+],function(TrackballControls, OrthographicTrackballControls, Utils){
 
     function World(options){
 	this.options = {
 	    width: 0,
 	    height: 0,
-	    perspective: true
+	    perspective: true,
+	    bg_color: 0xffffff,
+	    save_image: false
 	};
 
 	if(arguments.length > 1){
@@ -1688,9 +1711,14 @@ define('components/world',[
 	    this.scene.add(light);
 	}
 
-	this.renderer = new THREE.WebGLRenderer({antialias:true});
-	this.renderer.setSize(options.width, options.height);
-	this.renderer.setClearColor(options.bg_color, 1);
+	this.renderer = new THREE.WebGLRenderer({
+	    antialias:true, 
+	    clearAlpha: 1,
+	    preserveDrawingBuffer: this.options.save_image
+	});
+
+	this.renderer.setSize(this.options.width, this.options.height);
+	this.renderer.setClearColor(this.options.bg_color, 1);
 
 	if(options.perspective)
 	    this.controls = new TrackballControls(this.camera, this.renderer.domElement);
@@ -1748,26 +1776,6 @@ define('components/world',[
     };
 
     return World;
-});
-
-define('utils/utils',[],function(){
-    var mixin = function(sub, sup) {
-	sup.call(sub);
-    };
-
-    var merge = function(dest, src){
-	for(var key in src){
-	    dest[key] = src[key];
-	}
-	return dest;
-    };
-
-    var exports = {
-	mixin:mixin,
-	merge:merge
-    };
-
-    return exports;
 });
 
 define('components/space',[
@@ -2091,6 +2099,91 @@ define('components/player',[
     return Player;
 });
 
+define('components/menu',[
+    "utils/utils"
+], function(Utils){
+    function Menu(selection, options){
+	this.options = {
+	    filename: "plot"
+	};
+
+	if(arguments.length > 1){
+	    Utils.merge(this.options, options);
+	};
+
+	this.selection = selection;
+    }
+
+    Menu.prototype.begin = function(){
+	var filename = this.options.filename;
+
+	function removeMenu(){
+	    d3.selectAll(".download_menu").remove();
+	}
+
+	function createMenu(pos, canvas){
+	    removeMenu();
+
+	    var ul = d3.select("body")
+		    .append("ul")
+		    .on("click", removeMenu);
+
+	    ul.style({
+		"list-style-type": "none",
+		position: "absolute",
+		top: pos[1],
+		left: pos[0],
+		background: "#f3f3f3",
+		border: "1px solid #fff",
+		padding: 10,
+		margin: 0
+	    }).attr("class", "download_menu");
+
+	    ul.append("li")
+		.append("a")
+		.text("save as png")
+		.attr({
+		    download: filename + ".png",
+		    href: canvas.toDataURL("image/png")
+		});
+
+	    ul.append("li")
+		.append("a")
+		.text("save as jpeg")
+		.attr({
+		    download: filename + ".jpg",
+		    href: canvas.toDataURL("image/jpeg")
+		});
+
+	    ul.selectAll("a")
+		.style({
+		    display: "block",
+		    "text-decoration": "none",
+		    "text-align": "left",
+		    "line-style": "none",
+		    "color": "#333",
+		    "font-size" : "13px",
+		    "line-height" : "17px"
+		});
+
+	    ul.selectAll("li")
+		.style({
+		    "margin": 0
+		});
+	}
+
+	this.selection.select("canvas")
+	    .on("contextmenu", function(){
+		var pos = d3.mouse(document.body);
+		createMenu(pos, this, filename);
+		d3.event.preventDefault();
+	    })
+	    .on("click", removeMenu);
+    };
+
+    return Menu;
+});
+
 define('utils/range',[],function(){
     function Range(arg0, arg1){
 	if(arguments.length > 1){
@@ -2122,66 +2215,77 @@ define('components/stage',[
     "components/world",
     "components/space",
     "components/player",
+    "components/menu",
     "utils/utils",
     "utils/range"
-], function(World, Space, Player, Utils, Range){
+], function(World, Space, Player, Menu, Utils, Range){
     function Stage(element, options){
-	    this.options = {
-	        width:700,
-	        height:530,
-	        world_width:500,
-	        world_height:500,
-	        axis_labels: {x:"X", y:"Y", z:"Z"},
-	        bg_color:0xffffff,
-	        player: false,
-		space_mode: 'wireframe',
-		range:{x:[0,0], y:[0,0], z:[0,0]},
-		autorange:true,
-		grid: true,
-		perspective: true
-	    };
+	this.options = {
+	    width:700,
+	    height:530,
+	    world_width:500,
+	    world_height:500,
+	    axis_labels: {x:"X", y:"Y", z:"Z"},
+	    bg_color:0xffffff,
+	    player: false,
+	    space_mode: 'wireframe',
+	    range:{x:[0,0], y:[0,0], z:[0,0]},
+	    autorange:true,
+	    grid: true,
+	    perspective: true,
+	    save_image: false
+	};
 
-	    if(arguments.length > 1){
-	        Utils.merge(this.options, options);
-	    };
-	    
-	    var selection = d3.select(element);
-	    selection.style("width",String(this.options.width));
+	if(arguments.length > 1){
+	    Utils.merge(this.options, options);
+	};
+	
+	var selection = d3.select(element);
+	selection.style("width",String(this.options.width));
 
-	    this.world_space = selection.append("div")
-	        .style("float","left")
-	        .style("width",String(this.options.world_width))
-	        .style("height",String(this.options.world_height));
-
-	    this.legend_space = selection.append("div")
-	        .style("float","left")
-	        .style("width",String(this.options.width - this.options.world_width))
-	        .style("height",String(this.options.height));
-
-	    if(this.options.player){
-	        var player_space = selection.append("div")
-		            .style("width",String(this.options.width))
-		            .style("height",String(this.options.height - this.options.world_height));
-
-	        this.player = new Player(player_space, this);
-	    }
-
-	    this.charts = [];
-
-	    this.world = new World({
-	        width:this.options.world_width,
-	        height:this.options.world_height,
-	        bg_color:this.options.bg_color,
-		perspective: this.options.perspective
+	this.world_space = selection.append("div")
+	    .style({
+		"float":"left",
+		"width":String(this.options.world_width),
+		"height": String(this.options.world_height),
+		"save_image": this.options.save_image
 	    });
 
-	    this.data_ranges = {
+	this.legend_space = selection.append("div")
+	    .style({
+		"float":"left",
+		"width":String(this.options.width - this.options.world_width),
+		"height":String(this.options.height)
+	    });
+
+	if(this.options.player){
+	    var player_space = selection.append("div")
+		    .style("width",String(this.options.width))
+		    .style("height",String(this.options.height - this.options.world_height));
+
+	    this.player = new Player(player_space, this);
+	}
+
+	if(this.options.save_image){
+	    this.menu = new Menu(this.world_space);
+	}
+
+	this.charts = [];
+
+	this.world = new World({
+	    width:this.options.world_width,
+	    height:this.options.world_height,
+	    bg_color:this.options.bg_color,
+	    perspective: this.options.perspective
+	});
+
+	this.data_ranges = {
             x:new Range(this.options.range.x[0], this.options.range.x[1]),
             y:new Range(this.options.range.y[0], this.options.range.y[1]),
             z:new Range(this.options.range.z[0], this.options.range.z[1])
         };
 
-	    return this;
+	return this;
     }
 
     Stage.prototype.add = function(chart){
@@ -2217,6 +2321,7 @@ define('components/stage',[
 	}
 
 	this.world.begin(this.world_space);
+	if(this.options.save_image)this.menu.begin();
     };
 
     Stage.prototype.dispose = function(){
@@ -2379,9 +2484,6 @@ define('utils/datasets',[
 	return this;
     }
 
-    MatrixDataset.prototype.getRanges = function(){
-	return this.ranges;
-    };
 
     function ArrayDataset(data){
 	this.ranges = {};
@@ -2392,15 +2494,12 @@ define('utils/datasets',[
 	}
 	for(var i in this.raw){
 	    this.ranges[i] = new Range(
-		d3.max(this.raw[i], function(d){return d;}),
-		d3.min(this.raw[i], function(d){return d;})
+		d3.max(this.raw[i]),
+		d3.min(this.raw[i])
 	    );
 	}
     }
 
-    ArrayDataset.prototype.getRanges = function(){
-	return this.ranges;
-    };
 
     var Datasets = {
 	Matrix:MatrixDataset,
@@ -2737,7 +2836,7 @@ define('charts/surface',[
 	}
 
 	this.dataset = new Datasets.Matrix(data);
-	this.ranges = this.dataset.getRanges();
+	this.ranges = this.dataset.ranges;
     }
 
     Surface.prototype.generateMesh = function(scales){
@@ -2819,7 +2918,7 @@ define('charts/wireframe',[
 	}
 
 	this.dataset = new Datasets.Matrix(data);
-	this.ranges = this.dataset.getRanges();
+	this.ranges = this.dataset.ranges;
     }
 
     Wireframe.prototype.generateMesh = function(scales){
@@ -2961,7 +3060,7 @@ define('charts/particles',[
 
     Particles.prototype.getDataRanges = function(){
 	    var dataset = new Datasets.Array(this.data);
-	    return dataset.getRanges();
+	    return dataset.ranges;
     };
     
     Particles.prototype.hasLegend = function(){
@@ -3013,7 +3112,7 @@ define('charts/line',[
 
 	    this.data = data;
 	    this.dataset = new Datasets.Array(data);
-	    this.ranges = this.dataset.getRanges();
+	    this.ranges = this.dataset.ranges;
     }
 
     Line.prototype.generateMesh = function(scales){
@@ -3086,7 +3185,7 @@ define('charts/scatter',[
 	}
 
 	this.dataset = new Datasets.Array(data);
-	this.ranges = this.dataset.getRanges();
+	this.ranges = this.dataset.ranges;
     }
 
     Scatter.prototype.generateMesh = function(scales){
@@ -3205,7 +3304,7 @@ define('charts/cylinder',[
 
 	this.data = data;
 	this.dataset = new Datasets.Array(data);
-	this.ranges = this.dataset.getRanges();
+	this.ranges = this.dataset.ranges;
     }
 
     Cylinder.prototype.generateMesh = function(scales){
@@ -3289,7 +3388,7 @@ define('charts/debug_object',[
 
 	this.data = data;
 	this.dataset = new Datasets.Array(data);
-	this.ranges = this.dataset.getRanges();
+	this.ranges = this.dataset.ranges;
     }
 
     Debug_Object.prototype.generateMesh = function(scales){
