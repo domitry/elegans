@@ -57,7 +57,7 @@ float gStepFactor;
 
 // TODO: convert world to local volume space
 vec3 toLocal(vec3 p) {
-  return p + vec3(0.5);
+    return p + vec3(0.5);
 }
 
 float sampleVolTex(vec3 pos) {
@@ -67,12 +67,12 @@ float sampleVolTex(vec3 pos) {
   float zSlice = (1.0-pos.y)*(uTexDim.z-1.0);   // float value of slice number, slice 0th to 63rd
 
   float x0 = mod(floor(zSlice), fPerRow)*uTexDim.x +
-    pos.x*(uTexDim.x-1.0) +
-    0.5;
+      pos.x*(uTexDim.x-1.0) +
+      0.5;
 
   float y0 = floor(floor(zSlice)/fPerRow)*uTexDim.y +
-    pos.z*(uTexDim.y-1.0) +
-    0.5;
+      pos.z*(uTexDim.y-1.0) +
+      0.5;
 
   float width = uTexDim.x*fPerRow;
   float height = uTexDim.y*fPerColumn;
@@ -83,11 +83,11 @@ float sampleVolTex(vec3 pos) {
   float uni_y1;
 
   if(mod(floor(zSlice)+1.0, fPerRow) == 0.0){
-    uni_x1 = min((pos.x*(uTexDim.x-1.0) + 0.5)/width, 1.0);
-    uni_y1 = min((y0 + uTexDim.y)/height, 1.0);
+      uni_x1 = min((pos.x*(uTexDim.x-1.0) + 0.5)/width, 1.0);
+      uni_y1 = min((y0 + uTexDim.y)/height, 1.0);
   }else{
-    uni_x1 = min((x0 + uTexDim.x)/width, 1.0);
-    uni_y1 = uni_y0;
+      uni_x1 = min((x0 + uTexDim.x)/width, 1.0);
+      uni_y1 = uni_y0;
   }
 
   // get (bi)linear interped texture reads at two slices
@@ -97,41 +97,49 @@ float sampleVolTex(vec3 pos) {
 }
 
 vec4 raymarchNoLight(vec3 ro, vec3 rd) {
-  vec3 step = rd*gStepSize;
-  vec3 pos = ro;
+    vec3 step = rd*gStepSize;
+    vec3 pos = ro;
   
-  vec3 col = vec3(0.0);
-  float tm = 1.0;
+    vec3 col = vec3(0.0);
+    float tm = 1.0;
   
-  for (int i=0; i<MAX_STEPS; ++i) {
-    float dtm = exp( -uTMK*gStepSize*sampleVolTex(pos) );
-    tm *= dtm;
+    for (int i=0; i<MAX_STEPS; ++i) {
+        float dtm = exp( -uTMK*gStepSize*sampleVolTex(pos) );
+        tm *= dtm;
     
-    col += (1.0-dtm) * uColor * tm;
+        col += (1.0-dtm) * uColor * tm;
     
-    pos += step;
+        pos += step;
     
-    if (tm < TM_MIN ||
-	pos.x > 1.0 || pos.x < 0.0 ||
-	pos.y > 1.0 || pos.y < 0.0 ||
-	pos.z > 1.0 || pos.z < 0.0)
-      break;
-  }
+        if (tm < TM_MIN ||
+            pos.x > 1.0 || pos.x < 0.0 ||
+            pos.y > 1.0 || pos.y < 0.0 ||
+            pos.z > 1.0 || pos.z < 0.0)
+            break;
+    }
   
-  float alpha = 1.0-tm;
-  return vec4(col/alpha, alpha);
+    float alpha = 1.0-tm;
+    return vec4(col/alpha, alpha);
 }
 
 
 void main() {
-  // in world coords, just for now
-  vec3 ro = vPos1n;
-  vec3 rd = normalize( ro - toLocal(uCamPos) );
-  //vec3 rd = normalize(ro-uCamPos);
+    // in world coords, just for now
+    vec3 ro = vPos1n;
+    vec3 rd = normalize( ro - toLocal(uCamPos) );
+    //vec3 rd = normalize(ro-uCamPos);
   
-  // step_size = root_three / max_steps ; to get through diagonal  
-  gStepSize = ROOTTHREE / float(MAX_STEPS);
-  gStepFactor = 32.0 * gStepSize;
+    // step_size = root_three / max_steps ; to get through diagonal  
+    gStepSize = ROOTTHREE / float(MAX_STEPS);
+    gStepFactor = 32.0 * gStepSize;
   
-  gl_FragColor = raymarchNoLight(ro, rd);
+  if(
+     (abs(length(abs(vPos1.xy) - vec2(0.5))) < 0.01 ||
+      abs(length(abs(vPos1.yz) - vec2(0.5))) < 0.01 ||
+      abs(length(abs(vPos1.xz) - vec2(0.5))) < 0.01 )
+     ){
+    gl_FragColor = vec4(1.0);
+  }else{
+    gl_FragColor = raymarchNoLight(ro, rd);
+  }
 }

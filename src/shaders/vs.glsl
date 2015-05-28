@@ -16,7 +16,7 @@ void main()
                 modelViewMatrix *
                 vec4(position,1.0);
                 
-  vPos0 = ( objectMatrix * vec4(position, 1.0) ).xyz;
+  vPos0 = ( modelMatrix * vec4(position, 1.0) ).xyz;
   vPos1 = position;
   vPos1n = position+vec3(0.5);
   
