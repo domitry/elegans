@@ -30,8 +30,8 @@ define([
 	    ul.style({
 		"list-style-type": "none",
 		position: "absolute",
-		top: pos[1],
-		left: pos[0],
+		left: pos[0] + "px",
+		top: pos[1] + "px",
 		background: "#f3f3f3",
 		border: "1px solid #fff",
 		padding: 10,
