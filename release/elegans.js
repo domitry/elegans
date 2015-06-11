@@ -1714,7 +1714,7 @@ define('components/world',[
 	this.renderer = new THREE.WebGLRenderer({
 	    antialias:true, 
 	    clearAlpha: 1,
-	    preserveDrawingBuffer: this.options.save_image
+	    preserveDrawingBuffer: !this.options.save_image
 	});
 
 	this.renderer.setSize(options.width, options.height);
