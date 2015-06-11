@@ -69,7 +69,7 @@ define([
 	    new THREE.CubeGeometry(1, 1, 1),
 	    material
 	);
-//	this.mesh.scale.set(20, 20, 20);
+	this.mesh.scale.set(20, 20, 20);
     };
 
     Volume.prototype.getDataRanges = function(){

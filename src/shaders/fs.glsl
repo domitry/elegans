@@ -61,7 +61,7 @@ vec3 toLocal(vec3 p) {
 }
 
 float sampleVolTex(vec3 pos) {
-  pos = pos + uOffset; // TESTDEBUG
+  pos = pos;
   
   // note: z is up in 3D tex coords, pos.z is tex.y, pos.y is zSlice
   float zSlice = (1.0-pos.y)*(uTexDim.z-1.0);   // float value of slice number, slice 0th to 63rd
