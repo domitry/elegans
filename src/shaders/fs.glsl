@@ -119,7 +119,7 @@ vec4 raymarchNoLight(vec3 ro, vec3 rd) {
     }
   
     float alpha = 1.0-tm;
-    return vec4(col/alpha, alpha);
+    return vec4(alpha);
 }
 
 
