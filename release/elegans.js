@@ -1688,7 +1688,7 @@ define('components/world',[
 	    height: 0,
 	    perspective: true,
 	    bg_color: 0xffffff,
-	    save_image: true
+	    save_image: false
 	};
 
 	if(arguments.length > 0){
@@ -2119,7 +2119,6 @@ define('components/menu',[
 
 	function removeMenu(){
 	    d3.selectAll(".download_menu").remove();
-
 	}
 
 	function createMenu(pos, canvas){
@@ -2234,7 +2233,7 @@ define('components/stage',[
 	    autorange:true,
 	    grid: true,
 	    perspective: true,
-	    save_image: true
+	    save_image: false
 	};
 
 	if(arguments.length > 1){
@@ -3410,7 +3409,7 @@ vec3 toLocal(vec3 p) {__terminate__\
 }__terminate__\
 __terminate__\
 float sampleVolTex(vec3 pos) {__terminate__\
-  pos = pos + uOffset; // TESTDEBUG__terminate__\
+  pos = pos;__terminate__\
   __terminate__\
   // note: z is up in 3D tex coords, pos.z is tex.y, pos.y is zSlice__terminate__\
   float zSlice = (1.0-pos.y)*(uTexDim.z-1.0);   // float value of slice number, slice 0th to 63rd__terminate__\
@@ -3468,7 +3467,7 @@ vec4 raymarchNoLight(vec3 ro, vec3 rd) {__terminate__\
     }__terminate__\
   __terminate__\
     float alpha = 1.0-tm;__terminate__\
-    return vec4(col/alpha, alpha);__terminate__\
+    return vec4(alpha);__terminate__\
 }__terminate__\
 __terminate__\
 __terminate__\
@@ -3562,6 +3561,7 @@ define('charts/volume',[
 		image.src = this.data.raw;
 		voltex.minFilter = voltex.magFilter = THREE.LinearFilter;
 		voltex.wrapS = voltex.wrapT = THREE.ClampToEdgeWrapping;
+		voltex.flipX = true;
 		voltex.flipY = false;
 		return voltex;
             }, this))();
@@ -3591,7 +3591,7 @@ define('charts/volume',[
 	    new THREE.CubeGeometry(1, 1, 1),
 	    material
 	);
-//	this.mesh.scale.set(20, 20, 20);
+	this.mesh.scale.set(20, 20, 20);
     };
 
     Volume.prototype.getDataRanges = function(){
