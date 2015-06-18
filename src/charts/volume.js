@@ -18,7 +18,8 @@ define([
 	    height: 100,
 	    depth: 100,
 	    f_per_row: 1,
-	    f_per_column: 1
+	    f_per_column: 1,
+	    filter: THREE.NearestFilter
 	};
 	if(arguments.length>1)_.extend(this.options, _options);
 
@@ -37,7 +38,7 @@ define([
                     voltex.needsUpdate=true;
 		};
 		image.src = this.data.raw;
-		voltex.minFilter = voltex.magFilter = THREE.LinearFilter;
+		voltex.minFilter = voltex.magFilter = this.options.filter;
 		voltex.wrapS = voltex.wrapT = THREE.ClampToEdgeWrapping;
 		voltex.flipY = false;
 		return voltex;
