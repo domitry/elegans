@@ -133,13 +133,5 @@ void main() {
     gStepSize = ROOTTHREE / float(MAX_STEPS);
     gStepFactor = 32.0 * gStepSize;
   
-  if(
-     (abs(length(abs(vPos1.xy) - vec2(0.5))) < 0.01 ||
-      abs(length(abs(vPos1.yz) - vec2(0.5))) < 0.01 ||
-      abs(length(abs(vPos1.xz) - vec2(0.5))) < 0.01 )
-     ){
-    gl_FragColor = vec4(1.0);
-  }else{
     gl_FragColor = raymarchNoLight(ro, rd);
-  }
 }

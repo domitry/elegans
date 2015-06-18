@@ -3481,15 +3481,7 @@ void main() {__terminate__\
     gStepSize = ROOTTHREE / float(MAX_STEPS);__terminate__\
     gStepFactor = 32.0 * gStepSize;__terminate__\
   __terminate__\
-  if(__terminate__\
-     (abs(length(abs(vPos1.xy) - vec2(0.5))) < 0.01 ||__terminate__\
-      abs(length(abs(vPos1.yz) - vec2(0.5))) < 0.01 ||__terminate__\
-      abs(length(abs(vPos1.xz) - vec2(0.5))) < 0.01 )__terminate__\
-     ){__terminate__\
-    gl_FragColor = vec4(1.0);__terminate__\
-  }else{__terminate__\
     gl_FragColor = raymarchNoLight(ro, rd);__terminate__\
-  }__terminate__\
 }__terminate__\
 ".replace(/__terminate__/g, "\n");});
 
