@@ -40,6 +40,7 @@ define([
 		image.src = this.data.raw;
 		voltex.minFilter = voltex.magFilter = this.options.filter;
 		voltex.wrapS = voltex.wrapT = THREE.ClampToEdgeWrapping;
+		voltex.flipX = true;
 		voltex.flipY = false;
 		return voltex;
             }, this))();
