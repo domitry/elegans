@@ -3408,7 +3408,7 @@ vec3 toLocal(vec3 p) {__terminate__\
     return p + vec3(0.5);__terminate__\
 }__terminate__\
 __terminate__\
-float sampleVolTex(vec3 pos) {__terminate__\
+vec4 sampleVolTex(vec3 pos) {__terminate__\
   pos = pos;__terminate__\
   __terminate__\
   // note: z is up in 3D tex coords, pos.z is tex.y, pos.y is zSlice__terminate__\
@@ -3439,8 +3439,8 @@ __terminate__\
   }__terminate__\
 __terminate__\
   // get (bi)linear interped texture reads at two slices__terminate__\
-  float z0 = texture2D(uTex, vec2(uni_x0, uni_y0)).g;__terminate__\
-  float z1 = texture2D(uTex, vec2(uni_x1, uni_y1)).g;__terminate__\
+  vec4 z0 = texture2D(uTex, vec2(uni_x0, uni_y0));__terminate__\
+  vec4 z1 = texture2D(uTex, vec2(uni_x1, uni_y1));__terminate__\
   return mix(z0, z1, fract(zSlice));__terminate__\
 }__terminate__\
 __terminate__\
@@ -3448,26 +3448,26 @@ vec4 raymarchNoLight(vec3 ro, vec3 rd) {__terminate__\
     vec3 step = rd*gStepSize;__terminate__\
     vec3 pos = ro;__terminate__\
   __terminate__\
-    vec3 col = vec3(0.0);__terminate__\
-    float tm = 1.0;__terminate__\
+    vec4 col = vec4(0.0);__terminate__\
   __terminate__\
     for (int i=0; i<MAX_STEPS; ++i) {__terminate__\
-        float dtm = exp( -uTMK*gStepSize*sampleVolTex(pos) );__terminate__\
-        tm *= dtm;__terminate__\
+      //float dtm = exp( -uTMK*gStepSize*sampleVolTex(pos) );__terminate__\
+      //tm *= dtm;__terminate__\
+      //col += (1.0-dtm) * uColor * tm;__terminate__\
+      col += sampleVolTex(pos);__terminate__\
+      pos += step;__terminate__\
     __terminate__\
-        col += (1.0-dtm) * uColor * tm;__terminate__\
-    __terminate__\
-        pos += step;__terminate__\
-    __terminate__\
-        if (tm < TM_MIN ||__terminate__\
-            pos.x > 1.0 || pos.x < 0.0 ||__terminate__\
-            pos.y > 1.0 || pos.y < 0.0 ||__terminate__\
-            pos.z > 1.0 || pos.z < 0.0)__terminate__\
-            break;__terminate__\
+      if (__terminate__\
+	  pos.x > 1.0 || pos.x < 0.0 ||__terminate__\
+	  pos.y > 1.0 || pos.y < 0.0 ||__terminate__\
+	  pos.z > 1.0 || pos.z < 0.0)__terminate__\
+	break;__terminate__\
     }__terminate__\
   __terminate__\
-    float alpha = 1.0-tm;__terminate__\
-    return vec4(alpha);__terminate__\
+    if(col.r > 1.0)col.r = 1.0;__terminate__\
+    if(col.g > 1.0)col.g = 1.0;__terminate__\
+    if(col.b > 1.0)col.b = 1.0;__terminate__\
+    return vec4(col.rgb, 1.0);__terminate__\
 }__terminate__\
 __terminate__\
 __terminate__\
