@@ -95,7 +95,7 @@ define([
 	this.world.addMesh(this.space.getMeshes());
         for(var i=0;i<this.charts.length;i++){
             var chart=this.charts[i];
-            chart.generateMesh(this.space.getScales());
+            chart.generateMesh(this.space.getScales(), this);
 	    this.world.addMesh(chart.getMesh());
             if(chart.hasLegend()){
 		var legend = chart.getLegend();
@@ -126,7 +126,7 @@ define([
     Stage.prototype.update = function(){
         for(var i=0;i<this.charts.length;i++){
             var chart=this.charts[i];
-            chart.generateMesh(this.space.getScales());
+            chart.generateMesh(this.space.getScales(), this);
 	    this.world.addMesh(chart.getMesh());
         }
     };

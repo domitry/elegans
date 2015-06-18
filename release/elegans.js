@@ -2308,7 +2308,7 @@ define('components/stage',[
 	this.world.addMesh(this.space.getMeshes());
         for(var i=0;i<this.charts.length;i++){
             var chart=this.charts[i];
-            chart.generateMesh(this.space.getScales());
+            chart.generateMesh(this.space.getScales(), this);
 	    this.world.addMesh(chart.getMesh());
             if(chart.hasLegend()){
 		var legend = chart.getLegend();
@@ -2339,7 +2339,7 @@ define('components/stage',[
     Stage.prototype.update = function(){
         for(var i=0;i<this.charts.length;i++){
             var chart=this.charts[i];
-            chart.generateMesh(this.space.getScales());
+            chart.generateMesh(this.space.getScales(), this);
 	    this.world.addMesh(chart.getMesh());
         }
     };
@@ -3539,8 +3539,7 @@ define('charts/volume',[
 	    height: 100,
 	    depth: 100,
 	    f_per_row: 1,
-	    f_per_column: 1,
-	    stage: null
+	    f_per_column: 1
 	};
 	if(arguments.length>1)_.extend(this.options, _options);
 
@@ -3548,7 +3547,7 @@ define('charts/volume',[
 	this.ranges = {x: [0,1], y: [0,1], z: [0,1]};
     }
 
-    Volume.prototype.generateMesh = function(){
+    Volume.prototype.generateMesh = function(scales, stage){
 	var uniforms = (_.bind(function(){
             var voltexDim = new THREE.Vector3(this.options.width, this.options.height, this.options.depth);
             var texture = (_.bind(function(){
@@ -3566,7 +3565,7 @@ define('charts/volume',[
 		return voltex;
             }, this))();
 
-	    var camera = this.options.stage.world.camera;
+	    var camera = stage.world.camera;
 
             return {
 		uCamPos: {type: "v3", value: camera.position},

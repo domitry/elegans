@@ -18,8 +18,7 @@ define([
 	    height: 100,
 	    depth: 100,
 	    f_per_row: 1,
-	    f_per_column: 1,
-	    stage: null
+	    f_per_column: 1
 	};
 	if(arguments.length>1)_.extend(this.options, _options);
 
@@ -27,7 +26,7 @@ define([
 	this.ranges = {x: [0,1], y: [0,1], z: [0,1]};
     }
 
-    Volume.prototype.generateMesh = function(){
+    Volume.prototype.generateMesh = function(scales, stage){
 	var uniforms = (_.bind(function(){
             var voltexDim = new THREE.Vector3(this.options.width, this.options.height, this.options.depth);
             var texture = (_.bind(function(){
@@ -44,7 +43,7 @@ define([
 		return voltex;
             }, this))();
 
-	    var camera = this.options.stage.world.camera;
+	    var camera = stage.world.camera;
 
             return {
 		uCamPos: {type: "v3", value: camera.position},
