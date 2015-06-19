@@ -6,8 +6,9 @@ define([
     "charts/particles",
     "charts/line",
     "charts/cylinder",
-    "charts/debug_object"
-],function(Stage, Surface, Wireframe, Scatter, Particles, Line, Cylinder, DebugObject){
+    "charts/debug_object",
+    "charts/volume"
+],function(Stage, Surface, Wireframe, Scatter, Particles, Line, Cylinder, DebugObject, Volume){
     function Embed(){
 	return this;
     }
@@ -23,7 +24,8 @@ define([
 	    Particles: Particles,
 	    Line: Line,
 	    Cylinder: Cylinder,
-	    DebugObject: DebugObject
+	    DebugObject: DebugObject,
+	    Volume: Volume
 	};
 	for(var i=0;i<plots.length;i++){
 	    var plot = new (plot_types[plots[i].type])(plots[i].data,plots[i].options);
