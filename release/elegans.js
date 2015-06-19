@@ -3604,7 +3604,7 @@ define('charts/volume',[
     };
 
     Volume.prototype.getLegend = function(){
-	return Legends.generateDiscreteLegend("hoge", "#000", this);
+	return Legends.generateDiscreteLegend(this.options.name, "#000", this);
     };
     
     Volume.prototype.getMesh = function(){
