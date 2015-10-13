@@ -1,8 +1,9 @@
 define([
     "utils/TrackballControls",
     "utils/OrthographicTrackballControls",
+    "utils/OrbitControls",
     "utils/utils"
-],function(TrackballControls, OrthographicTrackballControls, Utils){
+],function(TrackballControls, OrthographicTrackballControls, OrbitControls, Utils){
 
     function World(options){
 	this.options = {
@@ -10,6 +11,7 @@ define([
 	    height: 0,
 	    perspective: true,
 	    bg_color: 0xffffff,
+        orbit: false,
 	    save_image: false
 	};
 
@@ -44,8 +46,10 @@ define([
 	
 	this.renderer.sortObjects = false;
 
-	if(this.options.perspective)
-	    this.controls = new TrackballControls(this.camera, this.renderer.domElement);
+	if(this.options.perspective && this.options.orbit)
+	    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+    else if (this.options.perspective)
+        this.controls = new TrackballControls(this.camera, this.renderer.domElement);
 	else
 	    this.controls = new OrthographicTrackballControls(this.camera, this.renderer.domElement);
 
