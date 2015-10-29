@@ -63,6 +63,8 @@ define([
 	this.ranges = {};
 	if(typeof data == "string"){
 	    this.raw = DataBase.find(data);
+        if(_.isUndefined(this.raw))
+            this.raw = {x: [], y: [], z:[]};
 	}else{
 	    this.raw = data;
 	}
