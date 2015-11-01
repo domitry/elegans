@@ -8,7 +8,6 @@ define('utils/OrbitControls',[],function(){
 		// "target" sets the location of focus, where the object orbits around
 		// and where it pans with respect to.
 		this.target = new THREE.Vector3();
-        console.log(this.target);
 
 		// Limits to how far you can dolly in and out ( PerspectiveCamera only )
 		this.minDistance = 0;
@@ -1105,8 +1104,5 @@ define('utils/OrbitControls',[],function(){
 
 	} );
 
-
-    // OrbitControls.prototype = Object.create(THREE.EventDispatcher.prototype);
-    // OrbitControls.prototype.constructor = OrbitControls;
     return OrbitControls;
 });
