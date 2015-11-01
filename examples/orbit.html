@@ -1,0 +1,46 @@
+<html lang="en">
+<head>
+  <title>Orbit Controls Sample - Surface</title>
+  <link rel='stylesheet' href='common.css'>
+  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/three.js/r72/three.min.js"></script>
+  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.4/d3.min.js"></script>
+  <script type="text/javascript" src="../release/elegans.min.js"></script>
+  <script type="text/javascript">
+   window.onload = function(){
+     var data = {};
+     var BIGIN=-10, END=10, INTERVAL = 0.5;
+     width = height = (END - BIGIN)/INTERVAL + 1;
+     data.x = [], data.y = [], data.z = [];
+     for(var i=0;i< height;i++)data.x.push([]);
+     for(var j=0;j< height;j++){
+       var x = BIGIN + INTERVAL*j;
+       for(var i=0;i< width;i++){
+	 data.x[i][j] = x;
+       }
+     }
+     for(var i=0;i< width;i++){
+       data.y.push([]);
+       var y = BIGIN + INTERVAL*i;
+       for(var j=0;j< height;j++){
+	 data.y[i][j] = y;
+       }
+     }
+     for(var i=0;i< width;i++){
+       data.z.push([]);
+       for(var j=0;j< height;j++){
+	 var x=data.x[i][j], y=data.y[i][j];
+	 data.z[i][j] = Math.cos(Math.sqrt(x*x+y*y));
+       }
+     }
+
+     var stage = new Elegans.Stage(d3.select('#vis')[0][0], options={orbit:true});
+     stage.add(new Elegans.Surface(data));
+     stage.render();
+   };
+  </script>
+</head>
+<body>
+
+  <div id="vis">
+  </div>
+</body>
