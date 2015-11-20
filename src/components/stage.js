@@ -20,6 +20,7 @@ define([
 	    autorange:true,
 	    grid: true,
 	    perspective: true,
+	    orbit: false,
 	    save_image: false
 	};
 
@@ -63,7 +64,8 @@ define([
 	    width:this.options.world_width,
 	    height:this.options.world_height,
 	    bg_color:this.options.bg_color,
-	    perspective: this.options.perspective
+	    perspective: this.options.perspective,
+        orbit: this.options.orbit
 	});
 
 	this.data_ranges = {
