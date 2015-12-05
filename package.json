@@ -7,11 +7,14 @@
         "example": "examples"
     },
     "scripts": {
+        "preinstall": "npm i -g grunt-cli",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "Naoki Nishida",
     "license": "MIT License",
     "devDependencies": {
+        "almond": "~0.3.1",
+        "underscore": "~1.8.3",
         "grunt": "~0.4.4",
         "grunt-contrib-requirejs": "~0.4.3",
         "grunt-shell": "~1.1.2"

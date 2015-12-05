@@ -1,5 +1,5 @@
 require.config({
     paths: {
-	'underscore': '../lib/underscore/underscore-min'
+        'underscore': '../node_modules/underscore/underscore-min'
     }
 });
