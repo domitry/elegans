@@ -1,19 +1,19 @@
 {
-  "name": "elegans",
-  "version": "0.2.0",
-  "description": "A 3D plotting library for web browsers enabling WebGL.",
-  "main": "src/main.js",
-  "directories": {
-    "example": "examples"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Naoki Nishida",
-  "license": "MIT License",
-  "devDependencies": {
-    "grunt": "~0.4.4",
-    "grunt-contrib-requirejs": "~0.4.3",
-    "grunt-shell": "~1.1.2"
-  }
+    "name": "elegans",
+    "version": "0.2.0",
+    "description": "A 3D plotting library for web browsers enabling WebGL.",
+    "main": "src/main.js",
+    "directories": {
+        "example": "examples"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Naoki Nishida",
+    "license": "MIT License",
+    "devDependencies": {
+        "grunt": "~0.4.4",
+        "grunt-contrib-requirejs": "~0.4.3",
+        "grunt-shell": "~1.1.2"
+    }
 }
