@@ -65,14 +65,14 @@ define([
     World.prototype.begin = function(selection){
         selection[0][0].appendChild(this.renderer.domElement);
         var world = this;
-        var interval = 1000/30;
+        var minInterval = 1000/30;
         var before = Date.now();
 
         this.animate = function(){
             window.requestAnimationFrame(world.animate);
             var now = Date.now();
-            if(now - before > interval){
-                before = now;
+            if(now - before > minInterval){
+                before += minInterval;
                 world.renderer.render(world.scene, world.camera);
                 world.controls.update();
             }
