@@ -65,10 +65,8 @@ define([
         selection[0][0].appendChild(this.renderer.domElement);
         var world = this;
 
-        this.invalidateUntil = Infinity;
-        this.controls.addEventListener('change', function() {
-            world.invalidateUntil = Infinity;
-        });
+        this.invalidate();
+        this.controls.addEventListener('change', world.invalidate.bind(world));
 
         this.animate = function(){
             window.requestAnimationFrame(world.animate);
@@ -82,6 +80,10 @@ define([
         };
 
         this.animate();
+    };
+
+    World.prototype.invalidate = function() {
+        this.invalidateUntil = Infinity;
     };
 
     World.prototype.addMesh = function(mesh){

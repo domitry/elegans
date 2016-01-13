@@ -86,6 +86,7 @@ define([
             });
         }
         this.charts.push(chart);
+        this.world.invalidate();
     };
 
     Stage.prototype.render = function(){
@@ -123,6 +124,7 @@ define([
             var chart=this.charts[i];
             this.world.removeMesh(chart.getMesh());
         }
+        this.world.invalidate();
     };
 
     Stage.prototype.update = function(){
@@ -131,6 +133,7 @@ define([
             chart.generateMesh(this.space.getScales(), this);
             this.world.addMesh(chart.getMesh());
         }
+        this.world.invalidate();
     };
 
     return Stage;
