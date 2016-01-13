@@ -65,17 +65,21 @@ define([
     World.prototype.begin = function(selection){
         selection[0][0].appendChild(this.renderer.domElement);
         var world = this;
-        var minInterval = 1000/30;
-        var before = Date.now();
+
+        this.invalidateUntil = Infinity;
+        this.controls.addEventListener('change', function() {
+            world.invalidateUntil = Infinity;
+        });
 
         this.animate = function(){
             window.requestAnimationFrame(world.animate);
             var now = Date.now();
-            if(now - before > minInterval){
-                before += minInterval;
+            if(now < world.invalidateUntil) {
                 world.renderer.render(world.scene, world.camera);
-                world.controls.update();
+                if(world.invalidateUntil == Infinity)
+                    world.invalidateUntil = now + 100;
             }
+            world.controls.update();
         };
 
         this.animate();
