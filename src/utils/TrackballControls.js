@@ -28,7 +28,7 @@ define([],function(){
         this.noRoll = false;
 
         this.staticMoving = false;
-        this.dynamicDampingFactor = 0.2;
+        this.dynamicDampingFactor = 0.4;
 
         this.minDistance = 0;
         this.maxDistance = Infinity;
@@ -202,8 +202,10 @@ define([],function(){
                         _rotateStart.copy( _rotateEnd );
 
                     } else {
-
-                        quaternion.setFromAxisAngle( axis, angle * ( _this.dynamicDampingFactor - 1.0 ) );
+                        var damping = _this.dynamicDampingFactor;
+                        if(_state == STATE.NONE)
+                            damping *= 0.25;
+                        quaternion.setFromAxisAngle( axis, angle * ( damping - 1.0 ) );
                         _rotateStart.applyQuaternion( quaternion );
 
                     }

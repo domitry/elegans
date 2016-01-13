@@ -54,7 +54,6 @@ define([
             this.controls = new OrthographicTrackballControls(this.camera, this.renderer.domElement);
 
         this.controls.screen = {left: 0, top: 0, width: this.options.width, height: this.options.height};
-        this.controls.rotateSpeed = 0.5;
 
         this.camera.position.set(-30, 31,42);
         this.camera.rotation.set(-0.6,-0.5,0.6);
@@ -65,20 +64,26 @@ define([
     World.prototype.begin = function(selection){
         selection[0][0].appendChild(this.renderer.domElement);
         var world = this;
-        var minInterval = 1000/30;
-        var before = Date.now();
+
+        this.invalidate();
+        this.controls.addEventListener('change', world.invalidate.bind(world));
 
         this.animate = function(){
             window.requestAnimationFrame(world.animate);
             var now = Date.now();
-            if(now - before > minInterval){
-                before += minInterval;
+            if(now < world.invalidateUntil) {
                 world.renderer.render(world.scene, world.camera);
-                world.controls.update();
+                if(world.invalidateUntil == Infinity)
+                    world.invalidateUntil = now + 100;
             }
+            world.controls.update();
         };
 
         this.animate();
+    };
+
+    World.prototype.invalidate = function() {
+        this.invalidateUntil = Infinity;
     };
 
     World.prototype.addMesh = function(mesh){
